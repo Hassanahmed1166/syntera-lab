@@ -4,7 +4,7 @@ import html, json, os, re, shutil, zipfile, xml.etree.ElementTree as ET
 from PIL import Image, ImageOps
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(ROOT, 'site')
+OUT = os.path.join(ROOT, 'docs')
 E = html.escape
 
 # ───────────────────────── brand ─────────────────────────
