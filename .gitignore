@@ -1,0 +1,9 @@
+# private source data (personal emails) and raw photos
+members*.xlsx
+images/members/
+publications.txt
+SYNTERA-Website-Requirements-Plan.md
+*.log
+ex.txt
+__pycache__/
+.claude/
