@@ -142,7 +142,7 @@ def build_members():
         if mid == 'shahrzad-saremi': role = 'Founder · Director'
         elif mid == 'rania-shibl': role = 'Co-Director · Cofounder'
         elif mid == 'dana-dermody': role = 'Cofounder · Senior Researcher'
-        elif mid == 'mostafa-kamalpour': role = 'Team Lead'
+        elif mid == 'mostafa-kamalpour': role = 'Team Lead · Senior Researcher'
         elif mid == 'hassan-ahmed': role = 'Team Lead · Senior Researcher'
         elif mid == 'abdullah-khan': role = 'Senior Researcher'
         elif level == 'Masters Student': role = "Master's Student"
@@ -278,7 +278,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 <body data-base="{p}">
 <a class="skip" href="#main">Skip to content</a>
 <header class="hdr"><div class="wrap hdr__in">
-  <a class="brand" href="{p}index.html" title="{BRAND['name']}, {BRAND['host']}">{LOGO}<span><b>SYNTERA</b><small>Lab · {BRAND['host_short']}</small></span></a>
+  <a class="brand" href="{p}index.html" title="{BRAND['name']}">{LOGO}<span><b>SYNTERA</b><small>Research Lab</small></span></a>
   <nav aria-label="Main"><ul id="nav" class="nav">{nav}<li class="nav__cta"><a class="btn btn--pink" href="{p}join.html">Join Us</a></li></ul></nav>
   <div class="hdr__act">
     <button class="icon-btn" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button>
@@ -291,12 +291,12 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 <footer class="ftr"><div class="wrap">
   <div class="ftr__grid">
     <div><a class="brand brand--ftr" href="{p}index.html">{LOGO}<span><b>SYNTERA</b><small>Lab</small></span></a>
-      <p>{BRAND['tagline']}. An applied AI and connected systems research group based at the <a href="{BRAND['host_url']}" rel="noopener" target="_blank">{BRAND['host']}</a>, Australia.</p></div>
+      <p>{BRAND['tagline']}. An applied AI and connected systems research group.</p></div>
     <div><h4>Research</h4><ul>{areas_f}</ul></div>
     <div><h4>The lab</h4><ul><li><a href="{p}about.html">About</a></li><li><a href="{p}people.html">People</a></li><li><a href="{p}publications.html">Publications</a></li><li><a href="{p}join.html">Join us</a></li><li><a href="{p}privacy.html">Privacy</a></li></ul></div>
     <div><h4>Get in touch</h4><ul><li><a href="mailto:{BRAND['email']}">{BRAND['email']}</a></li><li><a href="{BRAND['scholar']}" rel="noopener" target="_blank">Director on Google Scholar</a></li></ul><a class="btn btn--pink btn--sm" href="{p}join.html">Join Us</a></div>
   </div>
-  <div class="ftr__bar"><span>© 2026 {BRAND['name']}, {BRAND['host']}</span><span><a href="{p}privacy.html">Privacy</a></span></div>
+  <div class="ftr__bar"><span>© 2026 {BRAND['name']}</span><span><a href="{p}privacy.html">Privacy</a></span></div>
 </div></footer>
 <script src="{p}js/site.js"></script>
 {data_js}
@@ -314,6 +314,47 @@ def avatar(m, p='', cls='av'):
         return f'<img class="{cls}" src="{p}images/team/{m["photo"]}" alt="{E(m["name"])}" width="120" height="120" loading="lazy">'
     ini = ''.join(w[0] for w in m['full'].split()[:2]).upper()
     return f'<span class="{cls} {cls}--ini" aria-hidden="true">{ini}</span>'
+
+
+DETAILS = {
+ 'shahrzad-saremi': dict(
+  quals='PhD (CompSci) Griff. · M (InteractionDes) Qld. · BSc (InfoTech) MMU · GradCert (TeachLearning) TUA · FHEA',
+  title='Lecturer, ICT and Computer Science',
+  roles=['Program Coordinator: Bachelor of Information and Communications Technology'],
+  bio=['Dr Shahrzad Saremi is a researcher and academic with over a decade of experience in computing and information technology. She has published more than 20 high-impact journal articles, attracting over 15,000 citations, reflecting the significant international reach of her research contributions.',
+       'Her research spans multiple interdisciplinary domains, including bio-inspired optimisation algorithms, human–computer interaction (HCI), machine learning, Internet of Things (IoT), Internet of Vehicles (IoV), and Smart Health Home systems. She is widely recognised for her co-development of nature-inspired metaheuristic algorithms, including the Grasshopper Optimisation Algorithm and Salp Swarm Algorithm, which are extensively applied to complex engineering and computational challenges. Her work in HCI investigates user experience, gesture recognition, augmented reality, and creative technologies, with a particular focus on design education and knowledge management in organisational settings.',
+       'She also explores knowledge-sharing behaviours in organisational and educational settings, examining the interplay between motivation and culture to enhance learning and risk management outcomes. Her research combines technical innovation with human-centred inquiry.',
+       'Dr Saremi is deeply committed to fostering engaging, student-centred learning environments and is passionate about mentoring the next generation of researchers.'],
+  supervision='Dr Saremi actively supervises Higher Degree by Research (HDR) candidates and welcomes enquiries from motivated researchers whose interests intersect with her areas of expertise. Prospective domestic and international candidates are encouraged to reach out to explore potential research directions.',
+  grants=['<b>LAUNCH Partnership Grant (2026)</b>, University of the Sunshine Coast. Lead Investigator, $29,357. Project: “Rapid MRI-Based Knee Segmentation: Leveraging Deep Learning for Patient-Specific 3D Models and Clinical Translation”.'],
+  teaching=['Programming','Computer Science','Cybersecurity','Human-Computer Interaction','System Analysis','Math','Requirement Engineering','Computer Organization and Operating Systems','Device and Network Security','Information Systems','Business Intelligence','AI'],
+  awards=['Fellow of the Higher Education Academy (FHEA), 2026: Advance HE recognition of professional practice and excellence in higher education',
+          'Selected for the 2026 Essence of Research Leadership Program, University of the Sunshine Coast',
+          'Vice Chancellor’s Learning and Teaching Award, 2024',
+          'Top 2 percent scientist in the Stanford/Elsevier list, 2023',
+          'Pro Vice-Chancellor Research Commendation, 2021',
+          'PSH (Professor Susan Holland) Casual Academic Performance Award, 2020',
+          'Interviewed by Vogue as an active woman in AI (teaching and research), 2020',
+          'IIIS Research Impact Awards, Griffith University, 2016',
+          'Full scholarship for her PhD, Griffith University, 2014',
+          'Her master’s thesis project (Marker Puzzle) was selected for display at the School of Information Technology and Electronic Innovation showcase at the University of Queensland'],
+  metrics='15,000+ citations · h-index 21 · i10-index 22 (Google Scholar, Aug 2026)'),
+}
+
+def details_html(m):
+    d = DETAILS.get(m['id'])
+    if not d: return ''
+    li = lambda xs: ''.join(f'<li>{x}</li>' for x in xs)
+    out = ''
+    if d.get('quals'): out += f'<h2>Qualifications</h2><p>{E(d["quals"])}</p>'
+    if d.get('roles'): out += f'<ul>{li(E(x) for x in d["roles"])}</ul>'
+    if d.get('bio'): out += '<h2>About</h2>' + ''.join(f'<p>{E(p)}</p>' for p in d['bio'])
+    if d.get('metrics'): out += f'<p class="muted">{E(d["metrics"])}</p>'
+    if d.get('supervision'): out += f'<h2>Research supervision</h2><p>{E(d["supervision"])}</p>'
+    if d.get('grants'): out += f'<h2>Research grants</h2><ul>{li(d["grants"])}</ul>'
+    if d.get('teaching'): out += f'<h2>Teaching</h2><ul class="tags tags--dark">{li(E(x) for x in d["teaching"])}</ul>'
+    if d.get('awards'): out += f'<h2>Awards and fellowships</h2><ul>{li(E(x) for x in d["awards"])}</ul>'
+    return out
 
 def disp_name(m):
     return ' '.join(x for x in [m['prefix'], m['name']] if x)
@@ -371,7 +412,7 @@ def build_pages(members):
     marquee = ''.join(logo_card(n, sl, u) for n, sl, c, u in partners)
     body = f'''
 <section class="hero"><canvas id="net" aria-hidden="true"></canvas><div class="wrap hero__in">
-  <p class="badge">Applied AI &amp; Connected Systems · {BRAND['host_short']}</p>
+  <p class="badge">Applied AI &amp; Connected Systems</p>
   <h1>Intelligence in <span class="grad">Synergy</span></h1>
   <p class="lead">Applied AI and connected systems for healthier lives, sustainable food, personal learning and safer mobility.</p>
   <div class="cta"><a class="btn btn--pink" href="research.html">Explore Research</a><a class="btn btn--ghost" href="join.html">Join Us</a></div>
@@ -384,7 +425,7 @@ def build_pages(members):
   <div><p class="eyebrow">Latest papers</p><h2>Recent research output</h2><ul class="plist">{latest}</ul><p><a class="more" href="publications.html">All publications →</a></p></div>
   <div class="panel"><p class="eyebrow">Our name</p><h2>Syn · Te · Era</h2>
     <p><b>SYNTERA</b> brings together <b>Syn</b>ergy, In<b>te</b>lligence and E<b>ra</b>: a new era where AI works in synergy with health, agriculture, education, homes and mobility.</p>
-    <p class="muted">Based at the {BRAND['host']} with members and collaborators across {len(countries)} countries.</p>
+    <p class="muted">Members and collaborators across {len(countries)} countries.</p>
     <a class="btn btn--blue" href="about.html">About the lab</a></div></div></section>
 <section class="sec"><div class="wrap"><p class="eyebrow">People</p><h2>The team</h2>
   <ul class="faces">{faces}</ul><p><a class="more" href="people.html">Meet everyone →</a></p></div></section>
@@ -460,9 +501,9 @@ def build_pages(members):
         prv = by_id[members[i-1]['id']] if i else members[-1]; nxt = members[(i+1) % len(members)]
         body = f'''<section class="phead phead--profile"><div class="wrap profile"><div class="profile__ph">{avatar(m, "../", "av av--lg")}</div>
 <div><p class="eyebrow"><a href="../people.html">People</a></p><h1>{E(disp_name(m))}{f"<small>{E(m['suffix'])}</small>" if m["suffix"] else ""}</h1>
-<p class="lead">{E(m["role"])}{" · " + E(m["title"]) if m["title"] else ""}</p>
+<p class="lead">{E(m["role"])}{" · " + E(DETAILS.get(m["id"], {}).get("title", m["title"])) if m["title"] else ""}</p>
 <p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
-<section class="sec"><div class="wrap prose"><h2>Affiliation</h2><p>{insts}</p>
+<section class="sec"><div class="wrap prose">{details_html(m)}<h2>Affiliation</h2><p>{insts}</p>
 <h2>Research areas</h2><div class="chips">{achips}</div>
 <h2>Research interests</h2><ul class="tags tags--dark">{ints}</ul>{pubsec}
 <nav class="pager"><a href="{prv["id"]}.html">← {E(prv["name"])}</a><a href="{nxt["id"]}.html">{E(nxt["name"])} →</a></nav></div></section>'''
@@ -490,18 +531,19 @@ def build_pages(members):
     plog = marquee
     director = by_id['shahrzad-saremi']
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">About</p><h1>Intelligence in Synergy</h1>
-<p class="lead">{BRAND['full']}, based at the {BRAND['host']}.</p></div></section>
+<p class="lead">{BRAND['full']}.</p></div></section>
 <section class="sec" id="story"><div class="wrap prose"><h2>Our story</h2>
 <p><b>SYNTERA</b> stands for <b>Syn</b>ergy + In<b>te</b>lligence + E<b>ra</b>: a new era in which artificial intelligence works in synergy with health, agriculture, education, homes and mobility.</p>
 <p>The lab was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a> and <a href="people/rania-shibl.html">Dr. Rania Shibl</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
-<p class="muted">SYNTERA Lab is not affiliated with any commercial company of a similar name. We always present the lab together with its host university.</p></div></section>
+<p class="muted">SYNTERA Lab is not affiliated with any commercial company of a similar name.</p></div></section>
 <section class="sec sec--ice" id="mission"><div class="wrap"><div class="grid grid--2"><div class="panel"><h2>Mission</h2>
 <p>To design and apply AI and connected technologies (IoT, IoV) that solve real problems in health, agriculture, education and everyday living.</p></div>
 <div class="panel"><h2>Vision</h2><p>A future where intelligent, connected systems make life healthier, food more sustainable, learning more personal and mobility safer.</p></div></div>
 <h2 class="mt">Core values</h2><ul class="values">{vals}</ul></div></section>
 <section class="sec" id="director"><div class="wrap"><div class="dir"><div>{avatar(director, "", "av av--lg")}</div>
-<div class="prose"><p class="eyebrow">Founder &amp; Director</p><h2><a href="people/{director["id"]}.html">{E(disp_name(director))}</a></h2><p>{E(director["title"])}, {E(director["inst"][0])}.</p>
-<p>Research interests: {E(", ".join(director["interests"]))}.</p><p><a class="btn btn--blue btn--sm" href="people/{director["id"]}.html">Full profile</a></p></div></div></div></section>
+<div class="prose"><p class="eyebrow">Founder &amp; Director</p><h2><a href="people/{director["id"]}.html">{E(disp_name(director))}</a></h2><p>{E(DETAILS["shahrzad-saremi"]["title"])}, {E(director["inst"][0])}.</p>
+<p>{E(DETAILS["shahrzad-saremi"]["bio"][0])}</p>
+<p>{E(DETAILS["shahrzad-saremi"]["bio"][1].split(". She is widely")[0])}.</p><p><a class="btn btn--blue btn--sm" href="people/{director["id"]}.html">Full profile</a></p></div></div></div></section>
 <section class="sec sec--blush" id="partners"><div class="wrap"><p class="eyebrow">Collaborators</p><h2>Partner institutions</h2><ul class="logos">{plog}</ul></div></section>'''
     page('about.html', 'About', 'The story, mission, vision and values of SYNTERA Lab.', body, 'about')
 
@@ -524,9 +566,9 @@ def build_pages(members):
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Contact</p><h1>Get in touch</h1></div></section>
 <section class="sec"><div class="wrap"><div class="grid grid--3">
 <div class="panel"><h3>Email</h3><p><a href="mailto:{BRAND['email']}">{BRAND['email']}</a></p><p class="muted">Contact for the lab (Director, <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>).</p></div>
-<div class="panel"><h3>Host institution</h3><p><a href="{BRAND['host_url']}" rel="noopener" target="_blank">{BRAND['host']}</a></p><p class="muted">School of Science, Technology and Engineering, Queensland, Australia.</p></div>
+<div class="panel"><h3>Director's affiliation</h3><p><a href="{BRAND['host_url']}" rel="noopener" target="_blank">{BRAND['host']}</a></p><p class="muted">School of Science, Technology and Engineering, Queensland, Australia.</p></div>
 <div class="panel"><h3>Elsewhere</h3><p>{soc}</p></div></div></div></section>'''
-    page('contact.html', 'Contact', 'Contact SYNTERA Lab: email, host institution and links.', body, 'contact')
+    page('contact.html', 'Contact', 'Contact SYNTERA Lab: email and links.', body, 'contact')
 
     # ---------- privacy
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Privacy</p><h1>Privacy</h1></div></section>
