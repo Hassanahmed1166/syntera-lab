@@ -888,6 +888,14 @@ input[type=search],select{transition:border-color .2s,box-shadow .2s}input[type=
 #top{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border:0;border-radius:50%;background:var(--grad);color:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 22px rgba(232,62,140,.4);opacity:0;transform:translateY(16px) scale(.8);pointer-events:none;transition:all .3s;z-index:60}
 #top.show{opacity:1;transform:none;pointer-events:auto}#top:hover{transform:translateY(-4px)}#top svg{width:22px;height:22px}
 @media(hover:none){.pcard a::after{display:none}.spot::before{display:none}}
+/* butterflies */
+#bfly{position:fixed;inset:0;pointer-events:none;z-index:45;overflow:hidden}
+.bf{position:absolute;left:0;top:0;width:46px;height:40px;will-change:transform;filter:drop-shadow(0 3px 5px rgba(15,26,71,.28))}
+.bf svg{width:100%;height:100%;overflow:visible}
+.bf .wl,.bf .wr{transform-box:fill-box;animation:flap var(--f,.32s) ease-in-out infinite alternate}
+.bf .wl{transform-origin:100% 50%}.bf .wr{transform-origin:0% 50%}
+@keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.18)}}
+@media print{#bfly{display:none}}
 '''
 
 JS_SITE = r'''(function(){
@@ -913,6 +921,32 @@ tp.addEventListener('click',function(){scrollTo({top:0,behavior:reduce?'auto':'s
 var tick=false;function onS(){var h=d.documentElement,m=h.scrollHeight-h.clientHeight,y=h.scrollTop;bar.style.transform='scaleX('+(m>0?y/m:0)+')';hd&&hd.classList.toggle('is-scrolled',y>10);tp.classList.toggle('show',y>600);tick=false}
 addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(onS)}},{passive:true});onS();
 d.querySelectorAll('.area,.pcard a,.pub,.panel,.values li').forEach(function(x){x.classList.add('spot');x.addEventListener('pointermove',function(e){var r=x.getBoundingClientRect();x.style.setProperty('--mx',(e.clientX-r.left)+'px');x.style.setProperty('--my',(e.clientY-r.top)+'px')})});
+
+if(!reduce){(function(){
+var cols=[['#FF8FC3','#E83E8C'],['#8FB4FF','#3A7BFF'],['#C4A3FF','#8B5CF6'],['#FFC2DE','#E83E8C'],['#9ED0FF','#2D66E6']];
+var n=innerWidth<700?3:5,L=d.createElement('div');L.id='bfly';L.setAttribute('aria-hidden','true');d.body.appendChild(L);
+var mx=-999,my=-999;addEventListener('pointermove',function(e){mx=e.clientX;my=e.clientY},{passive:true});
+function svg(c){return '<svg viewBox="-20 -16 40 32"><g class="wl"><path d="M0 0C-6-14-18-15-19-7-20-1-10 2 0 0Z" fill="'+c[0]+'"/><path d="M0 1C-8 3-15 9-11 13-7 16-1 9 0 1Z" fill="'+c[1]+'"/><circle cx="-11" cy="-6" r="2.2" fill="#fff" opacity=".75"/></g><g class="wr"><path d="M0 0C6-14 18-15 19-7 20-1 10 2 0 0Z" fill="'+c[0]+'"/><path d="M0 1C8 3 15 9 11 13 7 16 1 9 0 1Z" fill="'+c[1]+'"/><circle cx="11" cy="-6" r="2.2" fill="#fff" opacity=".75"/></g><rect x="-1" y="-6" width="2" height="14" rx="1" fill="#14213D"/></svg>'}
+var B=[];
+for(var i=0;i<n;i++){var el=d.createElement('div');el.className='bf';el.style.setProperty('--f',(.26+Math.random()*.16)+'s');el.innerHTML=svg(cols[i%cols.length]);L.appendChild(el);
+B.push({el:el,x:Math.random()*innerWidth,y:Math.random()*innerHeight,tx:0,ty:0,a:0,sp:.9+Math.random()*.9,ph:Math.random()*6,sc:.7+Math.random()*.6,rest:0})}
+function pick(b){b.tx=Math.random()*innerWidth;b.ty=60+Math.random()*(innerHeight-120)}
+B.forEach(pick);
+var t=0,run=true;
+function step(){if(!run)return;t+=.03;
+B.forEach(function(b){
+if(b.rest>0){b.rest--;b.el.style.setProperty('--f','.9s')}else{b.el.style.setProperty('--f','.3s')
+var dx=b.tx-b.x,dy=b.ty-b.y,dist=Math.hypot(dx,dy);
+var fx=b.x-mx,fy=b.y-my,fd=Math.hypot(fx,fy);
+if(fd<130){b.x+=fx/fd*3.2;b.y+=fy/fd*3.2}
+if(dist<30){pick(b);if(Math.random()<.35)b.rest=90+Math.random()*120}
+else{var ang=Math.atan2(dy,dx)+Math.sin(t*2+b.ph)*.9;b.x+=Math.cos(ang)*b.sp;b.y+=Math.sin(ang)*b.sp+Math.sin(t*5+b.ph)*.5;b.a=ang}}
+var rot=(Math.cos(b.a)*14);
+b.el.style.transform='translate('+b.x.toFixed(1)+'px,'+b.y.toFixed(1)+'px) rotate('+rot.toFixed(1)+'deg) scale('+b.sc+')'});
+requestAnimationFrame(step)}
+d.addEventListener('visibilitychange',function(){run=!d.hidden;if(run)step()});
+step();
+})()}
 })();'''
 
 JS_HERO = r'''(function(){
