@@ -205,7 +205,7 @@ input[type=search],select{transition:border-color .2s,box-shadow .2s}input[type=
 #top.show{opacity:1;transform:none;pointer-events:auto}#top:hover{transform:translateY(-4px)}#top svg{width:22px;height:22px}
 @media(hover:none){.pcard a::after{display:none}.spot::before{display:none}}
 /* butterflies */
-#bfly{position:fixed;inset:0;pointer-events:none;z-index:45;overflow:hidden}
+#bfly{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}
 .bf{position:absolute;left:0;top:0;width:46px;height:40px;will-change:transform;filter:drop-shadow(0 3px 5px rgba(15,26,71,.28))}
 .bf svg{width:100%;height:100%;overflow:visible}
 .bf .wl,.bf .wr{transform-box:fill-box;animation:flap var(--f,.32s) ease-in-out infinite alternate}
