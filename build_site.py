@@ -183,6 +183,7 @@ def build_members():
             title=title, inst=inst, country=country, areas=AREAS_OF.get(mid, []), interests=interests, orcid=orcid,
             scholar=scholar, linkedin=linkedin, email=''))
     for m in out:
+        if m['id'] == 'rania-shibl': m['prefix'] = 'Professor Dr.'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'hassan-ahmed', 'mostafa-kamalpour']
     out.sort(key=lambda m: first.index(m['id']) if m['id'] in first else len(first))
@@ -651,13 +652,13 @@ def build_pages(members):
         main_html = f'''<section class="sec"><div class="wrap prose"><h2>Affiliation</h2><p>{insts}</p>
 <h2>Research areas</h2><div class="chips">{achips}</div>
 <h2>Research interests</h2><ul class="tags tags--dark">{ints}</ul>{pubsec}</div></section>'''
-        pager = f'<div class="wrap"><nav class="pager"><a href="{prv["id"]}.html">← {E(prv["name"])}</a><a href="{nxt["id"]}.html">{E(nxt["name"])} →</a></nav></div>'
+        pager = f'<div class="wrap"><nav class="pager"><a href="{prv["id"]}.html">← {E(disp_name(prv))}</a><a href="{nxt["id"]}.html">{E(disp_name(nxt))} →</a></nav></div>'
         body = f'''<section class="phead phead--profile"><div class="wrap profile"><div class="profile__ph">{avatar(m, "../", "av av--lg")}</div>
 <div><p class="eyebrow"><a href="../people.html">People</a></p><h1>{E(disp_name(m))}{f"<small>{E(m['suffix'])}</small>" if m["suffix"] else ""}</h1>
 <p class="lead">{E(m["role"])}{" · " + E(DETAILS.get(m["id"], {}).get("title", m["title"])) if m["title"] else ""}</p>
 {"".join(f'<p class="lead lead--sub">{E(r)}</p>' for r in DETAILS.get(m["id"], {}).get("roles", []))}<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
 {sp if sp else main_html}{pager}'''
-        page(f'people/{m["id"]}.html', m['name'], f'{m["name"]}, {m["role"]} at SYNTERA Research Group. Research interests and links.', body, 'people', 1, pubs_on=True)
+        page(f'people/{m["id"]}.html', disp_name(m), f'{disp_name(m)}, {m["role"]} at SYNTERA Research Group. Research interests and links.', body, 'people', 1, pubs_on=True)
 
     # ---------- publications
     types = [('all','All')] + [(k, t) for k, t in [('journal','Journal'),('conference','Conference'),('book','Book'),('chapter','Chapter'),('thesis','Thesis'),('preprint','Preprint'),('other','Other')] if any(p[1] == k for p in PUBS)]
@@ -684,7 +685,7 @@ def build_pages(members):
 <p class="lead">{BRAND['full']}.</p></div></section>
 <section class="sec" id="story"><div class="wrap prose"><h2>Our story</h2>
 <p><b>SYNTERA</b> stands for <b>Syn</b>ergy + In<b>te</b>lligence + E<b>ra</b>: a new era in which artificial intelligence works in synergy with health, agriculture, education, homes and mobility.</p>
-<p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>, <a href="people/rania-shibl.html">Dr. Rania Shibl</a> and <a href="people/dana-dermody.html">Dr. Dana Dermody</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
+<p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>, <a href="people/rania-shibl.html">Professor Dr. Rania Shibl</a> and <a href="people/dana-dermody.html">Dr. Dana Dermody</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
 <p class="muted">SYNTERA Research Group is not affiliated with any commercial company of a similar name.</p></div></section>
 <section class="sec sec--ice" id="mission"><div class="wrap"><div class="grid grid--2"><div class="panel"><h2>Mission</h2>
 <p>To design and apply AI and connected technologies (IoT, IoV) that solve real problems in health, agriculture, education and everyday living.</p></div>
