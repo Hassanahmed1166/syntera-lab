@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SYNTERA Lab static site generator. Run: python build_site.py  ->  site/"""
+"""SYNTERA Research Group static site generator. Run: python build_site.py  ->  site/"""
 import html, json, os, re, shutil, zipfile, xml.etree.ElementTree as ET
 from PIL import Image, ImageOps
 
@@ -9,8 +9,8 @@ E = html.escape
 
 # ───────────────────────── brand ─────────────────────────
 BRAND = dict(
-    name='SYNTERA Lab', short='SYNTERA',
-    full='SYNTERA Lab: Applied AI & Connected Systems Research Group',
+    name='SYNTERA Research Group', short='SYNTERA',
+    full='SYNTERA Research Group: Applied AI & Connected Systems',
     tagline='Intelligence in Synergy',
     host='University of the Sunshine Coast', host_short='UniSC',
     host_url='https://www.usc.edu.au/',
@@ -300,7 +300,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 <body data-base="{p}">
 <a class="skip" href="#main">Skip to content</a>
 <header class="hdr"><div class="wrap hdr__in">
-  <a class="brand" href="{p}index.html" title="{BRAND['name']}">{LOGO}<span><b>SYNTERA</b><small>Research Lab</small></span></a>
+  <a class="brand" href="{p}index.html" title="{BRAND['name']}">{LOGO}<span><b>SYNTERA</b><small>Research Group</small></span></a>
   <nav aria-label="Main"><ul id="nav" class="nav">{nav}<li class="nav__cta"><a class="btn btn--pink" href="{p}join.html">Join Us</a></li></ul></nav>
   <div class="hdr__act">
     <button class="icon-btn" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button>
@@ -312,10 +312,10 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 </main>
 <footer class="ftr"><div class="wrap">
   <div class="ftr__grid">
-    <div><a class="brand brand--ftr" href="{p}index.html">{LOGO}<span><b>SYNTERA</b><small>Lab</small></span></a>
+    <div><a class="brand brand--ftr" href="{p}index.html">{LOGO}<span><b>SYNTERA</b><small>Research Group</small></span></a>
       <p>{BRAND['tagline']}. An applied AI and connected systems research group.</p></div>
     <div><h4>Research</h4><ul>{areas_f}</ul></div>
-    <div><h4>The lab</h4><ul><li><a href="{p}about.html">About</a></li><li><a href="{p}people.html">People</a></li><li><a href="{p}publications.html">Publications</a></li><li><a href="{p}join.html">Join us</a></li><li><a href="{p}privacy.html">Privacy</a></li></ul></div>
+    <div><h4>The group</h4><ul><li><a href="{p}about.html">About</a></li><li><a href="{p}people.html">People</a></li><li><a href="{p}publications.html">Publications</a></li><li><a href="{p}join.html">Join us</a></li><li><a href="{p}privacy.html">Privacy</a></li></ul></div>
     <div><h4>Get in touch</h4><ul><li><a href="mailto:{BRAND['email']}">{BRAND['email']}</a></li><li><a href="{BRAND['scholar']}" rel="noopener" target="_blank">Director on Google Scholar</a></li></ul><a class="btn btn--pink btn--sm" href="{p}join.html">Join Us</a></div>
   </div>
   <div class="ftr__bar"><span>© 2026 {BRAND['name']}</span><span><a href="{p}privacy.html">Privacy</a></span></div>
@@ -524,7 +524,7 @@ def build_pages(members):
   <div class="panel"><p class="eyebrow">Our name</p><h2>Syn · Te · Era</h2>
     <p><b>SYNTERA</b> brings together <b>Syn</b>ergy, In<b>te</b>lligence and E<b>ra</b>: a new era where AI works in synergy with health, agriculture, education, homes and mobility.</p>
     <p class="muted">Members and collaborators across {len(countries)} countries.</p>
-    <a class="btn btn--blue" href="about.html">About the lab</a></div></div></section>
+    <a class="btn btn--blue" href="about.html">About the group</a></div></div></section>
 <section class="sec"><div class="wrap"><p class="eyebrow">People</p><h2>The team</h2>
   <ul class="faces">{faces}</ul><p><a class="more" href="people.html">Meet everyone →</a></p></div></section>
 <section class="sec sec--blush"><div class="wrap"><p class="eyebrow">Collaborators</p><h2>Institutions we work with</h2>
@@ -533,7 +533,7 @@ def build_pages(members):
 <section class="sec"><div class="wrap"><div class="banner"><div><h2>Open to collaboration</h2>
   <p>Students, researchers, industry and institutions are welcome.</p></div>
   <div class="cta"><a class="btn btn--pink" href="join.html">Ways to join</a><a class="btn btn--ghost" href="contact.html">Contact us</a></div></div></div></section>'''
-    page('index.html', BRAND['name'], 'SYNTERA Lab is an applied AI and connected systems research group working on health, smart homes, agriculture, education, IoT and IoV.', body, home=True,
+    page('index.html', BRAND['name'], 'SYNTERA Research Group is an applied AI and connected systems research group working on health, smart homes, agriculture, education, IoT and IoV.', body, home=True,
          extra_js='<script src="js/hero.js?v=' + VER + '"></script>')
 
     # ---------- research overview
@@ -562,14 +562,14 @@ def build_pages(members):
         pubs = [p for p in PUBS if a['id'] in p[7]]
         sec_team = (f'<section class="sec sec--ice"><div class="wrap"><p class="eyebrow">Team</p><h2>Who works on this</h2><ul class="grid grid--people">{"".join(person_card(m, "../") for m in team)}</ul></div></section>' if team else '')
         sec_pubs = (f'<section class="sec"><div class="wrap"><p class="eyebrow">Publications</p><h2>Selected publications</h2><ol class="publist" data-pubs data-area="{a["id"]}" data-limit="6"></ol><p><a class="more" href="../publications.html?area={a["id"]}">All {a["short"]} papers →</a></p></div></section>' if pubs else '')
-        emerging = (f'<p class="notice">{a["short"]} is an emerging area for the lab. Interested? <a href="../join.html#collaborate">Get in touch</a>.</p>' if len(team) < 2 else '')
+        emerging = (f'<p class="notice">{a["short"]} is an emerging area for the group. Interested? <a href="../join.html#collaborate">Get in touch</a>.</p>' if len(team) < 2 else '')
         body = f'''<section class="phead phead--area" style="--c:{a["color"]}"><div class="wrap"><p class="eyebrow"><a href="../research.html">Research</a> / {a["short"]}</p>
 <div class="phead__row"><span class="area__ico area__ico--xl">{icon(a["icon"])}</span><div><h1>{a["name"]}</h1>
 <ul class="tags tags--light">{"".join(f"<li>{t}</li>" for t in a["topics"])}</ul></div></div></div></section>
 <section class="sec"><div class="wrap prose"><h2>Why it matters</h2><p>{E(a["why"])}</p>{emerging}
 <h2>Key challenges</h2><ul>{"".join(f"<li>{E(c)}</li>" for c in a["challenges"])}</ul>
 <h2>Our approach</h2><p>{E(a["approach"])}</p></div></section>{sec_pubs}{sec_team}'''
-        page(f'research/{a["id"]}.html', a['name'], f'{a["name"]} at SYNTERA Lab: why it matters, our approach, publications and team.', body, 'research', 1, pubs_on=True)
+        page(f'research/{a["id"]}.html', a['name'], f'{a["name"]} at SYNTERA Research Group: why it matters, our approach, publications and team.', body, 'research', 1, pubs_on=True)
 
     # ---------- people
     chips = '<button class="fchip is-on" data-area="all">All</button>' + ''.join(
@@ -583,7 +583,7 @@ def build_pages(members):
 <p class="lead">{len(members)} researchers, academics and students across {len(countries)} countries.</p></div></section>
 <section class="sec"><div class="wrap"><div class="filters"><input id="q" type="search" placeholder="Search people or interests" aria-label="Search people"><div class="fchips" id="fchips">{chips}</div></div>
 <div id="people">{secs}</div><p id="none" class="notice" hidden>No one matches that filter.</p></div></section>'''
-    page('people.html', 'People', 'The director, researchers, academics and students of SYNTERA Lab.', body, 'people', extra_js='<script src="js/people.js?v=' + VER + '"></script>')
+    page('people.html', 'People', 'The director, researchers, academics and students of SYNTERA Research Group.', body, 'people', extra_js='<script src="js/people.js?v=' + VER + '"></script>')
 
     # ---------- profiles
     for i, m in enumerate(members):
@@ -607,7 +607,7 @@ def build_pages(members):
 <p class="lead">{E(m["role"])}{" · " + E(DETAILS.get(m["id"], {}).get("title", m["title"])) if m["title"] else ""}</p>
 {"".join(f'<p class="lead lead--sub">{E(r)}</p>' for r in DETAILS.get(m["id"], {}).get("roles", []))}<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
 {sp if sp else main_html}{pager}'''
-        page(f'people/{m["id"]}.html', m['name'], f'{m["name"]}, {m["role"]} at SYNTERA Lab. Research interests and links.', body, 'people', 1, pubs_on=True)
+        page(f'people/{m["id"]}.html', m['name'], f'{m["name"]}, {m["role"]} at SYNTERA Research Group. Research interests and links.', body, 'people', 1, pubs_on=True)
 
     # ---------- publications
     types = [('all','All')] + [(k, t) for k, t in [('journal','Journal'),('conference','Conference'),('book','Book'),('chapter','Chapter'),('thesis','Thesis'),('preprint','Preprint'),('other','Other')] if any(p[1] == k for p in PUBS)]
@@ -616,13 +616,13 @@ def build_pages(members):
     achips = '<button class="fchip is-on" data-area="all">All areas</button>' + ''.join(f'<button class="fchip" data-area="{a["id"]}" style="--c:{a["color"]}">{a["short"].replace("SYNTERA ","")}</button>' for a in AREAS)
     yopts = '<option value="all">All years</option>' + ''.join(f'<option>{y}</option>' for y in years)
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Publications</p><h1>Research output</h1>
-<p class="lead">Papers, chapters, books and theses by lab members and the director. Lab members are shown in bold and link to their profiles.</p>
+<p class="lead">Papers, chapters, books and theses by group members and the director. Group members are shown in bold and link to their profiles.</p>
 <p class="muted metrics">Director's Google Scholar profile (6 Oct 2026): 15,573 citations (12,216 since 2021) · h-index 21 (18 since 2021) · i10-index 22 (21 since 2021). <a href="{BRAND['scholar']}" rel="noopener" target="_blank">View profile</a></p></div></section>
 <section class="sec"><div class="wrap"><div class="filters"><input id="q" type="search" placeholder="Search title, author, keyword or venue" aria-label="Search publications">
 <select id="year" aria-label="Year">{yopts}</select></div>
 <div class="fchips" id="tchips">{tchips}</div><div class="fchips" id="achips">{achips}</div>
 <p id="count" class="muted" aria-live="polite"></p><ol class="publist" id="pubs" data-pubs></ol><p id="none" class="notice" hidden>No publications match those filters.</p></div></section>'''
-    page('publications.html', 'Publications', 'Journal articles, conference papers and book chapters from SYNTERA Lab, filterable by area, type and year.', body, 'publications', pubs_on=True)
+    page('publications.html', 'Publications', 'Journal articles, conference papers and book chapters from SYNTERA Research Group, filterable by area, type and year.', body, 'publications', pubs_on=True)
 
     # ---------- about
     values = [('Synergy','We achieve more together, across disciplines, institutions and countries.'),('Impact','We pursue research that solves real problems for real people.'),
@@ -634,8 +634,8 @@ def build_pages(members):
 <p class="lead">{BRAND['full']}.</p></div></section>
 <section class="sec" id="story"><div class="wrap prose"><h2>Our story</h2>
 <p><b>SYNTERA</b> stands for <b>Syn</b>ergy + In<b>te</b>lligence + E<b>ra</b>: a new era in which artificial intelligence works in synergy with health, agriculture, education, homes and mobility.</p>
-<p>The lab was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a> and <a href="people/rania-shibl.html">Dr. Rania Shibl</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
-<p class="muted">SYNTERA Lab is not affiliated with any commercial company of a similar name.</p></div></section>
+<p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a> and <a href="people/rania-shibl.html">Dr. Rania Shibl</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
+<p class="muted">SYNTERA Research Group is not affiliated with any commercial company of a similar name.</p></div></section>
 <section class="sec sec--ice" id="mission"><div class="wrap"><div class="grid grid--2"><div class="panel"><h2>Mission</h2>
 <p>To design and apply AI and connected technologies (IoT, IoV) that solve real problems in health, agriculture, education and everyday living.</p></div>
 <div class="panel"><h2>Vision</h2><p>A future where intelligent, connected systems make life healthier, food more sustainable, learning more personal and mobility safer.</p></div></div>
@@ -645,7 +645,7 @@ def build_pages(members):
 <p>{E(DETAILS["shahrzad-saremi"]["bio"][0])}</p>
 <p>{E(DETAILS["shahrzad-saremi"]["bio"][1].split(". She is widely")[0])}.</p><p><a class="btn btn--blue btn--sm" href="people/{director["id"]}.html">Full profile</a></p></div></div></div></section>
 <section class="sec sec--blush" id="partners"><div class="wrap"><p class="eyebrow">Collaborators</p><h2>Partner institutions</h2><ul class="logos">{plog}</ul></div></section>'''
-    page('about.html', 'About', 'The story, mission, vision and values of SYNTERA Lab.', body, 'about')
+    page('about.html', 'About', 'The story, mission, vision and values of SYNTERA Research Group.', body, 'about')
 
     # ---------- join
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Join us</p><h1>Open to collaboration</h1>
@@ -655,7 +655,7 @@ def build_pages(members):
 <section class="sec sec--ice" id="apply"><div class="wrap prose"><h2>How to apply</h2>
 <p>Email us with the following attached:</p><ul><li><b>CV</b></li><li><b>Academic transcript</b></li><li><b>Research statement</b> (one page)</li></ul>
 <p>In your message, tell us:</p><ol><li>Who you are</li><li>Which of our <a href="research.html">research areas</a> interests you</li><li>Where we can learn more about your work (Scholar, GitHub, ORCID)</li><li>What you can offer</li></ol>
-<p><a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Lab">Email the lab</a></p></div></section>
+<p><a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Lab">Email the group</a></p></div></section>
 <section class="sec" id="collaborate"><div class="wrap prose"><h2>Collaborate with us</h2>
 <p>We work with universities, hospitals, aged-care providers, farms, schools and industry. If you have a real problem where applied AI or connected systems could help, we would like to talk.</p>
 <p><a class="btn btn--blue" href="mailto:{BRAND['email']}?subject=Collaboration%20with%20SYNTERA%20Lab">Propose a collaboration</a></p></div></section>'''
@@ -665,10 +665,10 @@ def build_pages(members):
     soc = f'<a class="btn btn--ghost-d btn--sm" href="{BRAND["scholar"]}" rel="noopener" target="_blank">Director on Google Scholar</a>'
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Contact</p><h1>Get in touch</h1></div></section>
 <section class="sec"><div class="wrap"><div class="grid grid--3">
-<div class="panel"><h3>Email</h3><p><a href="mailto:{BRAND['email']}">{BRAND['email']}</a></p><p class="muted">Contact for the lab (Director, <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>).</p></div>
+<div class="panel"><h3>Email</h3><p><a href="mailto:{BRAND['email']}">{BRAND['email']}</a></p><p class="muted">Contact for the group (Director, <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>).</p></div>
 <div class="panel"><h3>Director's affiliation</h3><p><a href="{BRAND['host_url']}" rel="noopener" target="_blank">{BRAND['host']}</a></p><p class="muted">School of Science, Technology and Engineering, Queensland, Australia.</p></div>
 <div class="panel"><h3>Elsewhere</h3><p>{soc}</p></div></div></div></section>'''
-    page('contact.html', 'Contact', 'Contact SYNTERA Lab: email and links.', body, 'contact')
+    page('contact.html', 'Contact', 'Contact SYNTERA Research Group: email and links.', body, 'contact')
 
     # ---------- privacy
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Privacy</p><h1>Privacy</h1></div></section>
@@ -677,7 +677,7 @@ def build_pages(members):
 <h2>Member information</h2><p>Photos and profile details appear with each member's agreement. Member email addresses are not published. To correct or remove information about you, email <a href="mailto:{BRAND['email']}">{BRAND['email']}</a>.</p>
 <h2>Outbound links</h2><p>Links to ORCID, Google Scholar, LinkedIn and partner sites open in a new tab and are governed by those sites' own policies.</p>
 <p class="muted">Last reviewed: October 2026.</p></div></section>'''
-    page('privacy.html', 'Privacy', 'What the SYNTERA Lab website stores and how to request changes to personal information.', body, '')
+    page('privacy.html', 'Privacy', 'What the SYNTERA Research Group website stores and how to request changes to personal information.', body, '')
 
 # ───────────────────────── assets ─────────────────────────
 CSS = r'''

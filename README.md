@@ -1,6 +1,6 @@
-# SYNTERA Lab website
+# SYNTERA Research Group website
 
-Static website for SYNTERA Lab (Applied AI & Connected Systems), University of the Sunshine Coast.
+Static website for SYNTERA Research Group (Applied AI & Connected Systems), University of the Sunshine Coast.
 
 - `docs/` – the built website (served by GitHub Pages)
 - `build_site.py` – generator (pages, people, publications data)
