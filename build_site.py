@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """SYNTERA Research Group static site generator. Run: python build_site.py  ->  site/"""
-import html, json, os, re, shutil, zipfile, xml.etree.ElementTree as ET
+import html, json, os, posixpath, re, shutil, zipfile, xml.etree.ElementTree as ET
 from PIL import Image, ImageOps
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -55,6 +55,7 @@ AREAS = [
       approach='Protocol design and simulation, secure message exchange, blockchain-based consensus and machine-learning-assisted protocol selection.'),
 ]
 AREA = {a['id']: a for a in AREAS}
+KNOWS_ABOUT = ['Applied artificial intelligence', 'Machine learning', 'Deep learning', 'Internet of Things', 'Internet of Vehicles', 'AI for health', 'Smart health home', 'AI for agriculture', 'AI for education', 'Cybersecurity', 'Explainable AI', 'Research collaboration', 'Industry research partnerships']
 
 ICONS = {
  'health':'<path d="M3 12h4l2-5 4 10 2-5h6"/><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 10"/>',
@@ -311,7 +312,7 @@ def export_pubs():
 
 # ───────────────────────── page chrome ─────────────────────────
 NAV = [('research.html','Research','research'),('publications.html','Publications','publications'),
-       ('people.html','People','people'),('about.html','About','about'),('contact.html','Contact','contact')]
+       ('people.html','People','people'),('collaborate.html','Collaborate','collaborate'),('about.html','About','about'),('contact.html','Contact','contact')]
 LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">'
         '<stop offset="0" stop-color="#E83E8C"/><stop offset="1" stop-color="#3A7BFF"/></linearGradient></defs>'
         '<rect width="40" height="40" rx="10" fill="#0F1A47"/>'
@@ -321,31 +322,96 @@ LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="l
 import hashlib
 VER = ''   # set in main() from asset contents
 
-def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, pubs_on=False):
+
+def clean_links(doc, fname):
+    """Point internal <a href> at extensionless URLs (what Cloudflare Pages serves) so crawlers and visitors skip the .html redirect."""
+    d = posixpath.dirname(fname)
+    def fix(mo):
+        h = mo.group(2)
+        if re.match(r'^(?:[a-zA-Z][a-zA-Z0-9+.-]*:|/|#|\?)', h): return mo.group(0)
+        mm = re.match(r'([^#?]*)([#?].*)?$', h)
+        path, rest = mm.group(1), mm.group(2) or ''
+        if not path.endswith('.html'): return mo.group(0)
+        t = posixpath.normpath(posixpath.join(d, path))
+        t = '/' if t == 'index.html' else '/' + t[:-5]
+        return f'{mo.group(1)}{t}{rest}"'
+    return re.sub(r'(<a\b[^>]*?\bhref=")([^"]+)"', fix, doc)
+
+def ld_tag(obj):
+    return '<script type="application/ld+json">' + json.dumps(obj, ensure_ascii=False) + '</script>\n'
+
+def crumbs_ld(fname, title):
+    items = [('Home', SITE_URL + '/')]
+    if fname.startswith('research/'): items.append(('Research', SITE_URL + '/research'))
+    elif fname.startswith('people/'): items.append(('People', SITE_URL + '/people'))
+    items.append((title, SITE_URL + '/' + re.sub(r'\.html$', '', fname)))
+    return ld_tag({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]})
+
+_PUBMETA = None
+def pub_doi(p):
+    global _PUBMETA
+    if _PUBMETA is None:
+        mp = os.path.join(ROOT, 'pub_meta.json')
+        _PUBMETA = json.load(open(mp, encoding='utf-8')) if os.path.exists(mp) else {}
+    return p[6] or _PUBMETA.get(p[0], {}).get('doi', '')
+
+PUB_TYPES = {'journal':'Journal','conference':'Conference','book':'Book','chapter':'Chapter','thesis':'Thesis','preprint':'Preprint','other':'Other'}
+def static_pubs(pred=None, limit=None):
+    """Server-rendered publication list (JS replaces it with the interactive version) so search engines can read every paper."""
+    rows = sorted(PUBS, key=lambda x: (-x[2], x[4]))
+    if pred: rows = [p for p in rows if pred(p)]
+    if limit: rows = rows[:limit]
+    out = []
+    for p in rows:
+        au = '; '.join(f'<a class="au" href="/people/{mid}"><strong>{E(n)}</strong></a>' if mid else E(n) for n, mid in parse_authors(p[3]))
+        doi = pub_doi(p)
+        act = f'<div class="pub__act"><a class="pbtn" href="https://doi.org/{E(doi)}" rel="noopener" target="_blank">DOI<span class="doi"> {E(doi)}</span></a></div>' if doi else ''
+        out.append(f'<li class="pub" id="pub-{p[0]}"><div class="pub__meta"><span class="pill pill--{p[1]}">{PUB_TYPES[p[1]]}</span><span class="pub__year">{p[2] or "n.d."}</span></div>'
+                   f'<h3 class="pub__title">{E(p[4])}</h3><p class="pub__au">{au}</p><p class="pub__venue"><em>{E(p[5])}</em></p>{act}</li>')
+    return ''.join(out)
+
+def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, pubs_on=False, ld_extra='', full_title=None):
     p = '../' * depth
     cur = ' aria-current="page"'
     nav = ''.join(f'<li><a href="{p}{h}"{cur if k == active else ""}>{t}</a></li>' for h, t, k in NAV)
     clean = 'index.html' if fname == '404.html' else fname
     curl = SITE_URL + '/' + ('' if clean == 'index.html' else re.sub(r'\.html$', '', clean))
-    robots = '<base href="/"><meta name="robots" content="noindex">\n' if fname == '404.html' else ''
+    robots = '<base href="/">\n' if fname == '404.html' else ''
     ld = ''
     if home:
-        ld = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@type": "ResearchOrganization", "name": BRAND['name'], "url": SITE_URL + '/', "logo": SITE_URL + '/images/favicon.svg', "email": BRAND['email'], "slogan": BRAND['tagline'], "parentOrganization": {"@type": "CollegeOrUniversity", "name": "University of the Sunshine Coast", "url": BRAND['host_url']}, "sameAs": [BRAND['scholar']]}) + '</script>\n'
+        ld = ld_tag({"@context": "https://schema.org", "@graph": [
+            {"@type": ["ResearchOrganization", "Organization"], "@id": SITE_URL + "/#org", "name": BRAND['name'], "alternateName": "SYNTERA", "url": SITE_URL + '/',
+             "logo": {"@type": "ImageObject", "url": SITE_URL + '/images/og-image.png'}, "image": SITE_URL + '/images/og-image.png',
+             "description": "Applied AI and connected systems research group open to academic collaboration, funded research projects, industry partnerships and commissioned research.",
+             "email": BRAND['email_collab'], "slogan": BRAND['tagline'],
+             "address": {"@type": "PostalAddress", "addressRegion": "Queensland", "addressCountry": "AU"},
+             "areaServed": "Worldwide",
+             "contactPoint": [{"@type": "ContactPoint", "contactType": "research collaboration and partnerships", "email": BRAND['email_collab'], "availableLanguage": "English"},
+                              {"@type": "ContactPoint", "contactType": "prospective students", "email": BRAND['email_student'], "availableLanguage": "English"}],
+             "parentOrganization": {"@type": "CollegeOrUniversity", "name": "University of the Sunshine Coast", "url": BRAND['host_url']},
+             "knowsAbout": KNOWS_ABOUT, "sameAs": [BRAND['scholar']]},
+            {"@type": "WebSite", "@id": SITE_URL + "/#site", "url": SITE_URL + '/', "name": BRAND['name'], "inLanguage": "en-AU", "publisher": {"@id": SITE_URL + "/#org"}}]})
+    elif fname != '404.html':
+        ld = crumbs_ld(fname, title)
+    ld += ld_extra
     if fname != '404.html': PAGES.append(fname)
-    full_title = BRAND['full'] if home else f'{title} · {BRAND["name"]}'
+    full_title = full_title or (BRAND['full'] if home else f'{title} · {BRAND["name"]}')
     areas_f = ''.join(f'<li><a href="{p}research/{a["id"]}.html">{a["short"]}</a></li>' for a in AREAS)
     data_js = f'<script src="{p}data/publications.js?v={VER}"></script><script src="{p}js/pubs.js?v={VER}"></script>' if pubs_on else ''
     doc = f'''<!doctype html>
-<html lang="en">
+<html lang="en-AU">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{E(full_title)}</title>
 <meta name="description" content="{E(desc)}">
 <meta name="theme-color" content="#0F1A47">
+<meta name="robots" content="{'noindex' if fname == '404.html' else 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'}">
+<meta name="author" content="{BRAND['name']}">
 <link rel="canonical" href="{curl}">
-<meta property="og:title" content="{E(full_title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:type" content="website">
-<meta property="og:url" content="{curl}"><meta property="og:site_name" content="{BRAND['name']}"><meta property="og:image" content="{SITE_URL}/images/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:title" content="{E(full_title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:type" content="website"><meta property="og:locale" content="en_AU">
+<meta property="og:url" content="{curl}"><meta property="og:site_name" content="{BRAND['name']}"><meta property="og:image" content="{SITE_URL}/images/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="SYNTERA Research Group: Applied AI and Connected Systems">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{E(full_title)}"><meta name="twitter:description" content="{E(desc)}"><meta name="twitter:image" content="{SITE_URL}/images/og-image.png">
 {robots}{ld}
 <link rel="icon" href="{p}images/favicon.svg" type="image/svg+xml">
@@ -368,9 +434,9 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 <footer class="ftr"><div class="wrap">
   <div class="ftr__grid">
     <div><a class="brand brand--ftr" href="{p}index.html">{LOGO}<span><b>SYNTERA</b><small>Research Group</small></span></a>
-      <p>{BRAND['tagline']}. An applied AI and connected systems research group.</p></div>
+      <p>{BRAND['tagline']}. An applied AI and connected systems research group open to academic collaboration, funded projects and industry partnerships.</p></div>
     <div><h4>Research</h4><ul>{areas_f}</ul></div>
-    <div><h4>The group</h4><ul><li><a href="{p}about.html">About</a></li><li><a href="{p}people.html">People</a></li><li><a href="{p}publications.html">Publications</a></li><li><a href="{p}join.html">Join us</a></li><li><a href="{p}privacy.html">Privacy</a></li></ul></div>
+    <div><h4>The group</h4><ul><li><a href="{p}about.html">About</a></li><li><a href="{p}people.html">People</a></li><li><a href="{p}publications.html">Publications</a></li><li><a href="{p}collaborate.html">Collaborate with us</a></li><li><a href="{p}join.html">Join us</a></li><li><a href="{p}privacy.html">Privacy</a></li></ul></div>
     <div><h4>Get in touch</h4><ul><li><a href="mailto:{BRAND['email_student']}">{BRAND['email_student']}</a></li><li><a href="mailto:{BRAND['email_join']}">{BRAND['email_join']}</a></li><li><a href="mailto:{BRAND['email_collab']}">{BRAND['email_collab']}</a></li><li><a href="{BRAND['scholar']}" rel="noopener" target="_blank">Director on Google Scholar</a></li></ul><a class="btn btn--pink btn--sm" href="{p}join.html">Join Us</a></div>
   </div>
   <div class="ftr__bar"><span>© 2026 {BRAND['name']}</span><span><a href="{p}privacy.html">Privacy</a></span></div>
@@ -380,7 +446,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 {extra_js}
 </body></html>'''
     path = os.path.join(OUT, fname); os.makedirs(os.path.dirname(path), exist_ok=True)
-    open(path, 'w', encoding='utf-8').write(doc)
+    open(path, 'w', encoding='utf-8').write(clean_links(doc, fname))
 
 def flag(m, p=''):
     f = FLAGS.get(m['country'])
@@ -567,8 +633,8 @@ def build_pages(members):
 <section class="hero"><canvas id="net" aria-hidden="true"></canvas><div class="wrap hero__in">
   <p class="badge">Applied AI &amp; Connected Systems</p>
   <h1>Intelligence in <span class="grad">Synergy</span></h1>
-  <p class="lead">Applied AI and connected systems for healthier lives, sustainable food, personal learning and safer mobility.</p>
-  <div class="cta"><a class="btn btn--pink" href="research.html">Explore Research</a><a class="btn btn--ghost" href="join.html">Join Us</a></div>
+  <p class="lead">Applied AI and connected systems research for healthier lives, sustainable food, personal learning and safer mobility. Open to academic collaborations, funded projects and industry partners.</p>
+  <div class="cta"><a class="btn btn--pink" href="collaborate.html">Collaborate With Us</a><a class="btn btn--ghost" href="research.html">Explore Research</a></div>
 </div></section>
 <section class="stats"><div class="wrap stats__in">{stat_html}</div></section>
 <section class="sec"><div class="wrap"><p class="eyebrow">Research areas</p><h2>Six areas, one connected vision</h2>
@@ -582,10 +648,17 @@ def build_pages(members):
     <a class="btn btn--blue" href="about.html">About the group</a></div></div></section>
 <section class="sec"><div class="wrap"><p class="eyebrow">People</p><h2>The team</h2>
   <ul class="faces">{faces}</ul><p><a class="more" href="people.html">Meet everyone →</a></p></div></section>
+<section class="sec sec--ice"><div class="wrap"><p class="eyebrow">Partner with us</p><h2>Academic collaboration, funded projects and industry partnerships</h2>
+  <p class="sub">Whether you want a research partner for a grant, a university team to take on a paid project, or an AI pilot in a real setting, we would like to hear from you.</p>
+  <div class="grid grid--3"><div class="panel"><h3>Academic collaboration</h3><p>Joint research and papers, shared methods and data, visiting researchers and co-supervision.</p></div>
+  <div class="panel"><h3>Funded and paid projects</h3><p>Joint grant applications, industry-funded research and commissioned projects with agreed scope and deliverables.</p></div>
+  <div class="panel"><h3>Industry and community pilots</h3><p>Proofs of concept and evaluations in health, care, agriculture, education, IoT and transport.</p></div></div>
+  <p><a class="btn btn--pink" href="collaborate.html">See how to work with us</a></p></div></section>
 <section class="sec"><div class="wrap"><div class="banner"><div><h2>Open to collaboration</h2>
   <p>Students, researchers, industry and institutions are welcome.</p></div>
-  <div class="cta"><a class="btn btn--pink" href="join.html">Ways to join</a><a class="btn btn--ghost" href="contact.html">Contact us</a></div></div></div></section>'''
-    page('index.html', BRAND['name'], 'SYNTERA Research Group is an applied AI and connected systems research group working on health, smart homes, agriculture, education, IoT and IoV.', body, home=True,
+  <div class="cta"><a class="btn btn--pink" href="collaborate.html">Collaborate</a><a class="btn btn--ghost" href="join.html">Join the group</a><a class="btn btn--ghost" href="contact.html">Contact us</a></div></div></div></section>'''
+    page('index.html', BRAND['name'], 'Applied AI research group open to academic collaboration, funded and commissioned projects and industry partners in health, agriculture, education, IoT and IoV.', body, home=True,
+         full_title='SYNTERA Research Group | AI Research Collaboration & Industry Partnerships',
          extra_js='<script src="js/hero.js?v=' + VER + '"></script>')
 
     # ---------- research overview
@@ -605,23 +678,28 @@ def build_pages(members):
 <section class="sec"><div class="wrap"><div class="grid grid--2">{cards}</div></div></section>
 <section class="sec sec--ice"><div class="wrap"><p class="eyebrow">Core AI &amp; methods</p><h2>The toolkit behind every area</h2>
 <p class="sub">Machine learning, deep learning, language and vision models, explainable and trustworthy AI, and cybersecurity are shared across all six areas.</p>
-<div class="chips">{core_html}</div></div></section>'''
-    page('research.html', 'Research', 'Six research areas: AI for health, smart health home, agriculture, education, Internet of Things and Internet of Vehicles.', body, 'research')
+<div class="chips">{core_html}</div></div></section>
+<section class="sec"><div class="wrap"><div class="banner"><div><h2>Work on these problems with us</h2><p>We partner on joint research, grant applications and funded or commissioned projects in every area.</p></div>
+<div class="cta"><a class="btn btn--pink" href="collaborate.html">Collaborate with SYNTERA</a></div></div></div></section>'''
+    page('research.html', 'Applied AI Research Areas', 'Six applied AI research areas open to collaboration and funded projects: AI for health, smart health home, agriculture, education, Internet of Things and Internet of Vehicles.', body, 'research')
 
     # ---------- area pages
     for a in AREAS:
         team = [m for m in members if a['id'] in m['areas']]
         pubs = [p for p in PUBS if a['id'] in p[7]]
         sec_team = (f'<section class="sec sec--ice"><div class="wrap"><p class="eyebrow">Team</p><h2>Who works on this</h2><ul class="grid grid--people">{"".join(person_card(m, "../") for m in team)}</ul></div></section>' if team else '')
-        sec_pubs = (f'<section class="sec"><div class="wrap"><p class="eyebrow">Publications</p><h2>Selected publications</h2><ol class="publist" data-pubs data-area="{a["id"]}" data-limit="6"></ol><p><a class="more" href="../publications.html?area={a["id"]}">All {a["short"]} papers →</a></p></div></section>' if pubs else '')
+        sec_pubs = (f'<section class="sec"><div class="wrap"><p class="eyebrow">Publications</p><h2>Selected publications</h2><ol class="publist" data-pubs data-area="{a["id"]}" data-limit="6">{static_pubs(lambda p, a=a: a["id"] in p[7], 6)}</ol><p><a class="more" href="../publications.html?area={a["id"]}">All {a["short"]} papers →</a></p></div></section>' if pubs else '')
         emerging = (f'<p class="notice">{a["short"]} is an emerging area for the group. Interested? <a href="../join.html#collaborate">Get in touch</a>.</p>' if len(team) < 2 else '')
         body = f'''<section class="phead phead--area" style="--c:{a["color"]}"><div class="wrap"><p class="eyebrow"><a href="../research.html">Research</a> / {a["short"]}</p>
 <div class="phead__row"><span class="area__ico area__ico--xl">{icon(a["icon"])}</span><div><h1>{a["name"]}</h1>
 <ul class="tags tags--light">{"".join(f"<li>{t}</li>" for t in a["topics"])}</ul></div></div></div></section>
 <section class="sec"><div class="wrap prose"><h2>Why it matters</h2><p>{E(a["why"])}</p>{emerging}
 <h2>Key challenges</h2><ul>{"".join(f"<li>{E(c)}</li>" for c in a["challenges"])}</ul>
-<h2>Our approach</h2><p>{E(a["approach"])}</p></div></section>{sec_pubs}{sec_team}'''
-        page(f'research/{a["id"]}.html', a['name'], f'{a["name"]} at SYNTERA Research Group: why it matters, our approach, publications and team.', body, 'research', 1, pubs_on=True)
+<h2>Our approach</h2><p>{E(a["approach"])}</p></div></section>{sec_pubs}{sec_team}
+<section class="sec"><div class="wrap"><div class="banner"><div><h2>Collaborate on {E(a["name"])}</h2>
+<p>We welcome academic partners, funders and organisations who want to co-fund or commission research in {E(a["name"].lower())}: {E(", ".join(t.lower() for t in a["topics"]))}. Joint research, grant partnerships and paid proof-of-concept or evaluation projects are all possible.</p></div>
+<div class="cta"><a class="btn btn--pink" href="mailto:{BRAND["email_collab"]}?subject=Collaboration%20on%20{a["name"].replace(" ", "%20")}">Email us</a><a class="btn btn--ghost" href="../collaborate.html">How we work with partners</a></div></div></div></section>'''
+        page(f'research/{a["id"]}.html', a['name'] + ' Research', f'{a["name"]} research at SYNTERA: {", ".join(t.lower() for t in a["topics"][:3])}. Open to academic collaboration, funded projects and industry partnerships.', body, 'research', 1, pubs_on=True)
 
     # ---------- people
     chips = '<button class="fchip is-on" data-area="all">All</button>' + ''.join(
@@ -647,7 +725,7 @@ def build_pages(members):
         achips = ''.join(f'<a class="chip" style="--c:{AREA[a]["color"]}" href="../research/{a}.html">{AREA[a]["short"]}</a>' for a in m['areas']) or '<span class="chip chip--plain">Core AI &amp; Methods</span>'
         ints = ''.join(f'<li>{E(x)}</li>' for x in m['interests'])
         insts = '<br>'.join(E(x) for x in m['inst']) or '<span class="muted">Affiliation to be confirmed</span>'
-        pubsec = f'<h2>Publications</h2><ol class="publist" data-pubs data-member="{m["id"]}"></ol>' if any(m['id'] == mid for p in PUBS for _, mid in parse_authors(p[3])) else ''
+        pubsec = f'<h2>Publications</h2><ol class="publist" data-pubs data-member="{m["id"]}">{static_pubs(lambda p, m=m: any(mid == m["id"] for _, mid in parse_authors(p[3])))}</ol>' if any(m['id'] == mid for p in PUBS for _, mid in parse_authors(p[3])) else ''
         prv = by_id[members[i-1]['id']] if i else members[-1]; nxt = members[(i+1) % len(members)]
         sp = sectioned_profile(m, insts, achips, ints, pubsec)
         main_html = f'''<section class="sec"><div class="wrap prose"><h2>Affiliation</h2><p>{insts}</p>
@@ -659,7 +737,14 @@ def build_pages(members):
 <p class="lead">{E(m["role"])}{" · " + E(DETAILS.get(m["id"], {}).get("title", m["title"])) if m["title"] else ""}</p>
 {"".join(f'<p class="lead lead--sub">{E(r)}</p>' for r in DETAILS.get(m["id"], {}).get("roles", []))}<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
 {sp if sp else main_html}{pager}'''
-        page(f'people/{m["id"]}.html', disp_name(m), f'{disp_name(m)}, {m["role"]} at SYNTERA Research Group. Research interests and links.', body, 'people', 1, pubs_on=True)
+        person = {"@context": "https://schema.org", "@type": "Person", "@id": f'{SITE_URL}/people/{m["id"]}#person', "name": m['name'], "url": f'{SITE_URL}/people/{m["id"]}',
+                  "jobTitle": m['role'], "worksFor": {"@id": SITE_URL + "/#org"}, "memberOf": {"@id": SITE_URL + "/#org"},
+                  "knowsAbout": m['interests'] or [AREA[a]['name'] for a in m['areas']], "sameAs": [u for _, u in lk]}
+        if m['photo']: person["image"] = f'{SITE_URL}/images/team/{m["photo"]}'
+        if m['inst']: person["affiliation"] = [{"@type": "Organization", "name": x} for x in m['inst']]
+        person = {k: v for k, v in person.items() if v}
+        ints_s = ', '.join(m['interests'][:4])
+        page(f'people/{m["id"]}.html', disp_name(m), f'{disp_name(m)}, {m["role"]} at SYNTERA Research Group' + (f'. Research: {ints_s}.' if ints_s else '.') + ' Open to collaboration.', body, 'people', 1, pubs_on=True, ld_extra=ld_tag(person))
 
     # ---------- publications
     types = [('all','All')] + [(k, t) for k, t in [('journal','Journal'),('conference','Conference'),('book','Book'),('chapter','Chapter'),('thesis','Thesis'),('preprint','Preprint'),('other','Other')] if any(p[1] == k for p in PUBS)]
@@ -673,8 +758,8 @@ def build_pages(members):
 <section class="sec"><div class="wrap"><div class="filters"><input id="q" type="search" placeholder="Search title, author, keyword or venue" aria-label="Search publications">
 <select id="year" aria-label="Year">{yopts}</select></div>
 <div class="fchips" id="tchips">{tchips}</div><div class="fchips" id="achips">{achips}</div>
-<p id="count" class="muted" aria-live="polite"></p><ol class="publist" id="pubs" data-pubs></ol><p id="none" class="notice" hidden>No publications match those filters.</p></div></section>'''
-    page('publications.html', 'Publications', 'Journal articles, conference papers and book chapters from SYNTERA Research Group, filterable by area, type and year.', body, 'publications', pubs_on=True)
+<p id="count" class="muted" aria-live="polite"></p><ol class="publist" id="pubs" data-pubs>{static_pubs()}</ol><p id="none" class="notice" hidden>No publications match those filters.</p></div></section>'''
+    page('publications.html', 'Publications', f'{n_pubs} journal articles, conference papers, books and chapters on applied AI, IoT, IoV, health and education from SYNTERA Research Group. Find research collaborators.', body, 'publications', pubs_on=True)
 
     # ---------- about
     values = [('Synergy','We achieve more together, across disciplines, institutions and countries.'),('Impact','We pursue research that solves real problems for real people.'),
@@ -687,6 +772,7 @@ def build_pages(members):
 <section class="sec" id="story"><div class="wrap prose"><h2>Our story</h2>
 <p><b>SYNTERA</b> stands for <b>Syn</b>ergy + In<b>te</b>lligence + E<b>ra</b>: a new era in which artificial intelligence works in synergy with health, agriculture, education, homes and mobility.</p>
 <p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>, <a href="people/rania-shibl.html">Professor Dr. Rania Shibl</a> and <a href="people/dana-dermody.html">Assoc. Prof. Dr. Dana Dermody</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
+<p>We collaborate with universities, research institutes, health and care providers, industry and government. See <a href="collaborate.html">how to partner with us</a> on joint research, funded projects and commissioned work.</p>
 <p class="muted">SYNTERA Research Group is not affiliated with any commercial company of a similar name.</p></div></section>
 <section class="sec sec--ice" id="mission"><div class="wrap"><div class="grid grid--2"><div class="panel"><h2>Mission</h2>
 <p>To design and apply AI and connected technologies (IoT, IoV) that solve real problems in health, agriculture, education and everyday living.</p></div>
@@ -697,7 +783,7 @@ def build_pages(members):
 <p>{E(DETAILS["shahrzad-saremi"]["bio"][0])}</p>
 <p>{E(DETAILS["shahrzad-saremi"]["bio"][1].split(". She is widely")[0])}.</p><p><a class="btn btn--blue btn--sm" href="people/{director["id"]}.html">Full profile</a></p></div></div></div></section>
 '''
-    page('about.html', 'About', 'The story, mission, vision and values of SYNTERA Research Group.', body, 'about')
+    page('about.html', 'About Our Applied AI Research Group', 'The story, mission, vision and values of SYNTERA Research Group, an applied AI and connected systems group open to academic and industry collaboration.', body, 'about')
 
     # ---------- join
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Join us</p><h1>Open to collaboration</h1>
@@ -710,10 +796,10 @@ def build_pages(members):
 <p><a class="btn btn--pink" href="mailto:{BRAND['email_student']}?subject=Prospective%20student%20enquiry">Email as a prospective student</a> <a class="btn btn--ghost" href="mailto:{BRAND['email_join']}?subject=Joining%20SYNTERA%20Research%20Group">Postdocs, RAs and interns</a></p>
 <p class="muted">Prospective students: <a href="mailto:{BRAND['email_student']}">{BRAND['email_student']}</a>. Everyone else joining the group: <a href="mailto:{BRAND['email_join']}">{BRAND['email_join']}</a>.</p></div></section>
 <section class="sec" id="collaborate"><div class="wrap prose"><h2>Collaborate with us</h2>
-<p>We work with universities, hospitals, aged-care providers, farms, schools and industry. If you have a real problem where applied AI or connected systems could help, we would like to talk.</p>
+<p>We work with universities, hospitals, aged-care providers, farms, schools and industry. If you have a real problem where applied AI or connected systems could help, or want a research partner for a funded or paid project, we would like to talk. See <a href="collaborate.html">academic collaboration, funding and industry partnerships</a>.</p>
 <p><a class="btn btn--blue" href="mailto:{BRAND['email_collab']}?subject=Collaboration%20with%20SYNTERA%20Research%20Group">Propose a collaboration</a></p>
 <p class="muted">Collaboration enquiries: <a href="mailto:{BRAND['email_collab']}">{BRAND['email_collab']}</a></p></div></section>'''
-    page('join.html', 'Join Us', 'Open PhD, Master\'s, postdoc, research assistant and internship opportunities, and how to apply.', body, 'join')
+    page('join.html', 'Join Us: PhD, Postdoc & Research Roles', 'PhD, Master\'s, postdoc, research assistant and internship opportunities in applied AI at SYNTERA, and how to apply.', body, 'join')
 
     # ---------- contact
     soc = f'<a class="btn btn--ghost-d btn--sm" href="{BRAND["scholar"]}" rel="noopener" target="_blank">Director on Google Scholar</a>'
@@ -722,7 +808,60 @@ def build_pages(members):
 <div class="panel"><h3>Email</h3><p><b>Prospective students</b><br><a href="mailto:{BRAND['email_student']}">{BRAND['email_student']}</a></p><p><b>Joining the group</b><br><a href="mailto:{BRAND['email_join']}">{BRAND['email_join']}</a></p><p><b>Collaborations</b><br><a href="mailto:{BRAND['email_collab']}">{BRAND['email_collab']}</a></p><p class="muted">Messages reach the group Director, <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>.</p></div>
 <div class="panel"><h3>Director's affiliation</h3><p><a href="{BRAND['host_url']}" rel="noopener" target="_blank">{BRAND['host']}</a></p><p class="muted">School of Science, Technology and Engineering, Queensland, Australia.</p></div>
 <div class="panel"><h3>Elsewhere</h3><p>{soc}</p></div></div></div></section>'''
-    page('contact.html', 'Contact', 'Contact SYNTERA Research Group: email and links.', body, 'contact')
+    page('contact.html', 'Contact & Collaboration Enquiries', 'Contact SYNTERA Research Group about research collaboration, funded or commissioned projects, industry partnerships and student enquiries.', body, 'contact')
+
+    # ---------- collaborate (academic collaboration, funding, industry partnerships, paid projects)
+    mail = lambda subj: f'mailto:{BRAND["email_collab"]}?subject=' + subj.replace(' ', '%20')
+    ways = [
+     ('Academic collaboration', 'Joint research and co-authored papers, shared methods and datasets, visiting researchers, co-supervision of PhD and Master\'s students, and joint workshops with universities and research institutes.'),
+     ('Funding and joint grant applications', 'We partner on grant proposals as a research partner or lead investigator, from early scoping to submission, including industry-linked and government-funded schemes. Our director leads a 2026 LAUNCH Partnership Grant on AI-based knee MRI segmentation.'),
+     ('Commissioned and paid research', 'Organisations can engage the group for a defined project: a proof of concept, data analysis, model development and evaluation, a technical review or an AI feasibility study. Scope, deliverables, IP and fees are agreed in writing before work starts.'),
+     ('Industry and community pilots', 'Pilot AI and IoT solutions in real settings such as clinics, aged care, farms, classrooms and transport, with privacy, ethics and explainability built in.'),
+     ('Student and talent partnerships', 'Industry-linked student projects, internships and higher degree research (PhD and Master\'s) that you co-fund or co-supervise with us.'),
+     ('Knowledge exchange', 'Seminars, workshops, expert advice and co-designed training on responsible and applied AI for your team or community.'),
+    ]
+    ways_html = ''.join(f'<div class="panel"><h3>{t}</h3><p>{d}</p></div>' for t, d in ways)
+    area_html = ''.join(f'<li><a href="research/{a["id"]}.html"><b>{a["name"]}</b></a>: {E(", ".join(t.lower() for t in a["topics"]))}.</li>' for a in AREAS)
+    steps = ['<b>Email us</b> at <a href="mailto:%s">%s</a> with your problem or idea, your organisation, timeline and funding situation (if any).' % (BRAND['email_collab'], BRAND['email_collab']),
+             '<b>Scoping conversation.</b> We discuss the goals, data, risks and the best way to work together, whether that is a collaboration, a grant or a paid project.',
+             '<b>Proposal and agreement.</b> We outline scope, deliverables, timeline, budget, data handling, IP and publication terms in writing.',
+             '<b>Deliver and share.</b> We run the project with regular check-ins and share the results, reports, code or papers as agreed.']
+    steps_html = ''.join(f'<li>{s}</li>' for s in steps)
+    partner_html = ', '.join(f'<a href="{u}" rel="noopener" target="_blank">{E(n)}</a>' for n, sl, c, u in partners)
+    faqs = [
+     ('Can we commission a paid research project with SYNTERA?', 'Yes. Organisations can engage the group for a defined, funded project such as a proof of concept, data analysis, model development, evaluation or feasibility study. We agree scope, deliverables, timeline, fees, data handling and intellectual property in writing before work starts. Email %s to start.' % BRAND['email_collab']),
+     ('Can we apply for a research grant together?', 'Yes. We join grant applications as a research partner or lead investigator and can help scope the research, build the partnership and prepare the proposal, including industry-linked and government-funded schemes in Australia and internationally.'),
+     ('Which fields does SYNTERA work in?', 'Applied AI and connected systems: AI for health, smart health homes, AI for agriculture, AI for education, the Internet of Things and the Internet of Vehicles, supported by machine learning, deep learning, computer vision, language models, explainable AI and cybersecurity.'),
+     ('Who can collaborate with SYNTERA?', 'Universities and research institutes, hospitals and aged-care providers, farms and agri-businesses, schools and education providers, companies, government agencies and community organisations, in Australia and overseas.'),
+     ('Do you work with partners outside Australia?', 'Yes. SYNTERA has members in %d countries and works with partner institutions on several continents. We collaborate remotely and in person.' % len(countries)),
+     ('Where is SYNTERA based?', 'SYNTERA is led by Dr. Shahrzad Saremi, a lecturer at the University of the Sunshine Coast in Queensland, Australia, with co-director Professor Dr. Rania Shibl.'),
+     ('Do you offer student projects, internships or PhD supervision?', 'Yes. We welcome PhD and Master\'s applicants, research assistants and interns, and can run industry-linked student projects. See the Join Us page for how to apply.'),
+     ('How do we get started?', 'Send a short email to %s describing the problem, your organisation, timeline and whether funding is available. We will reply to arrange a scoping conversation.' % BRAND['email_collab']),
+    ]
+    faq_html = ''.join(f'<details class="abs"><summary>{E(q)}</summary><p>{E(a)}</p></details>' for q, a in faqs)
+    faq_ld = ld_tag({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]})
+    svc_ld = ld_tag({"@context": "https://schema.org", "@type": "Service", "name": "Research collaboration, funded and commissioned research projects",
+        "serviceType": "Academic research collaboration and industry research partnerships", "provider": {"@id": SITE_URL + "/#org"}, "areaServed": "Worldwide",
+        "description": "Joint research, grant partnerships, industry-funded and commissioned research projects, pilots and student projects in applied AI and connected systems.",
+        "url": SITE_URL + "/collaborate"})
+    body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Collaborate</p><h1>Research collaboration, funded projects and industry partnerships</h1>
+<p class="lead">Partner with SYNTERA on academic collaborations, grant applications, industry-funded research and commissioned (paid) projects in applied AI and connected systems.</p>
+<div class="cta"><a class="btn btn--pink" href="{mail('Collaboration with SYNTERA Research Group')}">Start a collaboration</a><a class="btn btn--ghost" href="#process">How it works</a></div></div></section>
+<section class="sec"><div class="wrap"><p class="eyebrow">Ways to work with us</p><h2>Six ways to partner</h2>
+<p class="sub">SYNTERA is a research group of {len(members)} researchers, academics and students across {len(countries)} countries, led from the University of the Sunshine Coast, Queensland, Australia. We work with universities, health and care providers, industry and government.</p>
+<div class="grid grid--3">{ways_html}</div></div></section>
+<section class="sec sec--ice" id="areas"><div class="wrap prose"><p class="eyebrow">Where we can help</p><h2>Research areas open to partnership</h2>
+<ul>{area_html}</ul>
+<p>Our methods include machine learning, deep learning, computer vision, natural language processing, explainable AI and cybersecurity. Browse our <a href="research.html">research areas</a> and <a href="publications.html">{n_pubs} publications</a>.</p></div></section>
+<section class="sec" id="process"><div class="wrap prose"><p class="eyebrow">How it works</p><h2>From first email to results</h2><ol>{steps_html}</ol>
+<p><a class="btn btn--blue" href="{mail('Collaboration with SYNTERA Research Group')}">Email {BRAND['email_collab']}</a></p></div></section>
+<section class="sec sec--ice" id="who"><div class="wrap prose"><p class="eyebrow">Who we work with</p><h2>Universities, institutes, industry and government</h2>
+<p>Our members come from and collaborate with {partner_html}, among others. Meet the <a href="people.html">team</a> or read about the <a href="about.html">group</a>.</p></div></section>
+<section class="sec" id="faq"><div class="wrap prose"><p class="eyebrow">FAQ</p><h2>Frequently asked questions</h2>{faq_html}</div></section>
+<section class="sec"><div class="wrap"><div class="banner"><div><h2>Have a project, a grant or a problem to solve?</h2><p>Tell us what you need. We will reply to arrange a conversation.</p></div>
+<div class="cta"><a class="btn btn--pink" href="{mail('Collaboration with SYNTERA Research Group')}">Email collaborations</a><a class="btn btn--ghost" href="join.html">Join the group</a></div></div></div></section>'''
+    page('collaborate.html', 'Research Collaboration & Funded Projects', 'Partner with SYNTERA on academic collaboration, joint grants, industry-funded and commissioned (paid) research projects in applied AI, IoT and health.', body, 'collaborate', ld_extra=faq_ld + svc_ld)
 
     # ---------- privacy
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Privacy</p><h1>Privacy</h1></div></section>
@@ -1045,8 +1184,8 @@ var D=window.SYNTERA_PUBS||[],A=window.SYNTERA_AREAS||{},B=document.body.dataset
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 var T={journal:'Journal',conference:'Conference',book:'Book',chapter:'Chapter',thesis:'Thesis',preprint:'Preprint',other:'Other'};
 function card(p){
- var au=p.authors.map(function(a){return a[1]?'<a class="au" href="'+B+'people/'+a[1]+'.html"><strong>'+esc(a[0])+'</strong></a>':esc(a[0])}).join('; ');
- var chips=p.areas.map(function(a){return '<a class="chip" style="--c:'+A[a].color+'" href="'+B+'research/'+a+'.html">'+A[a].short+'</a>'}).join('');
+ var au=p.authors.map(function(a){return a[1]?'<a class="au" href="/people/'+a[1]+'"><strong>'+esc(a[0])+'</strong></a>':esc(a[0])}).join('; ');
+ var chips=p.areas.map(function(a){return '<a class="chip" style="--c:'+A[a].color+'" href="/research/'+a+'">'+A[a].short+'</a>'}).join('');
  var kw=(p.keywords||[]).map(function(k){return '<li>'+esc(k)+'</li>'}).join('');
  var li=document.createElement('li');li.className='pub';li.id='pub-'+p.id;
  li.innerHTML='<div class="pub__meta"><span class="pill pill--'+p.type+'">'+T[p.type]+'</span>'+(p.note?'<span class="pill">'+esc(p.note)+'</span>':'')+'<span class="pub__year">'+(p.year||'n.d.')+'</span></div><h3 class="pub__title">'+esc(p.title)+'</h3><p class="pub__au">'+au+'</p><p class="pub__venue"><em>'+esc(p.venue)+'</em></p>'
@@ -1132,9 +1271,27 @@ def main():
         if f not in used: os.remove(os.path.join(OUT, 'images', 'partners', f))
     write('.nojekyll', '')
     today = __import__('datetime').date.today().isoformat()
-    urls = ''.join('<url><loc>%s/%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (SITE_URL, '' if f == 'index.html' else re.sub(r'\.html$', '', f), today, '1.0' if f == 'index.html' else '0.8' if '/' not in f else '0.6') for f in sorted(PAGES))
+    urls = ''.join('<url><loc>%s/%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (SITE_URL, '' if f == 'index.html' else re.sub(r'\.html$', '', f), today, '1.0' if f == 'index.html' else '0.9' if f in ('collaborate.html', 'research.html') else '0.8' if '/' not in f else '0.6') for f in sorted(PAGES))
     write('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + urls + '</urlset>')
     write('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE_URL)
+    write('llms.txt', f"""# {BRAND['name']}
+
+> Applied AI and connected systems research group led from the University of the Sunshine Coast, Queensland, Australia. Open to academic collaboration, joint grant applications, industry-funded and commissioned (paid) research projects, industry pilots and student projects.
+
+## Key pages
+- [Collaborate with us]({SITE_URL}/collaborate): ways to partner, process and FAQ
+- [Research areas]({SITE_URL}/research): AI for health, smart health home, AI for agriculture, AI for education, Internet of Things, Internet of Vehicles
+- [Publications]({SITE_URL}/publications): journal articles, conference papers, books and chapters
+- [People]({SITE_URL}/people): director, researchers, academics and students
+- [About]({SITE_URL}/about)
+- [Join us]({SITE_URL}/join): PhD, Master's, postdoc, research assistant and internship opportunities
+- [Contact]({SITE_URL}/contact)
+
+## Contact
+- Collaborations, funding and paid projects: {BRAND['email_collab']}
+- Prospective students: {BRAND['email_student']}
+- Joining the group: {BRAND['email_join']}
+""")
     write('_headers', """/*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

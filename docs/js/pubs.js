@@ -3,8 +3,8 @@ var D=window.SYNTERA_PUBS||[],A=window.SYNTERA_AREAS||{},B=document.body.dataset
 function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 var T={journal:'Journal',conference:'Conference',book:'Book',chapter:'Chapter',thesis:'Thesis',preprint:'Preprint',other:'Other'};
 function card(p){
- var au=p.authors.map(function(a){return a[1]?'<a class="au" href="'+B+'people/'+a[1]+'.html"><strong>'+esc(a[0])+'</strong></a>':esc(a[0])}).join('; ');
- var chips=p.areas.map(function(a){return '<a class="chip" style="--c:'+A[a].color+'" href="'+B+'research/'+a+'.html">'+A[a].short+'</a>'}).join('');
+ var au=p.authors.map(function(a){return a[1]?'<a class="au" href="/people/'+a[1]+'"><strong>'+esc(a[0])+'</strong></a>':esc(a[0])}).join('; ');
+ var chips=p.areas.map(function(a){return '<a class="chip" style="--c:'+A[a].color+'" href="/research/'+a+'">'+A[a].short+'</a>'}).join('');
  var kw=(p.keywords||[]).map(function(k){return '<li>'+esc(k)+'</li>'}).join('');
  var li=document.createElement('li');li.className='pub';li.id='pub-'+p.id;
  li.innerHTML='<div class="pub__meta"><span class="pill pill--'+p.type+'">'+T[p.type]+'</span>'+(p.note?'<span class="pill">'+esc(p.note)+'</span>':'')+'<span class="pub__year">'+(p.year||'n.d.')+'</span></div><h3 class="pub__title">'+esc(p.title)+'</h3><p class="pub__au">'+au+'</p><p class="pub__venue"><em>'+esc(p.venue)+'</em></p>'
