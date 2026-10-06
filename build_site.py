@@ -96,7 +96,7 @@ PHOTOS = {
  'sepehr-amooeinejad':'Sepehr Amooeinejad.jpeg','damilare-ogunjobi':'Damilare Ogunjobi.jpeg','bisma-ali':'Bisma Ali.png',
  'hilda-jemutai-bitok':'Hilda Jemutai Bitok.jpeg','meerab-fatima':'Meerab Fatima.jpeg','malahat-mardani':'Malahat.png',
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
- 'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg',
+ 'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
@@ -107,7 +107,7 @@ AREAS_OF = {
  'sepehr-amooeinejad':['health'],'damilare-ogunjobi':['connect'],'hilda-jemutai-bitok':['connect','mobility'],
  'meerab-fatima':['edu'],'malahat-mardani':['health'],'mounes-mardani':['health'],
  'shahrzad-saremi':['health','home','agri','edu','connect','mobility'],'hassan-ahmed':['edu','connect'],'abdullah-khan':['connect'],'arooj-fatima':['connect'],
- 'bisma-ali':['health'],
+ 'bisma-ali':['health'],'bilal-aslam':['health'],
 }
 GROUP_OF = {}
 for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leadership'
@@ -134,6 +134,8 @@ EXTRA_MEMBERS = [
   [],'','','https://www.linkedin.com/in/hina-mehboob-nust/'),
  ('javeria-iqbal','Javeria Iqbal','Researcher',['Department of Computer Science, National University of Computer and Emerging Sciences, Islamabad'],'Pakistan',
   [],'0009-0000-5685-5452','','https://www.linkedin.com/in/jave530'),
+ ('bilal-aslam','Bilal Aslam','Independent Researcher',[],'',
+  ['Machine learning','Deep learning','Healthcare AI','IoMT','Trustworthy AI'],'','','https://www.linkedin.com/in/bilal-aslam-777b6712b'),
 ]
 
 def build_members():
@@ -468,7 +470,7 @@ def person_card(m, p=''):
 # ───────────────────────── pages ─────────────────────────
 def build_pages(members):
     by_id = {m['id']: m for m in members}
-    countries = sorted({m['country'] for m in members})
+    countries = sorted({m['country'] for m in members if m['country']})
     n_pubs = len(PUBS)
     partners = [
      ('University of the Sunshine Coast','university-of-the-sunshine-coast','au','https://www.usc.edu.au/'),
@@ -650,15 +652,15 @@ def build_pages(members):
     # ---------- join
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Join us</p><h1>Open to collaboration</h1>
 <p class="lead">PhD and Master's students, postdocs, research assistants, interns, industry and academic partners are all welcome.</p>
-<a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Lab">Reach out</a></div></section>
+<a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Research%20Group">Reach out</a></div></section>
 <section class="sec" id="positions"><div class="wrap prose"><h2>Open positions</h2><p>No positions are open right now. Send us a short note anyway: we like hearing from motivated people.</p></div></section>
 <section class="sec sec--ice" id="apply"><div class="wrap prose"><h2>How to apply</h2>
 <p>Email us with the following attached:</p><ul><li><b>CV</b></li><li><b>Academic transcript</b></li><li><b>Research statement</b> (one page)</li></ul>
 <p>In your message, tell us:</p><ol><li>Who you are</li><li>Which of our <a href="research.html">research areas</a> interests you</li><li>Where we can learn more about your work (Scholar, GitHub, ORCID)</li><li>What you can offer</li></ol>
-<p><a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Lab">Email the group</a></p></div></section>
+<p><a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Research%20Group">Email the group</a></p></div></section>
 <section class="sec" id="collaborate"><div class="wrap prose"><h2>Collaborate with us</h2>
 <p>We work with universities, hospitals, aged-care providers, farms, schools and industry. If you have a real problem where applied AI or connected systems could help, we would like to talk.</p>
-<p><a class="btn btn--blue" href="mailto:{BRAND['email']}?subject=Collaboration%20with%20SYNTERA%20Lab">Propose a collaboration</a></p></div></section>'''
+<p><a class="btn btn--blue" href="mailto:{BRAND['email']}?subject=Collaboration%20with%20SYNTERA%20Research%20Group">Propose a collaboration</a></p></div></section>'''
     page('join.html', 'Join Us', 'Open PhD, Master\'s, postdoc, research assistant and internship opportunities, and how to apply.', body, 'join')
 
     # ---------- contact
