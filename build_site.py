@@ -184,6 +184,7 @@ def build_members():
             scholar=scholar, linkedin=linkedin, email=''))
     for m in out:
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor Dr.'
+        if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof. Dr.'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'hassan-ahmed', 'mostafa-kamalpour']
     out.sort(key=lambda m: first.index(m['id']) if m['id'] in first else len(first))
@@ -685,7 +686,7 @@ def build_pages(members):
 <p class="lead">{BRAND['full']}.</p></div></section>
 <section class="sec" id="story"><div class="wrap prose"><h2>Our story</h2>
 <p><b>SYNTERA</b> stands for <b>Syn</b>ergy + In<b>te</b>lligence + E<b>ra</b>: a new era in which artificial intelligence works in synergy with health, agriculture, education, homes and mobility.</p>
-<p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>, <a href="people/rania-shibl.html">Professor Dr. Rania Shibl</a> and <a href="people/dana-dermody.html">Dr. Dana Dermody</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
+<p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>, <a href="people/rania-shibl.html">Professor Dr. Rania Shibl</a> and <a href="people/dana-dermody.html">Assoc. Prof. Dr. Dana Dermody</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
 <p class="muted">SYNTERA Research Group is not affiliated with any commercial company of a similar name.</p></div></section>
 <section class="sec sec--ice" id="mission"><div class="wrap"><div class="grid grid--2"><div class="panel"><h2>Mission</h2>
 <p>To design and apply AI and connected technologies (IoT, IoV) that solve real problems in health, agriculture, education and everyday living.</p></div>
