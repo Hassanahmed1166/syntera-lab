@@ -255,13 +255,16 @@ LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="l
         '<path d="M28 12c-2-3-14-3-14 3 0 7 14 3 14 10 0 6-12 6-15 2" fill="none" stroke="url(#lg)" stroke-width="3" stroke-linecap="round"/>'
         '<circle cx="28" cy="12" r="3" fill="#FF8FC3"/><circle cx="13" cy="27" r="3" fill="#8FB4FF"/><circle cx="20" cy="20" r="2" fill="#fff"/></svg>')
 
+import hashlib
+VER = ''   # set in main() from asset contents
+
 def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, pubs_on=False):
     p = '../' * depth
     cur = ' aria-current="page"'
     nav = ''.join(f'<li><a href="{p}{h}"{cur if k == active else ""}>{t}</a></li>' for h, t, k in NAV)
     full_title = BRAND['full'] if home else f'{title} · {BRAND["name"]}'
     areas_f = ''.join(f'<li><a href="{p}research/{a["id"]}.html">{a["short"]}</a></li>' for a in AREAS)
-    data_js = f'<script src="{p}data/publications.js"></script><script src="{p}js/pubs.js"></script>' if pubs_on else ''
+    data_js = f'<script src="{p}data/publications.js?v={VER}"></script><script src="{p}js/pubs.js?v={VER}"></script>' if pubs_on else ''
     doc = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -272,7 +275,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 <meta name="theme-color" content="#0F1A47">
 <meta property="og:title" content="{E(full_title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:type" content="website">
 <link rel="icon" href="{p}images/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="{p}css/style.css">
+<link rel="stylesheet" href="{p}css/style.css?v={VER}">
 <script>try{{var t=localStorage.getItem('syntera-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 </head>
 <body data-base="{p}">
@@ -298,7 +301,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
   </div>
   <div class="ftr__bar"><span>© 2026 {BRAND['name']}</span><span><a href="{p}privacy.html">Privacy</a></span></div>
 </div></footer>
-<script src="{p}js/site.js"></script>
+<script src="{p}js/site.js?v={VER}"></script>
 {data_js}
 {extra_js}
 </body></html>'''
@@ -512,7 +515,7 @@ def build_pages(members):
   <p>Students, researchers, industry and institutions are welcome.</p></div>
   <div class="cta"><a class="btn btn--pink" href="join.html">Ways to join</a><a class="btn btn--ghost" href="contact.html">Contact us</a></div></div></div></section>'''
     page('index.html', BRAND['name'], 'SYNTERA Lab is an applied AI and connected systems research group working on health, smart homes, agriculture, education, IoT and IoV.', body, home=True,
-         extra_js='<script src="js/hero.js"></script>')
+         extra_js='<script src="js/hero.js?v=' + VER + '"></script>')
 
     # ---------- research overview
     methods = {}
@@ -561,7 +564,7 @@ def build_pages(members):
 <p class="lead">{len(members)} researchers, academics and students across {len(countries)} countries.</p></div></section>
 <section class="sec"><div class="wrap"><div class="filters"><input id="q" type="search" placeholder="Search people or interests" aria-label="Search people"><div class="fchips" id="fchips">{chips}</div></div>
 <div id="people">{secs}</div><p id="none" class="notice" hidden>No one matches that filter.</p></div></section>'''
-    page('people.html', 'People', 'The director, researchers, academics and students of SYNTERA Lab.', body, 'people', extra_js='<script src="js/people.js"></script>')
+    page('people.html', 'People', 'The director, researchers, academics and students of SYNTERA Lab.', body, 'people', extra_js='<script src="js/people.js?v=' + VER + '"></script>')
 
     # ---------- profiles
     for i, m in enumerate(members):
@@ -888,6 +891,8 @@ def main():
         shutil.copytree(os.path.join(ROOT, 'images', sub), os.path.join(OUT, 'images', sub))
     write('css/style.css', CSS); write('js/site.js', JS_SITE); write('js/hero.js', JS_HERO)
     write('js/people.js', JS_PEOPLE); write('js/pubs.js', JS_PUBS); write('images/favicon.svg', FAVICON)
+    global VER
+    VER = hashlib.md5((CSS + JS_SITE + JS_PUBS + JS_PEOPLE + JS_HERO + open(os.path.join(OUT, 'data', 'publications.js'), encoding='utf-8').read()).encode()).hexdigest()[:8]
     build_pages(members)
     used = set(re.findall(r'images/partners/([\w-]+\.webp)', open(os.path.join(OUT, 'index.html'), encoding='utf-8').read()))
     for f in os.listdir(os.path.join(OUT, 'images', 'partners')):
