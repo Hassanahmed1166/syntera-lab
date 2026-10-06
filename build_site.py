@@ -506,7 +506,7 @@ def build_pages(members):
     latest = ''.join(f'<li><a href="publications.html#pub-{p[0]}"><span class="pill pill--{p[1]}">{p[2]}</span> {E(p[4])}</a><small>{E(p[5])}</small></li>'
                      for p in sorted([x for x in PUBS if x[1] in ('journal','conference')], key=lambda x: -x[2])[:5])
     faces = ''.join(f'<li><a href="people/{m["id"]}.html" title="{E(disp_name(m))}">{avatar(m, "", "av av--sm")}</a></li>' for m in members)
-    stats = [(len(members), 'Members'), (len(countries), 'Countries'), (len(partners), 'Partner institutions'), (n_pubs, 'Featured publications')]
+    stats = [(len(members), 'Members'), (len(countries), 'Countries'), (n_pubs, 'Featured publications')]
     stat_html = ''.join(f'<div class="stat"><b data-count="{n}">{n}</b><span>{l}</span></div>' for n, l in stats)
     def logo_card(n, sl, u, pre=''):
         ppl = ', '.join(f'<a href="{pre}people/{m["id"]}.html">{E(m["name"])}</a>' for m in people_at[sl])
@@ -532,9 +532,6 @@ def build_pages(members):
     <a class="btn btn--blue" href="about.html">About the group</a></div></div></section>
 <section class="sec"><div class="wrap"><p class="eyebrow">People</p><h2>The team</h2>
   <ul class="faces">{faces}</ul><p><a class="more" href="people.html">Meet everyone →</a></p></div></section>
-<section class="sec sec--blush"><div class="wrap"><p class="eyebrow">Collaborators</p><h2>Institutions we work with</h2>
-  <p class="sub">Universities where our members are based.</p>
-  <ul class="logos">{marquee}</ul></div></section>
 <section class="sec"><div class="wrap"><div class="banner"><div><h2>Open to collaboration</h2>
   <p>Students, researchers, industry and institutions are welcome.</p></div>
   <div class="cta"><a class="btn btn--pink" href="join.html">Ways to join</a><a class="btn btn--ghost" href="contact.html">Contact us</a></div></div></div></section>'''
