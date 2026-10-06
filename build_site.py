@@ -83,7 +83,7 @@ def slug(s):
     s = re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
     return s
 
-FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no','Iraq':'iq','China':'cn'}
+FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no','Iraq':'iq','China':'cn','United Kingdom':'gb'}
 # Photo file per member id
 PHOTOS = {
  'shahrzad-saremi':'shahrzad saremi.jpeg','rania-shibl':'rania shibl.jpeg','mostafa-kamalpour':'Mostafa Kamalpour.jpeg',
@@ -96,7 +96,7 @@ PHOTOS = {
  'sepehr-amooeinejad':'Sepehr Amooeinejad.jpeg','damilare-ogunjobi':'Damilare Ogunjobi.jpeg','bisma-ali':'Bisma Ali.png',
  'hilda-jemutai-bitok':'Hilda Jemutai Bitok.jpeg','meerab-fatima':'Meerab Fatima.jpeg','malahat-mardani':'Malahat.png',
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
- 'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg',
+ 'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
@@ -136,6 +136,9 @@ EXTRA_MEMBERS = [
   [],'0009-0000-5685-5452','','https://www.linkedin.com/in/jave530'),
  ('bilal-aslam','Bilal Aslam','Independent Researcher',[],'',
   ['Machine learning','Deep learning','Healthcare AI','IoMT','Trustworthy AI'],'','','https://www.linkedin.com/in/bilal-aslam-777b6712b'),
+ ('hasanga-uyanhewage','Hasanga Uyanhewage','Customer Service Advisor',['Tesco Mobile, Tesco UK'],'United Kingdom',
+  ['Software engineering','Human–AI interaction','AI governance','Privacy & data protection','Trust & decision-making'],'0009-0009-3528-4940',
+  'https://scholar.google.com/citations?hl=en&user=n7aYL-MAAAAJ','https://www.linkedin.com/in/hasangauyanhewa'),
 ]
 
 def build_members():
