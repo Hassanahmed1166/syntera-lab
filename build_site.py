@@ -318,7 +318,7 @@ def avatar(m, p='', cls='av'):
 
 DETAILS = {
  'shahrzad-saremi': dict(
-  quals='PhD (CompSci) Griff. · M (InteractionDes) Qld. · BSc (InfoTech) MMU · GradCert (TeachLearning) TUA · FHEA',
+  quals='',
   title='Lecturer, ICT and Computer Science',
   roles=['Program Coordinator: Bachelor of Information and Communications Technology'],
   bio=['Dr Shahrzad Saremi is a researcher and academic with over a decade of experience in computing and information technology. She has published more than 20 high-impact journal articles, attracting over 15,000 citations, reflecting the significant international reach of her research contributions.',
@@ -338,6 +338,39 @@ DETAILS = {
           'IIIS Research Impact Awards, Griffith University, 2016',
           'Full scholarship for her PhD, Griffith University, 2014',
           'Her master’s thesis project (Marker Puzzle) was selected for display at the School of Information Technology and Electronic Innovation showcase at the University of Queensland'],
+  education=['<b>PhD, Computer Science</b>, Griffith University, Brisbane (2014–2018). Thesis: <i>Evolutionary Hand Posture Estimation for Image-based Gesture Detection Systems</i>',
+             '<b>Master of Science, Interaction Design</b>, University of Queensland (2012–2014). Thesis: <i>Marker Puzzle: A novel Augmented Reality framework for learning grammar in primary school</i>',
+             '<b>Bachelor of Science, Information Technology</b>, Multimedia University, Cyberjaya, Malaysia (2008–2011). Thesis: <i>Using Augmented Reality in Calendar</i>',
+             '<b>Graduate Certificate in Teaching and Learning</b>, Torrens University Australia (2022–2023)'],
+  expertise=[('Human-Computer Interaction (HCI)', 'gesture detection, hand posture estimation, augmented reality frameworks for learning, user interface design and human-centred interaction'),
+             ('Artificial Intelligence and Machine Learning', 'deep learning, optimization algorithms, multi-objective optimization, neural networks, and AI applications in education and enterprise systems'),
+             ('Information Technology Education', 'curriculum design, teaching and learning methodologies, IT professional practice, cybersecurity education and data analytics training'),
+             ('Optimization and Metaheuristics', 'evolutionary algorithms, nature-inspired optimization (grasshopper, grey wolf, particle swarm), hand shape optimization and multi-objective problem solving'),
+             ('Emerging Technologies', 'blockchain, Internet of Things (IoT), data visualization and augmented reality, with applications in education and enterprise')],
+  experience=[('2025–present', 'Program Coordinator, Bachelor of Information and Communication Technology, School of Science, Technology and Engineering, University of the Sunshine Coast'),
+              ('2025', 'Lecturer and Course Coordinator, Computer Organization and Operating System, University of the Sunshine Coast'),
+              ('2024–2025', 'Lecturer, Holmes Institute'),
+              ('2019–2025', 'Learning Facilitator, Torrens University'),
+              ('2019–present', 'Adjunct Research Fellow, Griffith University'),
+              ('2014–2019', 'Lecturer and Research Assistant, Griffith College, Griffith University')],
+  students=['Higher Degree by Research supervision at PhD and Master by Research level, in AI applications, health informatics and information systems, and Internet of Vehicles privacy.',
+            '<a href="hilda-jemutai-bitok.html">Hilda Jemutai Bitok</a> (PhD): <i>Preserving Privacy of Sensitive Information in Resource Constrained Internet of Vehicles Environment</i>'],
+  skills=[('Programming', 'Python, C++, MATLAB, Java, SQL'),
+          ('Machine learning and AI', 'TensorFlow, PyTorch, Keras, Scikit-learn, OpenCV, NLTK'),
+          ('Data analytics', 'Tableau, Power BI, Excel, R, SPSS, statistical modelling'),
+          ('Web development', 'HTML5, CSS3, JavaScript, PHP, WordPress'),
+          ('Design tools', 'Adobe Creative Suite, Canva, Figma, Edraw Max, MS Visio'),
+          ('Development environments', 'Visual Studio Code, PyCharm, Jupyter Notebook, GitHub, GitLab, Docker'),
+          ('Databases', 'MySQL, PostgreSQL, MongoDB, Oracle'),
+          ('Cloud platforms', 'Google Cloud, AWS, Microsoft Azure'),
+          ('Augmented reality', 'ARKit, ARCore, Unity, Unreal Engine'),
+          ('Academic tools', 'LaTeX, Mendeley, EndNote, Zotero, Covidence')],
+  courses=[('University of the Sunshine Coast', ['Computer Organization and Operating System (Course Coordinator, 2025)']),
+           ('Holmes Institute', ['IS Governance and Risk', 'Database Design', 'System Analysis and Design', 'Computer Forensics', 'Leveraging IT Advantages for Managers', 'Professional Issues in IS Ethics and Practice']),
+           ('Torrens University', ['Creative Enterprises', 'IT Professional Practice', 'Data and Networking', 'Introduction to Programming', 'Cybersecurity', 'Secure by Design', 'Human Centred by Design', 'Big Data and Analytics', 'Deep Learning', 'Mathematical Foundation of AI', 'Cloud Computing', 'Microservices', 'Requirement Engineering', 'Data Modelling and Database Design']),
+           ('Griffith College', ['Computer Skills', 'Information System Foundations', 'Human Computer Interaction', 'Essential Mathematics', 'Information Design', 'Introduction to Computing', 'Foundation of Computing Systems', 'Digital Technologies'])],
+  languages='English, Persian (Farsi) and Azeri (native or bilingual); Turkish (professional working); Arabic (elementary)',
+  service='Reviewer for international conferences and journals in computer science and education. Adjunct Research Fellow, Griffith University (2019–present).',
   metrics='15,000+ citations · h-index 21 · i10-index 22 (Google Scholar, Aug 2026)'),
 }
 
@@ -351,7 +384,15 @@ def details_html(m):
     if d.get('metrics'): out += f'<p class="muted">{E(d["metrics"])}</p>'
     if d.get('supervision'): out += f'<h2>Research supervision</h2><p>{E(d["supervision"])}</p>'
     if d.get('grants'): out += f'<h2>Research grants</h2><ul>{li(d["grants"])}</ul>'
-    if d.get('teaching'): out += f'<h2>Teaching</h2><ul class="tags tags--dark">{li(E(x) for x in d["teaching"])}</ul>'
+    if d.get('expertise'): out += '<h2>Research expertise</h2><ul>' + li(f'<b>{E(a)}</b>: {E(b)}' for a, b in d['expertise']) + '</ul>'
+    if d.get('education'): out += f'<h2>Academic background</h2><ul>{li(d["education"])}</ul>'
+    if d.get('experience'): out += '<h2>Professional experience</h2><ul>' + li(f'<b>{E(a)}</b>: {E(b)}' for a, b in d['experience']) + '</ul>'
+    if d.get('students'): out += f'<h2>Supervision</h2><ul>{li(d["students"])}</ul>'
+    if d.get('teaching'): out += f'<h2>Teaching areas</h2><ul class="tags tags--dark">{li(E(x) for x in d["teaching"])}</ul>'
+    if d.get('courses'): out += '<h2>Courses taught</h2>' + ''.join(f'<details class="abs"><summary>{E(a)}</summary><p>{E("; ".join(b))}</p></details>' for a, b in d['courses'])
+    if d.get('skills'): out += '<h2>Technical skills</h2><ul>' + li(f'<b>{E(a)}</b>: {E(b)}' for a, b in d['skills']) + '</ul>'
+    if d.get('languages'): out += f'<h2>Languages</h2><p>{E(d["languages"])}</p>'
+    if d.get('service'): out += f'<h2>Professional service</h2><p>{E(d["service"])}</p>'
     if d.get('awards'): out += f'<h2>Awards and fellowships</h2><ul>{li(E(x) for x in d["awards"])}</ul>'
     return out
 
