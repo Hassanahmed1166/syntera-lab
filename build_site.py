@@ -112,7 +112,7 @@ for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leader
 for i in ['mostafa-kamalpour','hassan-ahmed']: GROUP_OF[i] = 'leads'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
           'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'students'
-GROUPS = [('leadership','Leadership & Founders'),('leads','Team Leads'),
+GROUPS = [('leadership','Leadership & Founders'),('leads','Senior Researchers'),
           ('researchers','Researchers & Academics'),('students',"Master's & Undergraduate Students")]
 SHORT_INTEREST = {'Passive sensor monitoring and interpretation of daily activity patterns':'Passive sensor monitoring',
  'Data visualisation for health professionals':'Health data visualisation','Telehealth and wearables':'Telehealth & wearables',
@@ -142,7 +142,7 @@ def build_members():
         if mid == 'shahrzad-saremi': role = 'Founder · Director'
         elif mid == 'rania-shibl': role = 'Co-Director · Cofounder'
         elif mid == 'dana-dermody': role = 'Cofounder · Senior Researcher'
-        elif mid == 'mostafa-kamalpour': role = 'Team Lead · Senior Researcher'
+        elif mid == 'mostafa-kamalpour': role = 'Senior Researcher · Sessional Academic'
         elif mid == 'hassan-ahmed': role = 'Team Lead · Senior Researcher'
         elif mid == 'abdullah-khan': role = 'Senior Researcher'
         elif level == 'Masters Student': role = "Master's Student"
