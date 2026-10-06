@@ -83,7 +83,7 @@ def slug(s):
     s = re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
     return s
 
-FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no'}
+FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no','Iraq':'iq','China':'cn'}
 # Photo file per member id
 PHOTOS = {
  'shahrzad-saremi':'shahrzad saremi.jpeg','rania-shibl':'rania shibl.jpeg','mostafa-kamalpour':'Mostafa Kamalpour.jpeg',
@@ -95,7 +95,9 @@ PHOTOS = {
  'thiwanka-kaushalya-nagasanga':'Thiwanka Kaushalya Nagasanga.PNG','muhammad-irfan-aslam':'Muhammad Irfan Aslam.jpeg',
  'sepehr-amooeinejad':'Sepehr Amooeinejad.jpeg','damilare-ogunjobi':'Damilare Ogunjobi.jpeg','bisma-ali':'Bisma Ali.png',
  'hilda-jemutai-bitok':'Hilda Jemutai Bitok.jpeg','meerab-fatima':'Meerab Fatima.jpeg','malahat-mardani':'Malahat.png',
- 'mounes-mardani':'Mounes.png',
+ 'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
+ 'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg',
+ 'sadegh-rajaei':'Sadegh Rajaei.png',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
@@ -120,6 +122,19 @@ SHORT_INTEREST = {'Passive sensor monitoring and interpretation of daily activit
  'Human-centred design informed by clinical and caregiving needs':'Human-centred design',
  'Integration of sensor data into clinical workflows and care decisions':'Sensor data in clinical workflows',
  'Privacy, autonomy and ethical design of monitoring systems':'Ethical monitoring design'}
+
+EXTRA_MEMBERS = [
+ ('manar-makki-shaalan','Manar Makki Shaalan','Assistant Lecturer in Mathematics · PhD Scholar',['University of Babylon, Babylon'],'Iraq',
+  ['Graph theory','Domination theory','Network reliability'],'','https://scholar.google.com/citations?user=T4QkHMsAAAAJ','https://www.linkedin.com/in/manar-makki-shaalan-937371439/'),
+ ('abdul-mateen','Abdul Mateen','Lecturer',['Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), Chiniot-Faisalabad Campus'],'Pakistan',
+  [],'0000-0002-8607-7783','https://scholar.google.com/citations?user=CrlrCQkAAAAJ','https://www.linkedin.com/in/ammateen49/'),
+ ('ghalib-nadeem','Ghalib Nadeem','Researcher · PhD Scholar',['Department of Computer Science, Huazhong University of Science and Technology, Wuhan'],'China',
+  [],'','https://scholar.google.com/citations?user=9-Y_EvAAAAAJ','https://www.linkedin.com/in/ghalib-nadeem-023678189/'),
+ ('hina-mehboob','Hina Mehboob','BE Computer Software Engineering',['National University of Sciences and Technology (NUST), Islamabad'],'Pakistan',
+  [],'','','https://www.linkedin.com/in/hina-mehboob-nust/'),
+ ('javeria-iqbal','Javeria Iqbal','Researcher',['Department of Computer Science, National University of Computer and Emerging Sciences, Islamabad'],'Pakistan',
+  [],'0009-0000-5685-5452','','https://www.linkedin.com/in/jave530'),
+]
 
 def build_members():
     out = []
@@ -154,6 +169,10 @@ def build_members():
             inst=[x.strip() for x in r.get('F', '').split(';') if x.strip()], country=r['G'].strip(),
             areas=AREAS_OF.get(mid, []), interests=interests, orcid=orcid,
             scholar=r.get('J', '').strip(), linkedin=r.get('K', '').strip(), email=r.get('H', '').strip()))
+    for mid, name, title, inst, country, interests, orcid, scholar, linkedin in EXTRA_MEMBERS:
+        out.append(dict(id=mid, prefix='', name=name, full=name, suffix='', alias='', group='researchers', role='Researcher',
+            title=title, inst=inst, country=country, areas=AREAS_OF.get(mid, []), interests=interests, orcid=orcid,
+            scholar=scholar, linkedin=linkedin, email=''))
     return out
 
 def process_photos(members):
