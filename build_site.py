@@ -374,7 +374,7 @@ DETAILS = {
            ('Griffith College', ['Computer Skills', 'Information System Foundations', 'Human Computer Interaction', 'Essential Mathematics', 'Information Design', 'Introduction to Computing', 'Foundation of Computing Systems', 'Digital Technologies'])],
   languages='English, Persian (Farsi) and Azeri (native or bilingual); Turkish (professional working); Arabic (elementary)',
   service='Reviewer for international conferences and journals in computer science and education. Adjunct Research Fellow, Griffith University (2019–present).',
-  metrics='15,000+ citations · h-index 21 · i10-index 22 (Google Scholar, Aug 2026)'),
+  metrics='15,573 citations (12,216 since 2021) · h-index 21 (18 since 2021) · i10-index 22 (21 since 2021) · Google Scholar, 6 Oct 2026'),
 }
 
 def details_html(m):
@@ -598,7 +598,7 @@ def build_pages(members):
     yopts = '<option value="all">All years</option>' + ''.join(f'<option>{y}</option>' for y in years)
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Publications</p><h1>Research output</h1>
 <p class="lead">Papers, chapters, books and theses by lab members and the director. Lab members are shown in bold and link to their profiles.</p>
-<p class="muted metrics">Director's Google Scholar profile (Aug 2026): h-index 21 · 15,000+ citations · i10-index 22. <a href="{BRAND['scholar']}" rel="noopener" target="_blank">View profile</a></p></div></section>
+<p class="muted metrics">Director's Google Scholar profile (6 Oct 2026): 15,573 citations (12,216 since 2021) · h-index 21 (18 since 2021) · i10-index 22 (21 since 2021). <a href="{BRAND['scholar']}" rel="noopener" target="_blank">View profile</a></p></div></section>
 <section class="sec"><div class="wrap"><div class="filters"><input id="q" type="search" placeholder="Search title, author, keyword or venue" aria-label="Search publications">
 <select id="year" aria-label="Year">{yopts}</select></div>
 <div class="fchips" id="tchips">{tchips}</div><div class="fchips" id="achips">{achips}</div>
@@ -771,7 +771,7 @@ input[type=search],select{padding:11px 16px;border-radius:12px;border:1.5px soli
 .psecs{max-width:900px;padding-bottom:30px}.psec{scroll-margin-top:140px;padding:34px 0;border-bottom:1px solid var(--line)}.psec:last-child{border-bottom:0}
 .psec>h2{font-size:1.5rem;position:relative;padding-left:16px}.psec>h2::before{content:"";position:absolute;left:0;top:.12em;bottom:.12em;width:5px;border-radius:3px;background:var(--grad)}
 .psec h3{font-size:1.02rem;margin:1.4rem 0 .5rem;color:var(--pink-ink)}.psec ul{padding-left:1.2rem}.psec li{margin:.35rem 0}
-.metric-line{display:inline-block;background:var(--alt);padding:6px 14px;border-radius:999px;font-weight:600;font-size:.9rem}
+.psec p{text-align:justify;hyphens:auto}.psec p.metric-line{text-align:left}.metric-line{display:inline-block;background:var(--alt);padding:6px 14px;border-radius:999px;font-weight:600;font-size:.9rem}
 .timeline{list-style:none;padding:0!important}.timeline li{padding-left:0}.timeline .when{display:inline-block;min-width:104px;font-weight:700;color:var(--blue-ink)}
 @media(max-width:640px){.snav{top:66px}.timeline .when{display:block}}
 .kw{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:.5rem 0}.kw li{font-size:.76rem;padding:2px 10px;border-radius:999px;background:var(--alt);color:var(--muted);border:1px solid var(--line)}
