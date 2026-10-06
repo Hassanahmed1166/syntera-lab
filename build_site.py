@@ -182,7 +182,9 @@ def build_members():
             title=title, inst=inst, country=country, areas=AREAS_OF.get(mid, []), interests=interests, orcid=orcid,
             scholar=scholar, linkedin=linkedin, email=''))
     for m in out:
-        if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['suffix'] = 'PhD'
+        if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
+    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'hassan-ahmed', 'mostafa-kamalpour']
+    out.sort(key=lambda m: first.index(m['id']) if m['id'] in first else len(first))
     return out
 
 # face-centred crops (left, top, size) in source pixels
@@ -260,6 +262,26 @@ def build_member_keys(members):
         sur = parts[-1].lower()
         MEMBER_KEYS[(sur, parts[0][0].lower())] = m['id']
         if m['id'] == 'dana-dermody': MEMBER_KEYS[(sur, '*')] = m['id']   # one source lists her as "Dermody, D."
+
+INTEREST_RULES = [('health', r'health|medical|clinical|patient|biomedical|nurs|disease|iomt'), ('home', r'smart home|ageing|aging|assistive'),
+    ('agri', r'agricultur|crop|farm'), ('edu', r'education|teaching|student|pedagog|human.{0,3}ai interaction|academic'),
+    ('connect', r'iot|internet of things|cyber|security|privacy|blockchain|network|sensor|governance'),
+    ('mobility', r'vehic|iov|traffic|transport|mobility')]
+
+def derive_areas(members):
+    """Research areas of each person = union of the areas of the papers they co-authored.
+    Saremi and Shibl work across every area; people without papers keep their stated areas."""
+    order = [a['id'] for a in AREAS]
+    got = {m['id']: set() for m in members}
+    for p in PUBS:
+        for _, mid in parse_authors(p[3]):
+            if mid in got: got[mid].update(p[7])
+    for m in members:
+        if m['id'] in ('shahrzad-saremi', 'rania-shibl'): m['areas'] = list(order)
+        elif got[m['id']]: m['areas'] = [a for a in order if a in got[m['id']]]
+        elif not m['areas']:      # no papers yet: infer from stated interests
+            t = ' '.join(m['interests']).lower()
+            m['areas'] = [a for a, rx in INTEREST_RULES if re.search(rx, t)]
 
 def parse_authors(s):
     out = []
@@ -1091,6 +1113,7 @@ def main():
     members = build_members()
     process_photos(members)
     build_member_keys(members)
+    derive_areas(members)
     write('data/publications.js', export_pubs())
     for sub in ('flags', 'partners'):
         shutil.copytree(os.path.join(ROOT, 'images', sub), os.path.join(OUT, 'images', sub))
