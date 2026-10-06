@@ -181,7 +181,13 @@ def build_members():
         out.append(dict(id=mid, prefix='', name=name, full=name, suffix='', alias='', group='researchers', role='Researcher',
             title=title, inst=inst, country=country, areas=AREAS_OF.get(mid, []), interests=interests, orcid=orcid,
             scholar=scholar, linkedin=linkedin, email=''))
+    for m in out:
+        if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['suffix'] = 'PhD'
     return out
+
+# face-centred crops (left, top, size) in source pixels
+CROPS = {'shahrzad-saremi': (390, 0, 680), 'rania-shibl': (306, 50, 640), 'dana-dermody': (95, 20, 680),
+         'hassan-ahmed': (28, 0, 192), 'mostafa-kamalpour': (10, 0, 490)}
 
 def process_photos(members):
     d = os.path.join(OUT, 'images', 'team'); os.makedirs(d, exist_ok=True)
@@ -192,6 +198,11 @@ def process_photos(members):
             m['photo'] = ''; continue
         im = ImageOps.exif_transpose(Image.open(os.path.join(src, f))).convert('RGB')
         w, h = im.size; s = min(w, h)
+        if m['id'] in CROPS:
+            l, t, cs = CROPS[m['id']]
+            im = im.crop((l, t, l + cs, t + cs)).resize((360, 360), Image.LANCZOS)
+            im.save(os.path.join(d, m['id'] + '.jpg'), quality=82, optimize=True, progressive=True)
+            m['photo'] = m['id'] + '.jpg'; continue
         left = (w - s) // 2
         top = 0 if h > w else 0            # faces sit in the upper part of portrait shots
         if h > w: top = int((h - s) * 0.12)
