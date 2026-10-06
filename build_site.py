@@ -104,7 +104,7 @@ AREAS_OF = {
  'tobias-romano':['agri'],'shiva-jahanaray':['health'],'aittezaz-ahmad':['connect'],
  'sepehr-amooeinejad':['health'],'damilare-ogunjobi':['connect'],'hilda-jemutai-bitok':['connect','mobility'],
  'meerab-fatima':['edu'],'malahat-mardani':['health'],'mounes-mardani':['health'],
- 'shahrzad-saremi':['edu'],'hassan-ahmed':['edu','connect'],'abdullah-khan':['connect'],'arooj-fatima':['connect'],
+ 'shahrzad-saremi':['health','home','agri','edu','connect','mobility'],'hassan-ahmed':['edu','connect'],'abdullah-khan':['connect'],'arooj-fatima':['connect'],
  'bisma-ali':['health'],
 }
 GROUP_OF = {}
