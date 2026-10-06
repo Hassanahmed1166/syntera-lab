@@ -291,7 +291,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
     nav = ''.join(f'<li><a href="{p}{h}"{cur if k == active else ""}>{t}</a></li>' for h, t, k in NAV)
     clean = 'index.html' if fname == '404.html' else fname
     curl = SITE_URL + '/' + ('' if clean == 'index.html' else re.sub(r'\.html$', '', clean))
-    robots = '<meta name="robots" content="noindex">\n' if fname == '404.html' else ''
+    robots = '<base href="/"><meta name="robots" content="noindex">\n' if fname == '404.html' else ''
     ld = ''
     if home:
         ld = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@type": "ResearchOrganization", "name": BRAND['name'], "url": SITE_URL + '/', "logo": SITE_URL + '/images/favicon.svg', "email": BRAND['email'], "slogan": BRAND['tagline'], "parentOrganization": {"@type": "CollegeOrUniversity", "name": "University of the Sunshine Coast", "url": BRAND['host_url']}, "sameAs": [BRAND['scholar']]}) + '</script>\n'
