@@ -396,6 +396,42 @@ def details_html(m):
     if d.get('awards'): out += f'<h2>Awards and fellowships</h2><ul>{li(E(x) for x in d["awards"])}</ul>'
     return out
 
+def sectioned_profile(m, insts, achips, ints, pubsec):
+    """Profile body split into navigable sections (used when DETAILS exist for a member)."""
+    d = DETAILS.get(m['id'])
+    if not d: return None
+    li = lambda xs: ''.join(f'<li>{x}</li>' for x in xs)
+    S = []   # (id, nav label, inner html)
+    a = ''.join(f'<p>{E(p)}</p>' for p in d.get('bio', []))
+    if d.get('metrics'): a += f'<p class="metric-line">{E(d["metrics"])}</p>'
+    a += f'<h3>Affiliation</h3><p>{insts}</p>'
+    S.append(('about', 'About', a))
+    r = ''
+    if d.get('expertise'): r += '<h3>Expertise</h3><ul>' + li(f'<b>{E(x)}</b>: {E(y)}' for x, y in d['expertise']) + '</ul>'
+    r += f'<h3>Research areas</h3><div class="chips">{achips}</div><h3>Research interests</h3><ul class="tags tags--dark">{ints}</ul>'
+    if d.get('grants'): r += f'<h3>Research grants</h3><ul>{li(d["grants"])}</ul>'
+    if d.get('supervision') or d.get('students'):
+        r += '<h3>Supervision</h3>' + (f'<p>{E(d["supervision"])}</p>' if d.get('supervision') else '') + (f'<ul>{li(d["students"])}</ul>' if d.get('students') else '')
+    S.append(('research', 'Research', r))
+    b = ''
+    if d.get('education'): b += f'<h3>Education</h3><ul>{li(d["education"])}</ul>'
+    if d.get('experience'): b += '<h3>Experience</h3><ul class="timeline">' + li(f'<span class="when">{E(x)}</span> {E(y)}' for x, y in d['experience']) + '</ul>'
+    S.append(('background', 'Education & experience', b))
+    t = ''
+    if d.get('teaching'): t += f'<h3>Teaching areas</h3><ul class="tags tags--dark">{li(E(x) for x in d["teaching"])}</ul>'
+    if d.get('courses'): t += '<h3>Courses taught</h3>' + ''.join(f'<details class="abs"><summary>{E(x)}</summary><p>{E("; ".join(y))}</p></details>' for x, y in d['courses'])
+    S.append(('teaching', 'Teaching', t))
+    k = ''
+    if d.get('skills'): k += '<h3>Technical skills</h3><ul>' + li(f'<b>{E(x)}</b>: {E(y)}' for x, y in d['skills']) + '</ul>'
+    if d.get('languages'): k += f'<h3>Languages</h3><p>{E(d["languages"])}</p>'
+    if d.get('service'): k += f'<h3>Professional service</h3><p>{E(d["service"])}</p>'
+    S.append(('skills', 'Skills & service', k))
+    if d.get('awards'): S.append(('awards', 'Awards', f'<ul>{li(E(x) for x in d["awards"])}</ul>'))
+    if pubsec: S.append(('publications', 'Publications', pubsec.replace('<h2>Publications</h2>', '')))
+    nav = '<nav class="snav" aria-label="Profile sections"><div class="wrap"><ul>' + ''.join(f'<li><a href="#{i}">{E(n)}</a></li>' for i, n, _ in S) + '</ul></div></nav>'
+    secs = ''.join(f'<section class="psec" id="{i}"><h2>{E(n)}</h2>{h}</section>' for i, n, h in S)
+    return nav + f'<div class="wrap psecs">{secs}</div>'
+
 def disp_name(m):
     return ' '.join(x for x in [m['prefix'], m['name']] if x)
 
@@ -539,14 +575,16 @@ def build_pages(members):
         insts = '<br>'.join(E(x) for x in m['inst']) or '<span class="muted">Affiliation to be confirmed</span>'
         pubsec = f'<h2>Publications</h2><ol class="publist" data-pubs data-member="{m["id"]}"></ol>' if any(m['id'] == mid for p in PUBS for _, mid in parse_authors(p[3])) else ''
         prv = by_id[members[i-1]['id']] if i else members[-1]; nxt = members[(i+1) % len(members)]
+        sp = sectioned_profile(m, insts, achips, ints, pubsec)
+        main_html = f'''<section class="sec"><div class="wrap prose"><h2>Affiliation</h2><p>{insts}</p>
+<h2>Research areas</h2><div class="chips">{achips}</div>
+<h2>Research interests</h2><ul class="tags tags--dark">{ints}</ul>{pubsec}</div></section>'''
+        pager = f'<div class="wrap"><nav class="pager"><a href="{prv["id"]}.html">← {E(prv["name"])}</a><a href="{nxt["id"]}.html">{E(nxt["name"])} →</a></nav></div>'
         body = f'''<section class="phead phead--profile"><div class="wrap profile"><div class="profile__ph">{avatar(m, "../", "av av--lg")}</div>
 <div><p class="eyebrow"><a href="../people.html">People</a></p><h1>{E(disp_name(m))}{f"<small>{E(m['suffix'])}</small>" if m["suffix"] else ""}</h1>
 <p class="lead">{E(m["role"])}{" · " + E(DETAILS.get(m["id"], {}).get("title", m["title"])) if m["title"] else ""}</p>
 {"".join(f'<p class="lead lead--sub">{E(r)}</p>' for r in DETAILS.get(m["id"], {}).get("roles", []))}<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
-<section class="sec"><div class="wrap prose">{details_html(m)}<h2>Affiliation</h2><p>{insts}</p>
-<h2>Research areas</h2><div class="chips">{achips}</div>
-<h2>Research interests</h2><ul class="tags tags--dark">{ints}</ul>{pubsec}
-<nav class="pager"><a href="{prv["id"]}.html">← {E(prv["name"])}</a><a href="{nxt["id"]}.html">{E(nxt["name"])} →</a></nav></div></section>'''
+{sp if sp else main_html}{pager}'''
         page(f'people/{m["id"]}.html', m['name'], f'{m["name"]}, {m["role"]} at SYNTERA Lab. Research interests and links.', body, 'people', 1, pubs_on=True)
 
     # ---------- publications
@@ -723,6 +761,16 @@ input[type=search],select{padding:11px 16px;border-radius:12px;border:1.5px soli
 .publist{list-style:none;padding:0;margin:1rem 0}
 .pub{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}.pub[hidden]{display:none}.pub:target{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent)}
 .pub__meta{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted)}.pub__meta .pill{margin-left:0}.pub__year{margin-left:auto;font-weight:700}
+.snav{position:sticky;top:66px;z-index:40;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 4px 14px rgba(15,26,71,.06)}
+.snav ul{display:flex;gap:6px;list-style:none;margin:0;padding:10px 0;overflow-x:auto;scrollbar-width:thin}
+.snav a{display:block;white-space:nowrap;padding:7px 16px;border-radius:999px;font-weight:600;font-size:.88rem;text-decoration:none;color:var(--text);border:1.5px solid var(--line)}
+.snav a:hover{border-color:var(--blue-ink);color:var(--blue-ink)}.snav a.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.psecs{max-width:900px;padding-bottom:30px}.psec{scroll-margin-top:140px;padding:34px 0;border-bottom:1px solid var(--line)}.psec:last-child{border-bottom:0}
+.psec>h2{font-size:1.5rem;position:relative;padding-left:16px}.psec>h2::before{content:"";position:absolute;left:0;top:.12em;bottom:.12em;width:5px;border-radius:3px;background:var(--grad)}
+.psec h3{font-size:1.02rem;margin:1.4rem 0 .5rem;color:var(--pink-ink)}.psec ul{padding-left:1.2rem}.psec li{margin:.35rem 0}
+.metric-line{display:inline-block;background:var(--alt);padding:6px 14px;border-radius:999px;font-weight:600;font-size:.9rem}
+.timeline{list-style:none;padding:0!important}.timeline li{padding-left:0}.timeline .when{display:inline-block;min-width:104px;font-weight:700;color:var(--blue-ink)}
+@media(max-width:640px){.snav{top:66px}.timeline .when{display:block}}
 .kw{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:.5rem 0}.kw li{font-size:.76rem;padding:2px 10px;border-radius:999px;background:var(--alt);color:var(--muted);border:1px solid var(--line)}
 .abs{margin:.5rem 0}.abs summary{cursor:pointer;font-weight:600;font-size:.88rem;color:var(--blue-ink)}.abs p{font-size:.92rem;color:var(--muted);margin:.5rem 0 0;max-width:80ch}
 .pub__act{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}.pub__act .chips{margin:0}.pbtn{font:600 .82rem Inter,sans-serif;padding:5px 14px;border-radius:10px;border:1.5px solid var(--strong);background:var(--card);color:var(--text);text-decoration:none;cursor:pointer}.pbtn:hover{border-color:var(--blue-ink);color:var(--blue-ink)}.pbtn .doi{font-weight:400;opacity:.75}
@@ -748,6 +796,10 @@ d.addEventListener('keydown',function(e){if(e.key==='Escape'&&nav){nav.classList
 if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.1});d.querySelectorAll('.reveal').forEach(function(x){io.observe(x)})}else d.querySelectorAll('.reveal').forEach(function(x){x.classList.add('in')});
 var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 d.querySelectorAll('[data-count]').forEach(function(el){var n=+el.dataset.count;if(reduce)return;var t0=null;el.textContent='0';function f(t){t0=t0||t;var p=Math.min((t-t0)/900,1);el.textContent=Math.round(n*p);if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)});
+var sn=d.querySelectorAll('.snav a');
+if(sn.length&&'IntersectionObserver' in window){var map={};sn.forEach(function(a){map[a.getAttribute('href').slice(1)]=a});
+var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){sn.forEach(function(a){a.classList.remove('on')});map[e.target.id].classList.add('on')}})},{rootMargin:'-140px 0px -65% 0px'});
+d.querySelectorAll('.psec').forEach(function(x){so.observe(x)})}
 })();'''
 
 JS_HERO = r'''(function(){
