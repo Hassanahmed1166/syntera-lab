@@ -895,6 +895,13 @@ input[type=search],select{transition:border-color .2s,box-shadow .2s}input[type=
 .bf .wl,.bf .wr{transform-box:fill-box;animation:flap var(--f,.32s) ease-in-out infinite alternate}
 .bf .wl{transform-origin:100% 50%}.bf .wr{transform-origin:0% 50%}
 @keyframes flap{from{transform:scaleX(1)}to{transform:scaleX(.18)}}
+
+.hdr .brand{position:relative}
+.bf-logo{position:absolute;left:-9px;top:-5px;width:26px;height:22px;pointer-events:none;transform-origin:50% 80%;animation:perch 4.5s ease-in-out infinite;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}
+.bf-logo svg{width:100%;height:100%;overflow:visible}
+.bf-logo .wl,.bf-logo .wr{transform-box:fill-box;animation:flap .42s ease-in-out infinite alternate}
+.bf-logo .wl{transform-origin:100% 50%}.bf-logo .wr{transform-origin:0% 50%}
+@keyframes perch{0%,100%{transform:translate(0,0) rotate(-24deg)}30%{transform:translate(2px,-3px) rotate(-14deg)}60%{transform:translate(-1px,-1px) rotate(-30deg)}}
 @media print{#bfly{display:none}}
 '''
 
@@ -922,6 +929,10 @@ var tick=false;function onS(){var h=d.documentElement,m=h.scrollHeight-h.clientH
 addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(onS)}},{passive:true});onS();
 d.querySelectorAll('.area,.pcard a,.pub,.panel,.values li').forEach(function(x){x.classList.add('spot');x.addEventListener('pointermove',function(e){var r=x.getBoundingClientRect();x.style.setProperty('--mx',(e.clientX-r.left)+'px');x.style.setProperty('--my',(e.clientY-r.top)+'px')})});
 
+
+(function(){var b=d.querySelector('.hdr .brand');if(!b||reduce)return;var e=d.createElement('span');e.className='bf-logo';e.setAttribute('aria-hidden','true');
+e.innerHTML='<svg viewBox="-20 -16 40 32"><g class="wl"><path d="M0 0C-6-14-18-15-19-7-20-1-10 2 0 0Z" fill="#FF8FC3"/><path d="M0 1C-8 3-15 9-11 13-7 16-1 9 0 1Z" fill="#E83E8C"/><circle cx="-11" cy="-6" r="2.2" fill="#fff" opacity=".75"/></g><g class="wr"><path d="M0 0C6-14 18-15 19-7 20-1 10 2 0 0Z" fill="#FF8FC3"/><path d="M0 1C8 3 15 9 11 13 7 16 1 9 0 1Z" fill="#E83E8C"/><circle cx="11" cy="-6" r="2.2" fill="#fff" opacity=".75"/></g><rect x="-1" y="-6" width="2" height="14" rx="1" fill="#fff"/></svg>';
+b.appendChild(e)})();
 var hero=d.querySelector('.hero');
 if(!reduce&&hero){(function(){
 var cols=[['#FF8FC3','#E83E8C'],['#8FB4FF','#3A7BFF'],['#C4A3FF','#8B5CF6'],['#FFC2DE','#E83E8C'],['#9ED0FF','#2D66E6']];
