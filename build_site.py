@@ -17,7 +17,8 @@ BRAND = dict(
     tagline='Intelligence in Synergy',
     host='University of the Sunshine Coast', host_short='UniSC',
     host_url='https://www.usc.edu.au/',
-    email='ssaremi@usc.edu.au',
+    email='join@syntera.au',   # general address (JSON-LD, privacy requests)
+    email_student='prospective.student@syntera.au', email_join='join@syntera.au', email_collab='collaborations@syntera.au',
     scholar='https://scholar.google.com/citations?user=oDhSiscAAAAJ',
 )
 
@@ -368,7 +369,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
       <p>{BRAND['tagline']}. An applied AI and connected systems research group.</p></div>
     <div><h4>Research</h4><ul>{areas_f}</ul></div>
     <div><h4>The group</h4><ul><li><a href="{p}about.html">About</a></li><li><a href="{p}people.html">People</a></li><li><a href="{p}publications.html">Publications</a></li><li><a href="{p}join.html">Join us</a></li><li><a href="{p}privacy.html">Privacy</a></li></ul></div>
-    <div><h4>Get in touch</h4><ul><li><a href="mailto:{BRAND['email']}">{BRAND['email']}</a></li><li><a href="{BRAND['scholar']}" rel="noopener" target="_blank">Director on Google Scholar</a></li></ul><a class="btn btn--pink btn--sm" href="{p}join.html">Join Us</a></div>
+    <div><h4>Get in touch</h4><ul><li><a href="mailto:{BRAND['email_student']}">{BRAND['email_student']}</a></li><li><a href="mailto:{BRAND['email_join']}">{BRAND['email_join']}</a></li><li><a href="mailto:{BRAND['email_collab']}">{BRAND['email_collab']}</a></li><li><a href="{BRAND['scholar']}" rel="noopener" target="_blank">Director on Google Scholar</a></li></ul><a class="btn btn--pink btn--sm" href="{p}join.html">Join Us</a></div>
   </div>
   <div class="ftr__bar"><span>© 2026 {BRAND['name']}</span><span><a href="{p}privacy.html">Privacy</a></span></div>
 </div></footer>
@@ -699,22 +700,24 @@ def build_pages(members):
     # ---------- join
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Join us</p><h1>Open to collaboration</h1>
 <p class="lead">PhD and Master's students, postdocs, research assistants, interns, industry and academic partners are all welcome.</p>
-<a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Research%20Group">Reach out</a></div></section>
+<a class="btn btn--pink" href="mailto:{BRAND['email_join']}?subject=Joining%20SYNTERA%20Research%20Group">Reach out</a></div></section>
 <section class="sec" id="positions"><div class="wrap prose"><h2>Open positions</h2><p>No positions are open right now. Send us a short note anyway: we like hearing from motivated people.</p></div></section>
 <section class="sec sec--ice" id="apply"><div class="wrap prose"><h2>How to apply</h2>
 <p>Email us with the following attached:</p><ul><li><b>CV</b></li><li><b>Academic transcript</b></li><li><b>Research statement</b> (one page)</li></ul>
 <p>In your message, tell us:</p><ol><li>Who you are</li><li>Which of our <a href="research.html">research areas</a> interests you</li><li>Where we can learn more about your work (Scholar, GitHub, ORCID)</li><li>What you can offer</li></ol>
-<p><a class="btn btn--pink" href="mailto:{BRAND['email']}?subject=Joining%20SYNTERA%20Research%20Group">Email the group</a></p></div></section>
+<p><a class="btn btn--pink" href="mailto:{BRAND['email_student']}?subject=Prospective%20student%20enquiry">Email as a prospective student</a> <a class="btn btn--ghost" href="mailto:{BRAND['email_join']}?subject=Joining%20SYNTERA%20Research%20Group">Postdocs, RAs and interns</a></p>
+<p class="muted">Prospective students: <a href="mailto:{BRAND['email_student']}">{BRAND['email_student']}</a>. Everyone else joining the group: <a href="mailto:{BRAND['email_join']}">{BRAND['email_join']}</a>.</p></div></section>
 <section class="sec" id="collaborate"><div class="wrap prose"><h2>Collaborate with us</h2>
 <p>We work with universities, hospitals, aged-care providers, farms, schools and industry. If you have a real problem where applied AI or connected systems could help, we would like to talk.</p>
-<p><a class="btn btn--blue" href="mailto:{BRAND['email']}?subject=Collaboration%20with%20SYNTERA%20Research%20Group">Propose a collaboration</a></p></div></section>'''
+<p><a class="btn btn--blue" href="mailto:{BRAND['email_collab']}?subject=Collaboration%20with%20SYNTERA%20Research%20Group">Propose a collaboration</a></p>
+<p class="muted">Collaboration enquiries: <a href="mailto:{BRAND['email_collab']}">{BRAND['email_collab']}</a></p></div></section>'''
     page('join.html', 'Join Us', 'Open PhD, Master\'s, postdoc, research assistant and internship opportunities, and how to apply.', body, 'join')
 
     # ---------- contact
     soc = f'<a class="btn btn--ghost-d btn--sm" href="{BRAND["scholar"]}" rel="noopener" target="_blank">Director on Google Scholar</a>'
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Contact</p><h1>Get in touch</h1></div></section>
 <section class="sec"><div class="wrap"><div class="grid grid--3">
-<div class="panel"><h3>Email</h3><p><a href="mailto:{BRAND['email']}">{BRAND['email']}</a></p><p class="muted">Contact for the group (Director, <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>).</p></div>
+<div class="panel"><h3>Email</h3><p><b>Prospective students</b><br><a href="mailto:{BRAND['email_student']}">{BRAND['email_student']}</a></p><p><b>Joining the group</b><br><a href="mailto:{BRAND['email_join']}">{BRAND['email_join']}</a></p><p><b>Collaborations</b><br><a href="mailto:{BRAND['email_collab']}">{BRAND['email_collab']}</a></p><p class="muted">Messages reach the group Director, <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>.</p></div>
 <div class="panel"><h3>Director's affiliation</h3><p><a href="{BRAND['host_url']}" rel="noopener" target="_blank">{BRAND['host']}</a></p><p class="muted">School of Science, Technology and Engineering, Queensland, Australia.</p></div>
 <div class="panel"><h3>Elsewhere</h3><p>{soc}</p></div></div></div></section>'''
     page('contact.html', 'Contact', 'Contact SYNTERA Research Group: email and links.', body, 'contact')
