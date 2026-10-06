@@ -649,7 +649,7 @@ def build_pages(members):
 <div class="prose"><p class="eyebrow">Founder &amp; Director</p><h2><a href="people/{director["id"]}.html">{E(disp_name(director))}</a></h2><p>{E(DETAILS["shahrzad-saremi"]["title"])}, {E(director["inst"][0])}.</p>
 <p>{E(DETAILS["shahrzad-saremi"]["bio"][0])}</p>
 <p>{E(DETAILS["shahrzad-saremi"]["bio"][1].split(". She is widely")[0])}.</p><p><a class="btn btn--blue btn--sm" href="people/{director["id"]}.html">Full profile</a></p></div></div></div></section>
-<section class="sec sec--blush" id="partners"><div class="wrap"><p class="eyebrow">Collaborators</p><h2>Partner institutions</h2><ul class="logos">{plog}</ul></div></section>'''
+'''
     page('about.html', 'About', 'The story, mission, vision and values of SYNTERA Research Group.', body, 'about')
 
     # ---------- join
