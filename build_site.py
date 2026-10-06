@@ -387,7 +387,7 @@ def details_html(m):
     if d.get('expertise'): out += '<h2>Research expertise</h2><ul>' + li(f'<b>{E(a)}</b>: {E(b)}' for a, b in d['expertise']) + '</ul>'
     if d.get('education'): out += f'<h2>Academic background</h2><ul>{li(d["education"])}</ul>'
     if d.get('experience'): out += '<h2>Professional experience</h2><ul>' + li(f'<b>{E(a)}</b>: {E(b)}' for a, b in d['experience']) + '</ul>'
-    if d.get('students'): out += f'<h2>Supervision</h2><ul>{li(d["students"])}</ul>'
+    if d.get('students'): out += f'<h2>Supervised research</h2><ul>{li(d["students"])}</ul>'
     if d.get('teaching'): out += f'<h2>Teaching areas</h2><ul class="tags tags--dark">{li(E(x) for x in d["teaching"])}</ul>'
     if d.get('courses'): out += '<h2>Courses taught</h2>' + ''.join(f'<details class="abs"><summary>{E(a)}</summary><p>{E("; ".join(b))}</p></details>' for a, b in d['courses'])
     if d.get('skills'): out += '<h2>Technical skills</h2><ul>' + li(f'<b>{E(a)}</b>: {E(b)}' for a, b in d['skills']) + '</ul>'
