@@ -8,6 +8,9 @@ OUT = os.path.join(ROOT, 'docs')
 E = html.escape
 
 # ───────────────────────── brand ─────────────────────────
+SITE_URL = 'https://syntera.au'
+PAGES = []   # (fname, noindex) collected for sitemap
+
 BRAND = dict(
     name='SYNTERA Research Group', short='SYNTERA',
     full='SYNTERA Research Group: Applied AI & Connected Systems',
@@ -286,6 +289,13 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
     p = '../' * depth
     cur = ' aria-current="page"'
     nav = ''.join(f'<li><a href="{p}{h}"{cur if k == active else ""}>{t}</a></li>' for h, t, k in NAV)
+    clean = 'index.html' if fname == '404.html' else fname
+    curl = SITE_URL + '/' + ('' if clean == 'index.html' else re.sub(r'\.html$', '', clean))
+    robots = '<meta name="robots" content="noindex">\n' if fname == '404.html' else ''
+    ld = ''
+    if home:
+        ld = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@type": "ResearchOrganization", "name": BRAND['name'], "url": SITE_URL + '/', "logo": SITE_URL + '/images/favicon.svg', "email": BRAND['email'], "slogan": BRAND['tagline'], "parentOrganization": {"@type": "CollegeOrUniversity", "name": "University of the Sunshine Coast", "url": BRAND['host_url']}, "sameAs": [BRAND['scholar']]}) + '</script>\n'
+    if fname != '404.html': PAGES.append(fname)
     full_title = BRAND['full'] if home else f'{title} · {BRAND["name"]}'
     areas_f = ''.join(f'<li><a href="{p}research/{a["id"]}.html">{a["short"]}</a></li>' for a in AREAS)
     data_js = f'<script src="{p}data/publications.js?v={VER}"></script><script src="{p}js/pubs.js?v={VER}"></script>' if pubs_on else ''
@@ -297,7 +307,11 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
 <title>{E(full_title)}</title>
 <meta name="description" content="{E(desc)}">
 <meta name="theme-color" content="#0F1A47">
+<link rel="canonical" href="{curl}">
 <meta property="og:title" content="{E(full_title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:type" content="website">
+<meta property="og:url" content="{curl}"><meta property="og:site_name" content="{BRAND['name']}"><meta property="og:image" content="{SITE_URL}/images/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{E(full_title)}"><meta name="twitter:description" content="{E(desc)}"><meta name="twitter:image" content="{SITE_URL}/images/og-image.png">
+{robots}{ld}
 <link rel="icon" href="{p}images/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="{p}css/style.css?v={VER}">
 <script>try{{var t=localStorage.getItem('syntera-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
@@ -1034,6 +1048,28 @@ run();
 
 FAVICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E83E8C"/><stop offset="1" stop-color="#3A7BFF"/></linearGradient></defs><rect width="40" height="40" rx="10" fill="#0F1A47"/><path d="M28 12c-2-3-14-3-14 3 0 7 14 3 14 10 0 6-12 6-15 2" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/><circle cx="28" cy="12" r="3" fill="#FF8FC3"/><circle cx="13" cy="27" r="3" fill="#8FB4FF"/></svg>'
 
+def make_og_image():
+    from PIL import Image, ImageDraw, ImageFont
+    W, H = 1200, 630
+    im = Image.new('RGB', (W, H), '#0F1A47'); d = ImageDraw.Draw(im)
+    for i in range(H):   # vertical gradient
+        t = i / H; d.line([(0, i), (W, i)], fill=(int(15 + 25 * t), int(26 + 10 * t), int(71 + 60 * t)))
+    for x, y, r, c in [(980, 150, 190, (232, 62, 140)), (1080, 470, 140, (58, 123, 255)), (820, 560, 90, (255, 143, 195))]:
+        ov = Image.new('RGBA', (W, H), (0, 0, 0, 0)); ImageDraw.Draw(ov).ellipse([x - r, y - r, x + r, y + r], fill=c + (70,))
+        im.paste(ov, (0, 0), ov)
+    d = ImageDraw.Draw(im)
+    def font(sz, bold=True):
+        for n in (['arialbd.ttf', 'segoeuib.ttf'] if bold else ['arial.ttf', 'segoeui.ttf']) + ['DejaVuSans-Bold.ttf' if bold else 'DejaVuSans.ttf']:
+            try: return ImageFont.truetype(n, sz)
+            except OSError: pass
+        return ImageFont.load_default()
+    d.text((80, 190), 'SYNTERA', font=font(130), fill='white')
+    d.text((86, 340), 'Research Group', font=font(54, False), fill=(255, 143, 195))
+    d.text((86, 430), 'Applied AI & Connected Systems', font=font(40, False), fill=(200, 210, 240))
+    d.text((86, 540), 'syntera.au', font=font(34), fill=(143, 180, 255))
+    os.makedirs(os.path.join(OUT, 'images'), exist_ok=True)
+    im.save(os.path.join(OUT, 'images', 'og-image.png'), optimize=True)
+
 def write(path, txt):
     p = os.path.join(OUT, path); os.makedirs(os.path.dirname(p), exist_ok=True)
     open(p, 'w', encoding='utf-8').write(txt)
@@ -1056,6 +1092,28 @@ def main():
     for f in os.listdir(os.path.join(OUT, 'images', 'partners')):
         if f not in used: os.remove(os.path.join(OUT, 'images', 'partners', f))
     write('.nojekyll', '')
+    today = __import__('datetime').date.today().isoformat()
+    urls = ''.join('<url><loc>%s/%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (SITE_URL, '' if f == 'index.html' else re.sub(r'\.html$', '', f), today, '1.0' if f == 'index.html' else '0.8' if '/' not in f else '0.6') for f in sorted(PAGES))
+    write('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + urls + '</urlset>')
+    write('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE_URL)
+    write('_headers', """/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+/images/*
+  Cache-Control: public, max-age=2592000
+/data/*
+  Cache-Control: public, max-age=31536000, immutable
+""")
+    make_og_image()
+    page('404.html', 'Page not found', 'This page could not be found.', '<section class="sec"><div class="wrap" style="text-align:center;padding:80px 0"><h1>Page not found</h1><p>The page you are looking for does not exist or has moved.</p><p><a class="btn btn--pink" href="/">Back to the home page</a></p></div></section>')
     n = sum(len(f) for _, _, f in os.walk(OUT))
     print(f'{len(members)} members, {len(PUBS)} publications, {n} files -> {OUT}')
 
