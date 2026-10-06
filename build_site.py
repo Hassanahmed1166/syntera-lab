@@ -347,7 +347,6 @@ def details_html(m):
     li = lambda xs: ''.join(f'<li>{x}</li>' for x in xs)
     out = ''
     if d.get('quals'): out += f'<h2>Qualifications</h2><p>{E(d["quals"])}</p>'
-    if d.get('roles'): out += f'<ul>{li(E(x) for x in d["roles"])}</ul>'
     if d.get('bio'): out += '<h2>About</h2>' + ''.join(f'<p>{E(p)}</p>' for p in d['bio'])
     if d.get('metrics'): out += f'<p class="muted">{E(d["metrics"])}</p>'
     if d.get('supervision'): out += f'<h2>Research supervision</h2><p>{E(d["supervision"])}</p>'
@@ -502,7 +501,7 @@ def build_pages(members):
         body = f'''<section class="phead phead--profile"><div class="wrap profile"><div class="profile__ph">{avatar(m, "../", "av av--lg")}</div>
 <div><p class="eyebrow"><a href="../people.html">People</a></p><h1>{E(disp_name(m))}{f"<small>{E(m['suffix'])}</small>" if m["suffix"] else ""}</h1>
 <p class="lead">{E(m["role"])}{" · " + E(DETAILS.get(m["id"], {}).get("title", m["title"])) if m["title"] else ""}</p>
-<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
+{"".join(f'<p class="lead lead--sub">{E(r)}</p>' for r in DETAILS.get(m["id"], {}).get("roles", []))}<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
 <section class="sec"><div class="wrap prose">{details_html(m)}<h2>Affiliation</h2><p>{insts}</p>
 <h2>Research areas</h2><div class="chips">{achips}</div>
 <h2>Research interests</h2><ul class="tags tags--dark">{ints}</ul>{pubsec}
@@ -622,7 +621,7 @@ a{color:var(--blue-ink)}img{max-width:100%}
 .hero__in{position:relative;padding:clamp(70px,12vw,140px) 0}.hero__in>*{max-width:760px}
 .badge{display:inline-block;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 14px;font-size:.85rem;margin:0 0 1.2rem}
 .grad{background:linear-gradient(90deg,#FF8FC3,#8FB4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{font-size:1.2rem;max-width:62ch}.hero .lead{color:#E3E9FA}
+.lead{font-size:1.2rem;max-width:62ch}.lead--sub{font-size:1.02rem;margin:.2rem 0 .6rem}.hero .lead{color:#E3E9FA}
 /* stats */
 .stats{background:var(--hero);color:#fff;border-top:1px solid rgba(255,255,255,.1)}.stats__in{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:28px 0;text-align:center}
 .stat b{display:block;font:700 2.4rem "Space Grotesk",sans-serif;background:linear-gradient(90deg,#FF8FC3,#8FB4FF);-webkit-background-clip:text;background-clip:text;color:transparent}.stat span{font-size:.9rem;color:#C9D4F2}

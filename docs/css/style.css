@@ -40,7 +40,7 @@ a{color:var(--blue-ink)}img{max-width:100%}
 .hero__in{position:relative;padding:clamp(70px,12vw,140px) 0}.hero__in>*{max-width:760px}
 .badge{display:inline-block;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 14px;font-size:.85rem;margin:0 0 1.2rem}
 .grad{background:linear-gradient(90deg,#FF8FC3,#8FB4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{font-size:1.2rem;max-width:62ch}.hero .lead{color:#E3E9FA}
+.lead{font-size:1.2rem;max-width:62ch}.lead--sub{font-size:1.02rem;margin:.2rem 0 .6rem}.hero .lead{color:#E3E9FA}
 /* stats */
 .stats{background:var(--hero);color:#fff;border-top:1px solid rgba(255,255,255,.1)}.stats__in{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:28px 0;text-align:center}
 .stat b{display:block;font:700 2.4rem "Space Grotesk",sans-serif;background:linear-gradient(90deg,#FF8FC3,#8FB4FF);-webkit-background-clip:text;background-clip:text;color:transparent}.stat span{font-size:.9rem;color:#C9D4F2}
