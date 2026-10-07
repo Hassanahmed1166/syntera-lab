@@ -103,7 +103,7 @@ PHOTOS = {
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
- 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
+ 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
@@ -151,6 +151,8 @@ EXTRA_MEMBERS = [
   ['Computer vision','Medical AI','Large language models','Agentic AI','Deep learning'],'0009-0002-6979-4059','https://scholar.google.com/citations?user=lgIdgBcAAAAJ','https://www.linkedin.com/in/ali-hasnain-aa88252a3/'),
  ('malak-emziane','Malak Emziane','Computer Science Engineer · Part-Time Teacher',['University of Tipaza'],'Algeria',
   ['Quantum cryptography','IoT','AI','Secure 5G/6G networks'],'0009-0001-1485-8169','https://scholar.google.com/citations?user=K8km0VoAAAAJ','https://www.linkedin.com/in/malak-emziane-a407681a9'),
+ ('ramsha-khan','Ramsha Khan','Researcher · MPhil Virology & Molecular Pathology',['University of Lahore'],'Pakistan',
+  ['AI for health','Biomedical research','Molecular medicine','Virology & infectious diseases','AI in healthcare','Bioinformatics'],'0009-0004-6469-300X','https://scholar.google.com/citations?user=GFuPTmYAAAAJ','https://www.linkedin.com/in/ramshakhan13'),
 ]
 EXTRA_META = {'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher')}
 
