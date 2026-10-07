@@ -88,7 +88,7 @@ def slug(s):
     s = re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
     return s
 
-FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no','Iraq':'iq','China':'cn','United Kingdom':'gb'}
+FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no','Iraq':'iq','China':'cn','United Kingdom':'gb','Algeria':'dz'}
 # Photo file per member id
 PHOTOS = {
  'shahrzad-saremi':'shahrzad saremi.jpeg','rania-shibl':'rania shibl.jpeg','mostafa-kamalpour':'Mostafa Kamalpour.jpeg',
@@ -103,6 +103,7 @@ PHOTOS = {
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
+ 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
@@ -116,7 +117,7 @@ AREAS_OF = {
 }
 GROUP_OF = {}
 for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leadership'
-for i in ['mostafa-kamalpour','hassan-ahmed']: GROUP_OF[i] = 'leads'
+for i in ['mostafa-kamalpour','hassan-ahmed','shiva-ilkhani-zadeh']: GROUP_OF[i] = 'leads'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
           'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'students'
 GROUPS = [('leadership','Leadership & Founders'),('leads','Senior Researchers'),
@@ -144,7 +145,14 @@ EXTRA_MEMBERS = [
  ('hasanga-uyanhewage','Hasanga Uyanhewage','Customer Service Advisor',['Tesco Mobile, Tesco UK'],'United Kingdom',
   ['Software engineering','Human–AI interaction','AI governance','Privacy & data protection','Trust & decision-making'],'0009-0009-3528-4940',
   'https://scholar.google.com/citations?hl=en&user=n7aYL-MAAAAJ','https://www.linkedin.com/in/hasangauyanhewa'),
+ ('shiva-ilkhani-zadeh','Shiva Ilkhani Zadeh','Senior Lecturer in Business and Management',['Business School, Business and Law Department, Bournemouth University'],'United Kingdom',
+  ['Leadership','Sustainability','AI in tourism','Nudging'],'0000-0002-9362-663X','https://scholar.google.com/citations?user=Fmh5rhIAAAAJ','https://www.linkedin.com/in/shiva-ilkhanizadeh'),
+ ('ali-hasnain','Ali Hasnain','Researcher',['Department of Software Engineering, University of Sahiwal'],'Pakistan',
+  ['Computer vision','Medical AI','Large language models','Agentic AI','Deep learning'],'0009-0002-6979-4059','https://scholar.google.com/citations?user=lgIdgBcAAAAJ','https://www.linkedin.com/in/ali-hasnain-aa88252a3/'),
+ ('malak-emziane','Malak Emziane','Computer Science Engineer · Part-Time Teacher',['University of Tipaza'],'Algeria',
+  ['Quantum cryptography','IoT','AI','Secure 5G/6G networks'],'0009-0001-1485-8169','https://scholar.google.com/citations?user=K8km0VoAAAAJ','https://www.linkedin.com/in/malak-emziane-a407681a9'),
 ]
+EXTRA_META = {'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher')}
 
 def build_members():
     out = []
@@ -180,15 +188,17 @@ def build_members():
             areas=AREAS_OF.get(mid, []), interests=interests, orcid=orcid,
             scholar=r.get('J', '').strip(), linkedin=r.get('K', '').strip(), email=r.get('H', '').strip()))
     for mid, name, title, inst, country, interests, orcid, scholar, linkedin in EXTRA_MEMBERS:
-        out.append(dict(id=mid, prefix='', name=name, full=name, suffix='', alias='', group='researchers', role='Researcher',
+        out.append(dict(id=mid, prefix='', name=name, full=name, suffix='', alias='', group=GROUP_OF.get(mid, 'researchers'), role='Researcher',
             title=title, inst=inst, country=country, areas=AREAS_OF.get(mid, []), interests=interests, orcid=orcid,
             scholar=scholar, linkedin=linkedin, email=''))
+        out[-1].update(EXTRA_META.get(mid, {}))
     for m in out:
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor Dr.'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof. Dr.'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'hassan-ahmed', 'mostafa-kamalpour']
-    out.sort(key=lambda m: first.index(m['id']) if m['id'] in first else len(first))
+    order = [g for g, _ in GROUPS]
+    out.sort(key=lambda m: (order.index(m['group']), first.index(m['id']) if m['id'] in first else len(first)))
     return out
 
 # face-centred crops (left, top, size) in source pixels
