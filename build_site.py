@@ -115,13 +115,13 @@ AREAS_OF = {
  'shahrzad-saremi':['health','home','agri','edu','connect','mobility'],'hassan-ahmed':['edu','connect'],'abdullah-khan':['connect'],'arooj-fatima':['connect'],
  'bisma-ali':['health'],'bilal-aslam':['health'],
 }
-GROUP_OF = {}
+GROUP_OF = {}; STUDENT_IDS = set()   # students are listed under Researchers & Academics, after the other researchers
 for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leadership'
 for i in ['mostafa-kamalpour','hassan-ahmed','shiva-ilkhani-zadeh']: GROUP_OF[i] = 'leads'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
-          'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'students'
+          'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'researchers'; STUDENT_IDS.add(i)
 GROUPS = [('leadership','Leadership & Founders'),('leads','Senior Researchers'),
-          ('researchers','Researchers & Academics'),('students',"Master's & Undergraduate Students")]
+          ('researchers','Researchers & Academics')]
 SHORT_INTEREST = {'Passive sensor monitoring and interpretation of daily activity patterns':'Passive sensor monitoring',
  'Data visualisation for health professionals':'Health data visualisation','Telehealth and wearables':'Telehealth & wearables',
  'Human�computer interaction, usability and technology adoption':'HCI & technology adoption',
@@ -198,7 +198,7 @@ def build_members():
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'hassan-ahmed', 'mostafa-kamalpour']
     order = [g for g, _ in GROUPS]
-    out.sort(key=lambda m: (order.index(m['group']), first.index(m['id']) if m['id'] in first else len(first)))
+    out.sort(key=lambda m: (order.index(m['group']), m['id'] in STUDENT_IDS, first.index(m['id']) if m['id'] in first else len(first)))
     return out
 
 # face-centred crops (left, top, size) in source pixels
