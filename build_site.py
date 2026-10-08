@@ -288,25 +288,37 @@ def build_member_keys(members):
         MEMBER_KEYS[(sur, parts[0][0].lower())] = m['id']
         if m['id'] == 'dana-dermody': MEMBER_KEYS[(sur, '*')] = m['id']   # one source lists her as "Dermody, D."
 
-INTEREST_RULES = [('health', r'health|medical|clinical|patient|biomedical|nurs|disease|iomt'), ('home', r'smart home|ageing|aging|assistive'),
-    ('agri', r'agricultur|crop|farm'), ('edu', r'education|teaching|student|pedagog|human.{0,3}ai interaction|academic'),
-    ('connect', r'iot|internet of things|cyber|security|privacy|blockchain|network|sensor|governance'),
-    ('mobility', r'vehic|iov|traffic|transport|mobility')]
+INTEREST_RULES = [
+    ('health', r'health|medical|clinical|biomedical|disease|virolog|molecular|bioinformat|iomt|telehealth|wearable|sports injury|nurs|patient|eeg|neuro|genom|concussion'),
+    ('home', r'smart home|ageing|aging|assistive|ambient|elder|passive sensor|aged care'),
+    ('agri', r'agricultur|crop|farm'),
+    ('edu', r'educat|teaching|student|pedagog|learning analytics|serious game|immersive learning|computer-assisted|linguistic|tutor|e-learning|career|skill'),
+    ('connect', r'\biot\b|internet of things|iomt|cyber|security|privacy|blockchain|networking|network (?:security|reliab)|sensor network|wireless|5g|6g|cryptograph|intrusion|reliability engineering'),
+    ('mobility', r'vehic|\biov\b|traffic|transport|v2x|v2i')]
 
 def derive_areas(members):
-    """Research areas of each person = union of the areas of the papers they co-authored.
-    Saremi and Shibl work across every area; people without papers keep their stated areas."""
+    """Research areas of each person, from evidence: (1) their stated interests, (2) the areas of papers they co-authored
+    (including paper keywords from pub_meta.json). A paper-based area needs 3+ papers, or 2+ papers making up 40%+ of their
+    output, or (for members who listed no interests) half of their papers. Saremi and Shibl work across every area."""
     order = [a['id'] for a in AREAS]
-    got = {m['id']: set() for m in members}
+    mp = os.path.join(ROOT, 'pub_meta.json')
+    meta = json.load(open(mp, encoding='utf-8')) if os.path.exists(mp) else {}
+    ev = {m['id']: {} for m in members}; npub = {m['id']: 0 for m in members}
     for p in PUBS:
+        kws = ' '.join(meta.get(p[0], {}).get('keywords', [])).lower()
+        areas = set(p[7]) | {a for a, rx in INTEREST_RULES if kws and re.search(rx, kws)}
         for _, mid in parse_authors(p[3]):
-            if mid in got: got[mid].update(p[7])
+            if mid in ev:
+                npub[mid] += 1
+                for a in areas: ev[mid][a] = ev[mid].get(a, 0) + 1
     for m in members:
-        if m['id'] in ('shahrzad-saremi', 'rania-shibl'): m['areas'] = list(order)
-        elif got[m['id']]: m['areas'] = [a for a in order if a in got[m['id']]]
-        elif not m['areas']:      # no papers yet: infer from stated interests
-            t = ' '.join(m['interests']).lower()
-            m['areas'] = [a for a, rx in INTEREST_RULES if re.search(rx, t)]
+        if m['id'] in ('shahrzad-saremi', 'rania-shibl'): m['areas'] = list(order); continue
+        t = ' '.join(m['interests']).lower()
+        got = {a for a, rx in INTEREST_RULES if re.search(rx, t)}
+        n = npub[m['id']]
+        for a, c in ev[m['id']].items():
+            if c >= 3 or (c >= 2 and c / n >= .4) or (not m['interests'] and c / n >= .5): got.add(a)
+        m['areas'] = [a for a in order if a in got]
 
 def parse_authors(s):
     out = []
@@ -328,7 +340,7 @@ def export_pubs():
         items.append(dict(id=pid, type=typ, year=year, authors=parse_authors(authors), title=title, venue=venue,
                           doi=doi or mt.get('doi', ''), areas=areas, note=note,
                           keywords=mt.get('keywords', []), abstract=mt.get('abstract', '')))
-    areas = {a['id']: dict(short=a['short'], color=a['color']) for a in AREAS}
+    areas = {a['id']: dict(short=a['name'], color=a['color']) for a in AREAS}
     return 'window.SYNTERA_PUBS = %s;\nwindow.SYNTERA_AREAS = %s;\n' % (json.dumps(items, ensure_ascii=False, indent=1), json.dumps(areas))
 
 # ───────────────────────── page chrome ─────────────────────────
@@ -625,7 +637,7 @@ def disp_name(m):
     return ' '.join(x for x in [m['prefix'], m['name']] if x)
 
 def person_card(m, p=''):
-    areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["short"]}"></span>' for a in m['areas'])
+    areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["name"]}"></span>' for a in m['areas'])
     inst = E(m['inst'][0]) if m['inst'] else ''
     role = f'<p class="pcard__role">{E(m["role"])}</p>' if m['group'] == 'leadership' else ''   # role tags only for founders; groups are headed on the People page
     return (f'<li class="pcard" data-areas="{" ".join(m["areas"]) or "methods"}" data-name="{E((m["name"]+" "+m["alias"]+" "+" ".join(m["interests"])).lower())}">'
@@ -750,7 +762,7 @@ def build_pages(members):
 
     # ---------- people
     chips = '<button class="fchip is-on" data-area="all">All</button>' + ''.join(
-        f'<button class="fchip" data-area="{a["id"]}" style="--c:{a["color"]}">{a["short"].replace("SYNTERA ","")} <small>{area_cnt[a["id"]]}</small></button>' for a in AREAS) + \
+        f'<button class="fchip" data-area="{a["id"]}" style="--c:{a["color"]}">{a["name"]} <small>{area_cnt[a["id"]]}</small></button>' for a in AREAS) + \
         f'<button class="fchip" data-area="methods">Core AI &amp; Methods <small>{sum(not m["areas"] for m in members)}</small></button>'
     secs = ''
     for gid, gt in GROUPS:
@@ -770,7 +782,7 @@ def build_pages(members):
         if m['linkedin']: lk.append(('LinkedIn', m['linkedin']))
         lk += m.get('links', [])
         links = ''.join(f'<a class="btn btn--ghost-d btn--sm" href="{E(u)}" rel="noopener" target="_blank">{t}</a>' for t, u in lk)
-        achips = ''.join(f'<a class="chip" style="--c:{AREA[a]["color"]}" href="../research/{a}.html">{AREA[a]["short"]}</a>' for a in m['areas']) or '<span class="chip chip--plain">Core AI &amp; Methods</span>'
+        achips = ''.join(f'<a class="chip" style="--c:{AREA[a]["color"]}" href="../research/{a}.html">{AREA[a]["name"]}</a>' for a in m['areas']) or '<span class="chip chip--plain">Core AI &amp; Methods</span>'
         ints = ''.join(f'<li>{E(x)}</li>' for x in m['interests'])
         insts = '<br>'.join(E(x) for x in m['inst']) or '<span class="muted">Affiliation to be confirmed</span>'
         pubsec = f'<h2>Publications</h2><ol class="publist" data-pubs data-member="{m["id"]}">{static_pubs(lambda p, m=m: any(mid == m["id"] for _, mid in parse_authors(p[3])))}</ol>' if any(m['id'] == mid for p in PUBS for _, mid in parse_authors(p[3])) else ''
@@ -798,7 +810,7 @@ def build_pages(members):
     types = [('all','All')] + [(k, t) for k, t in [('journal','Journal'),('conference','Conference'),('book','Book'),('chapter','Chapter'),('thesis','Thesis'),('preprint','Preprint'),('other','Other')] if any(p[1] == k for p in PUBS)]
     years = sorted({p[2] for p in PUBS if p[2]}, reverse=True)
     tchips = ''.join(f'<button class="fchip{" is-on" if k=="all" else ""}" data-type="{k}">{t}</button>' for k, t in types)
-    achips = '<button class="fchip is-on" data-area="all">All areas</button>' + ''.join(f'<button class="fchip" data-area="{a["id"]}" style="--c:{a["color"]}">{a["short"].replace("SYNTERA ","")}</button>' for a in AREAS)
+    achips = '<button class="fchip is-on" data-area="all">All areas</button>' + ''.join(f'<button class="fchip" data-area="{a["id"]}" style="--c:{a["color"]}">{a["name"]}</button>' for a in AREAS)
     yopts = '<option value="all">All years</option>' + ''.join(f'<option>{y}</option>' for y in years)
     body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">Publications</p><h1>Research output</h1>
 <p class="lead">Papers, chapters, books and theses by group members and the director. Group members are shown in bold and link to their profiles.</p>

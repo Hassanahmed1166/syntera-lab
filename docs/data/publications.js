@@ -5692,4 +5692,4 @@ window.SYNTERA_PUBS = [
   "abstract": ""
  }
 ];
-window.SYNTERA_AREAS = {"health": {"short": "SYNTERA Health", "color": "#E83E8C"}, "home": {"short": "SYNTERA Home", "color": "#8B5CF6"}, "agri": {"short": "SYNTERA Agri", "color": "#16A34A"}, "edu": {"short": "SYNTERA Edu", "color": "#D97706"}, "connect": {"short": "SYNTERA Connect", "color": "#3A7BFF"}, "mobility": {"short": "SYNTERA Mobility", "color": "#0E9F8E"}};
+window.SYNTERA_AREAS = {"health": {"short": "AI for Health", "color": "#E83E8C"}, "home": {"short": "Smart Health Home", "color": "#8B5CF6"}, "agri": {"short": "AI for Agriculture", "color": "#16A34A"}, "edu": {"short": "AI for Education", "color": "#D97706"}, "connect": {"short": "Internet of Things", "color": "#3A7BFF"}, "mobility": {"short": "Internet of Vehicles", "color": "#0E9F8E"}};
