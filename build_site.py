@@ -154,7 +154,7 @@ EXTRA_MEMBERS = [
   ['Quantum cryptography','IoT','AI','Secure 5G/6G networks'],'0009-0001-1485-8169','https://scholar.google.com/citations?user=K8km0VoAAAAJ','https://www.linkedin.com/in/malak-emziane-a407681a9'),
  ('ramsha-khan','Ramsha Khan','Researcher · MPhil Virology & Molecular Pathology',['University of Lahore'],'Pakistan',
   ['AI for health','Biomedical research','Molecular medicine','Virology & infectious diseases','AI in healthcare','Bioinformatics'],'0009-0004-6469-300X','https://scholar.google.com/citations?user=GFuPTmYAAAAJ','https://www.linkedin.com/in/ramshakhan13'),
- ('alan-liew','Alan Wee-Chung Liew','Head of School, School of Information and Communication Technology',['Griffith University, Gold Coast'],'Australia',
+ ('alan-liew','Alan Wee-Chung Liew','Head of School, School of Information and Communication Technology',['School of Information and Communication Technology, Griffith University, Gold Coast'],'Australia',
   ['Artificial intelligence','AI for health','Medical imaging','Multimodal AI','Trustworthy & explainable AI','Graph learning & foundation models','Machine learning','Computer vision','Pattern recognition','Bioinformatics'],'0000-0001-6718-7584','https://scholar.google.com.au/citations?user=CNgJ3LYAAAAJ','https://www.linkedin.com/in/alan-liew-0214a138/'),
  ('fawad-zaidi','Syed Fawad M. Zaidi','Senior Academic',['Torrens University Australia'],'Australia',
   ['Artificial intelligence & intelligent systems','Human-centred design & design thinking','Serious games & immersive learning technologies','Digital health & health informatics','Learning analytics & educational innovation'],'0000-0002-3027-4139','https://scholar.google.com/citations?user=eZ22LtIAAAAJ','https://www.linkedin.com/in/syedfawadmustafazaidi/'),
@@ -288,6 +288,8 @@ def build_member_keys(members):
         MEMBER_KEYS[(sur, parts[0][0].lower())] = m['id']
         if m['id'] == 'dana-dermody': MEMBER_KEYS[(sur, '*')] = m['id']   # one source lists her as "Dermody, D."
 
+ALL_AREAS = {'shahrzad-saremi', 'rania-shibl', 'alan-liew'}   # work across every research area
+CORE_TOO = {'alan-liew'}                                    # also listed under Core AI & Methods
 INTEREST_RULES = [
     ('health', r'health|medical|clinical|biomedical|disease|virolog|molecular|bioinformat|iomt|telehealth|wearable|sports injury|nurs|patient|eeg|neuro|genom|concussion'),
     ('home', r'smart home|ageing|aging|assistive|ambient|elder|passive sensor|aged care'),
@@ -312,13 +314,14 @@ def derive_areas(members):
                 npub[mid] += 1
                 for a in areas: ev[mid][a] = ev[mid].get(a, 0) + 1
     for m in members:
-        if m['id'] in ('shahrzad-saremi', 'rania-shibl'): m['areas'] = list(order); continue
+        if m['id'] in ALL_AREAS: m['areas'] = list(order); m['core'] = m['id'] in CORE_TOO; continue
         t = ' '.join(m['interests']).lower()
         got = {a for a, rx in INTEREST_RULES if re.search(rx, t)}
         n = npub[m['id']]
         for a, c in ev[m['id']].items():
             if c >= 3 or (c >= 2 and c / n >= .4) or (not m['interests'] and c / n >= .5): got.add(a)
         m['areas'] = [a for a in order if a in got]
+        m['core'] = not m['areas']
 
 def parse_authors(s):
     out = []
@@ -640,7 +643,7 @@ def person_card(m, p=''):
     areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["name"]}"></span>' for a in m['areas'])
     inst = E(m['inst'][0]) if m['inst'] else ''
     role = f'<p class="pcard__role">{E(m["role"])}</p>' if m['group'] == 'leadership' else ''   # role tags only for founders; groups are headed on the People page
-    return (f'<li class="pcard" data-areas="{" ".join(m["areas"]) or "methods"}" data-name="{E((m["name"]+" "+m["alias"]+" "+" ".join(m["interests"])).lower())}">'
+    return (f'<li class="pcard" data-areas="{" ".join(m["areas"] + (["methods"] if m.get("core") else [])) or "methods"}" data-name="{E((m["name"]+" "+m["alias"]+" "+" ".join(m["interests"])).lower())}">'
             f'<a href="{p}people/{m["id"]}.html">{avatar(m, p)}'
             f'<h3>{E(disp_name(m))}</h3>{role}'
             f'<p class="pcard__inst">{flag(m, p)}<span>{inst}</span></p><div class="dots">{areas}</div></a></li>')
@@ -763,7 +766,7 @@ def build_pages(members):
     # ---------- people
     chips = '<button class="fchip is-on" data-area="all">All</button>' + ''.join(
         f'<button class="fchip" data-area="{a["id"]}" style="--c:{a["color"]}">{a["name"]} <small>{area_cnt[a["id"]]}</small></button>' for a in AREAS) + \
-        f'<button class="fchip" data-area="methods">Core AI &amp; Methods <small>{sum(not m["areas"] for m in members)}</small></button>'
+        f'<button class="fchip" data-area="methods">Core AI &amp; Methods <small>{sum(bool(m.get("core")) for m in members)}</small></button>'
     secs = ''
     for gid, gt in GROUPS:
         g = [m for m in members if m['group'] == gid]
@@ -782,7 +785,7 @@ def build_pages(members):
         if m['linkedin']: lk.append(('LinkedIn', m['linkedin']))
         lk += m.get('links', [])
         links = ''.join(f'<a class="btn btn--ghost-d btn--sm" href="{E(u)}" rel="noopener" target="_blank">{t}</a>' for t, u in lk)
-        achips = ''.join(f'<a class="chip" style="--c:{AREA[a]["color"]}" href="../research/{a}.html">{AREA[a]["name"]}</a>' for a in m['areas']) or '<span class="chip chip--plain">Core AI &amp; Methods</span>'
+        achips = ''.join(f'<a class="chip" style="--c:{AREA[a]["color"]}" href="../research/{a}.html">{AREA[a]["name"]}</a>' for a in m['areas']) + ('<span class="chip chip--plain">Core AI &amp; Methods</span>' if m.get('core') else '')
         ints = ''.join(f'<li>{E(x)}</li>' for x in m['interests'])
         insts = '<br>'.join(E(x) for x in m['inst']) or '<span class="muted">Affiliation to be confirmed</span>'
         pubsec = f'<h2>Publications</h2><ol class="publist" data-pubs data-member="{m["id"]}">{static_pubs(lambda p, m=m: any(mid == m["id"] for _, mid in parse_authors(p[3])))}</ol>' if any(m['id'] == mid for p in PUBS for _, mid in parse_authors(p[3])) else ''
