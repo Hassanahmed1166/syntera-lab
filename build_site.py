@@ -92,7 +92,7 @@ FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argenti
 # Photo file per member id
 PHOTOS = {
  'shahrzad-saremi':'shahrzad saremi.jpeg','rania-shibl':'rania shibl.jpeg','mostafa-kamalpour':'Mostafa Kamalpour.jpeg',
- 'hassan-ahmed':'hassan-ahmed.jpg','dana-dermody':'Gordana (Dana) Dermody.jpeg','abdullah-khan':'abdullah-khan.jpg',
+ 'hassan-ahmed':'hassan-ahmed1.png','dana-dermody':'Gordana (Dana) Dermody.jpeg','abdullah-khan':'abdullah-khan.jpg',
  'nazmul-hossain':'Nazmul Hossain.png','arooj-fatima':'arooj fatima.png','samia-mujahid':'samia mujahid.HEIC',
  'nida-ali':'nida ali.jpeg','svetlana-kolos':'Svetlana Kolos.jpg','sadegh-rajaei':'Sadegh Rajaei.png',
  'tobias-romano':'Tobias.jpeg','shiva-jahanaray':'shiva.jpg','aittezaz-ahmad':'Aittezaz Ahmad.jpeg',
@@ -214,7 +214,7 @@ def build_members():
 
 # face-centred crops (left, top, size) in source pixels
 CROPS = {'shahrzad-saremi': (390, 0, 680), 'rania-shibl': (306, 50, 640), 'dana-dermody': (95, 20, 680),
-         'hassan-ahmed': (28, 0, 192), 'mostafa-kamalpour': (10, 0, 490)}
+         'hassan-ahmed': (250, 60, 820), 'mostafa-kamalpour': (10, 0, 490)}
 
 def process_photos(members):
     d = os.path.join(OUT, 'images', 'team'); os.makedirs(d, exist_ok=True)
