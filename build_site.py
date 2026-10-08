@@ -155,7 +155,7 @@ EXTRA_MEMBERS = [
  ('ramsha-khan','Ramsha Khan','Researcher · MPhil Virology & Molecular Pathology',['University of Lahore'],'Pakistan',
   ['AI for health','Biomedical research','Molecular medicine','Virology & infectious diseases','AI in healthcare','Bioinformatics'],'0009-0004-6469-300X','https://scholar.google.com/citations?user=GFuPTmYAAAAJ','https://www.linkedin.com/in/ramshakhan13'),
  ('alan-liew','Alan Wee-Chung Liew','Head of School, School of Information and Communication Technology',['Griffith University, Gold Coast'],'Australia',
-  ['Artificial intelligence','AI for health','Medical imaging','Multimodal AI','Trustworthy & explainable AI','Graph learning & foundation models','Machine learning','Computer vision','Bioinformatics'],'0000-0001-6718-7584','https://scholar.google.com.au/citations?user=CNgJ3LYAAAAJ','https://www.linkedin.com/in/alan-liew-0214a138/'),
+  ['Artificial intelligence','AI for health','Medical imaging','Multimodal AI','Trustworthy & explainable AI','Graph learning & foundation models','Machine learning','Computer vision','Pattern recognition','Bioinformatics'],'0000-0001-6718-7584','https://scholar.google.com.au/citations?user=CNgJ3LYAAAAJ','https://www.linkedin.com/in/alan-liew-0214a138/'),
  ('fawad-zaidi','Syed Fawad M. Zaidi','Senior Academic',['Torrens University Australia'],'Australia',
   ['Artificial intelligence & intelligent systems','Human-centred design & design thinking','Serious games & immersive learning technologies','Digital health & health informatics','Learning analytics & educational innovation'],'0000-0002-3027-4139','https://scholar.google.com/citations?user=eZ22LtIAAAAJ','https://www.linkedin.com/in/syedfawadmustafazaidi/'),
  ('mana-mirzaei','Mana Mirzaei','Lecturer, School of Business and Creative Industries',['University of the Sunshine Coast, Sunshine Coast, Queensland'],'Australia',
@@ -540,7 +540,7 @@ DETAILS = {
 
 DETAILS['alan-liew'] = dict(
   title='Head of School, School of Information and Communication Technology, Griffith University',
-  roles=['Founder and Lead, AI4Health Lab · Co-founder and Co-lead, TrustAGI Lab'],
+  roles=['Professor, Griffith University · Founder and Lead, AI4Health Lab · Co-founder and Co-lead, TrustAGI Lab'],
   bio=['Professor Alan Liew is Head of the School of Information and Communication Technology at Griffith University and an internationally recognised researcher in artificial intelligence (AI), machine learning, medical imaging, computer vision and bioinformatics. His research focuses on advanced, trustworthy and translational AI methods for complex real-world problems, particularly in health and biomedical applications.',
        'At Griffith he founded the AI4Health Lab, which he leads, and co-founded the TrustAGI Lab, which he co-leads. His current research spans AI for health and medical imaging, multimodal learning, trustworthy and explainable AI, graph learning and foundation models, computer vision, machine learning and bioinformatics. A major emphasis is translating advances in AI into real-world applications through collaboration with clinicians, health researchers, scientists, government and industry, including Gold Coast University Hospital and Queensland Health.',
        'Professor Liew joined Griffith University in 2007. Before that he was an Assistant Professor in the Department of Computer Science and Engineering at The Chinese University of Hong Kong and a Senior Research Fellow in the Department of Electrical Engineering at City University of Hong Kong.',
@@ -548,13 +548,20 @@ DETAILS['alan-liew'] = dict(
   metrics='h-index 53 on Google Scholar and 42 on Scopus · More than 300 papers · 34 PhD completions at Griffith (20 as Principal Supervisor)',
   grants=["More than $13.46 million in research, industry and project funding as chief investigator or collaborating investigator, from the Australian Research Council (ARC), National Health and Medical Research Council (NHMRC), Medical Research Future Fund (MRFF), Australia's Economic Accelerator (AEA), Office of National Intelligence, CSIRO, Department of Foreign Affairs and Trade, Queensland Health and industry partners."],
   supervision='Since joining Griffith he has achieved 34 PhD completions, 20 as Principal Supervisor. He currently supervises doctoral researchers working on multimodal medical AI, trustworthy and explainable AI, graph foundation models, large language models, privacy-preserving learning, medical image analysis, image and video understanding, and AI applications in health and engineering.',
-  experience=[('1 Jun 2022 – present','Head of School, School of ICT, Griffith University'),
+  education=['<b>PhD, Electrical and Electronic Engineering</b>, University of Tasmania, Hobart (1993–1996)',
+             '<b>Bachelor of Engineering (First Class Honours), Electrical and Electronic Engineering</b>, University of Auckland (1989–1992)'],
+  experience=[('2022 – present','Professor, School of Information and Communication Technology, Griffith University (Gold Coast)'),
+              ('1 Jun 2022 – present','Head of School, School of ICT, Griffith University'),
               ('1 Mar 2019 – 31 Dec 2024','Deputy Director, Institute for Integrated and Intelligent Systems, Griffith University'),
               ('1 Oct 2018 – 31 May 2022','Deputy Head of School (Research), School of ICT, Griffith University'),
-              ('2007 – 2024','Member, Institute for Integrated and Intelligent Systems, Griffith University'),
-              ('Before 2007','Assistant Professor, The Chinese University of Hong Kong; Senior Research Fellow, City University of Hong Kong')],
+              ('2010 – 2021','Associate Professor, School of ICT, Griffith University'),
+              ('Sep – Dec 2011','Visiting Professor, Linguistic Lab, Department of Chinese Language and Literature, Peking University'),
+              ('2007 – 2009','Senior Lecturer, School of ICT, Griffith University'),
+              ('2004 – 2006','Assistant Professor, Department of Computer Science and Engineering, The Chinese University of Hong Kong'),
+              ('2002 – 2004','Senior Research Fellow, Department of Electronic Engineering, City University of Hong Kong'),
+              ('1997 – 2002','Research Fellow, Department of Electronic Engineering, City University of Hong Kong')],
   service='Associate Editor of IEEE Transactions on Fuzzy Systems, Springer Nature Computer Science, International Journal of Computational Intelligence Systems and Machine Intelligence Research. Member of organising and programme committees of international conferences, assessor for nationally competitive research grants, and reviewer for international journals and conferences.',
-  awards=['Fellow, Queensland Academy of Arts and Sciences','Fellow, Australian Computer Society','Senior Member, IEEE',"Stanford University World's Top 2% Scientists (Artificial Intelligence and Image Processing), since 2021"])
+  awards=['Fellow, Queensland Academy of Arts and Sciences','Fellow, Australian Computer Society','Senior Member, IEEE (since 2005)',"Stanford University World's Top 2% Scientists (Computer Science: AI and Image Processing), recognised since 2021 for career-long impact"])
 
 def details_html(m):
     d = DETAILS.get(m['id'])
