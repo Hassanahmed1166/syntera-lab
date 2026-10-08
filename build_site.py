@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """SYNTERA Research Group static site generator. Run: python build_site.py  ->  site/"""
-import html, json, os, posixpath, re, shutil, zipfile, xml.etree.ElementTree as ET
+import hashlib, html, json, os, posixpath, re, shutil, zipfile, xml.etree.ElementTree as ET
 from PIL import Image, ImageOps
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -222,20 +222,20 @@ def process_photos(members):
     for m in members:
         f = PHOTOS.get(m['id'])
         if not f or not os.path.exists(os.path.join(src, f)):
-            m['photo'] = ''; continue
+            m['photo'] = ''; m['pv'] = ''; continue
         im = ImageOps.exif_transpose(Image.open(os.path.join(src, f))).convert('RGB')
         w, h = im.size; s = min(w, h)
         if m['id'] in CROPS:
             l, t, cs = CROPS[m['id']]
             im = im.crop((l, t, l + cs, t + cs)).resize((360, 360), Image.LANCZOS)
             im.save(os.path.join(d, m['id'] + '.jpg'), quality=82, optimize=True, progressive=True)
-            m['photo'] = m['id'] + '.jpg'; continue
+            m['photo'] = m['id'] + '.jpg'; m['pv'] = hashlib.md5(open(os.path.join(d, m['photo']), 'rb').read()).hexdigest()[:8]; continue
         left = (w - s) // 2
         top = 0 if h > w else 0            # faces sit in the upper part of portrait shots
         if h > w: top = int((h - s) * 0.12)
         im = im.crop((left, top, left + s, top + s)).resize((360, 360), Image.LANCZOS)
         im.save(os.path.join(d, m['id'] + '.jpg'), quality=82, optimize=True, progressive=True)
-        m['photo'] = m['id'] + '.jpg'
+        m['photo'] = m['id'] + '.jpg'; m['pv'] = hashlib.md5(open(os.path.join(d, m['photo']), 'rb').read()).hexdigest()[:8]
 
 # ───────────────────────── publications ─────────────────────────
 # (id, type, year, authors, title, venue, doi, areas, note)
@@ -487,7 +487,7 @@ def flag(m, p=''):
 
 def avatar(m, p='', cls='av'):
     if m['photo']:
-        return f'<img class="{cls}" src="{p}images/team/{m["photo"]}" alt="{E(m["name"])}" width="120" height="120" loading="lazy">'
+        return f'<img class="{cls}" src="{p}images/team/{m["photo"]}?v={m["pv"]}" alt="{E(m["name"])}" width="120" height="120" loading="lazy">'
     ini = ''.join(w[0] for w in m['full'].split()[:2]).upper()
     return f'<span class="{cls} {cls}--ini" aria-hidden="true">{ini}</span>'
 
@@ -800,7 +800,7 @@ def build_pages(members):
         person = {"@context": "https://schema.org", "@type": "Person", "@id": f'{SITE_URL}/people/{m["id"]}#person', "name": m['name'], "url": f'{SITE_URL}/people/{m["id"]}',
                   "jobTitle": m['role'], "worksFor": {"@id": SITE_URL + "/#org"}, "memberOf": {"@id": SITE_URL + "/#org"},
                   "knowsAbout": m['interests'] or [AREA[a]['name'] for a in m['areas']], "sameAs": [u for _, u in lk]}
-        if m['photo']: person["image"] = f'{SITE_URL}/images/team/{m["photo"]}'
+        if m['photo']: person["image"] = f'{SITE_URL}/images/team/{m["photo"]}?v={m["pv"]}'
         if m['inst']: person["affiliation"] = [{"@type": "Organization", "name": x} for x in m['inst']]
         person = {k: v for k, v in person.items() if v}
         ints_s = ', '.join(m['interests'][:4])
