@@ -639,14 +639,28 @@ def sectioned_profile(m, insts, achips, ints, pubsec):
 def disp_name(m):
     return ' '.join(x for x in [m['prefix'], m['name']] if x)
 
+CARD_LINK_GROUPS = {'leadership', 'advisors'}   # these cards show profile badges (ORCID, Scholar, LinkedIn, website)
+def card_links(m):
+    out = []
+    if m['orcid']: out.append(('ORCID', f'https://orcid.org/{m["orcid"]}'))
+    if m['scholar']: out.append(('Scholar', m['scholar']))
+    if m['linkedin']: out.append(('LinkedIn', m['linkedin']))
+    for t, u in m.get('links', []): out.append(('Website' if 'Experts' in t else t, u))
+    return out
+
 def person_card(m, p=''):
     areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["name"]}"></span>' for a in m['areas'])
     inst = E(m['inst'][0]) if m['inst'] else ''
     role = f'<p class="pcard__role">{E(m["role"])}</p>' if m['group'] == 'leadership' else ''   # role tags only for founders; groups are headed on the People page
-    return (f'<li class="pcard" data-areas="{" ".join(m["areas"] + (["methods"] if m.get("core") else [])) or "methods"}" data-name="{E((m["name"]+" "+m["alias"]+" "+" ".join(m["interests"])).lower())}">'
+    links = card_links(m) if m['group'] in CARD_LINK_GROUPS else []
+    badges = ''
+    if links:
+        badges = '<div class="pcard__links">' + ''.join(f'<a href="{E(u)}" rel="noopener" target="_blank" aria-label="{E(m["name"])} on {t}">{t}</a>' for t, u in links) + '</div>'
+    cls = 'pcard' + (f' pcard--links pcard--l{1 if len(links) <= 3 else 2 if len(links) <= 5 else 3}' if links else '')
+    return (f'<li class="{cls}" data-areas="{" ".join(m["areas"] + (["methods"] if m.get("core") else [])) or "methods"}" data-name="{E((m["name"]+" "+m["alias"]+" "+" ".join(m["interests"])).lower())}">'
             f'<a href="{p}people/{m["id"]}.html">{avatar(m, p)}'
             f'<h3>{E(disp_name(m))}</h3>{role}'
-            f'<p class="pcard__inst">{flag(m, p)}<span>{inst}</span></p><div class="dots">{areas}</div></a></li>')
+            f'<p class="pcard__inst">{flag(m, p)}<span>{inst}</span></p><div class="dots">{areas}</div></a>{badges}</li>')
 
 # ───────────────────────── pages ─────────────────────────
 def build_pages(members):
@@ -1014,10 +1028,15 @@ a{color:var(--blue-ink)}img{max-width:100%}
 .logos{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}.logos li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}.logos .logo{display:grid;place-items:center;background:#fff;border-radius:10px;height:84px;padding:8px;margin-bottom:10px}.logos img{max-height:64px;max-width:100%;object-fit:contain}.logos p{margin:0;font-weight:600;font-size:.92rem}.logos small{display:block;color:var(--muted);margin-top:4px;line-height:1.5}
 .banner{background:var(--grad);color:#fff;border-radius:22px;padding:clamp(28px,5vw,52px);display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}.banner h2{margin:0 0 .3rem;color:#fff}.banner p{margin:0;color:#fff}.banner .btn--pink{background:#0F1A47;color:#fff}.banner .btn--ghost{border-color:#fff}
 /* people */
-.pcard a{display:block;text-align:center;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 14px;height:100%;transition:transform .2s,box-shadow .2s}.pcard a:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+.pcard>a{display:block;text-align:center;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 14px;height:100%;transition:transform .2s,box-shadow .2s}.pcard:hover>a{transform:translateY(-4px);box-shadow:var(--sh)}
 .pcard .av{width:104px;height:104px;margin:0 auto 12px}.pcard h3{font-size:1rem;margin-bottom:2px}.pcard__role{margin:0;font-size:.84rem;font-weight:600;color:var(--pink-ink)}
 .pcard__inst{margin:.4rem 0 0;font-size:.76rem;color:var(--muted);display:flex;gap:6px;justify-content:center;align-items:flex-start;text-align:left;line-height:1.35}.flag{width:20px;height:14px;object-fit:cover;border-radius:2px;margin-top:2px;flex:none}
 .pcard__inst span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pcard{position:relative}.pcard--l1>a{padding-bottom:50px}.pcard--l2>a{padding-bottom:78px}.pcard--l3>a{padding-bottom:104px}.pcard--links>a::after{display:none}
+.pcard__links{position:absolute;left:8px;right:8px;bottom:12px;z-index:2;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.pcard:hover .pcard__links{transform:translateY(-8px)}
+.pcard__links a{font:600 .7rem Inter,sans-serif;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--alt);color:var(--text);text-decoration:none;transition:background .2s,color .2s,border-color .2s}
+.pcard__links a:hover,.pcard__links a:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff}
 .dots{display:flex;gap:5px;justify-content:center;margin-top:8px;min-height:10px}.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
 .pgroup h2 small{font-size:.9rem;color:var(--muted);font-weight:500}.pgroup{margin-bottom:2.2rem}
 .filters{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
@@ -1110,14 +1129,14 @@ body{animation:fadein .5s ease both}
 .area:hover::after{opacity:1;transform:none}
 .area__ico{transition:transform .4s cubic-bezier(.3,1.5,.5,1),background .3s,color .3s}.area:hover .area__ico{transform:scale(1.15) rotate(-6deg);background:var(--c);color:#fff}
 .area__ico--xl{animation:floaty 5s ease-in-out infinite}
-.pcard a{position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s,border-color .3s}
-.pcard a:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(58,123,255,.22);border-color:var(--blue)}
-.pcard a::after{content:"View profile \2192";position:absolute;left:0;right:0;bottom:0;padding:9px 0;font:600 .8rem Inter,sans-serif;color:#fff;background:var(--grad);transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
-.pcard a:hover::after,.pcard a:focus-visible::after{transform:none}
+.pcard>a{position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s,border-color .3s}
+.pcard:hover>a{transform:translateY(-8px);box-shadow:0 20px 40px rgba(58,123,255,.22);border-color:var(--blue)}
+.pcard>a::after{content:"View profile \2192";position:absolute;left:0;right:0;bottom:0;padding:9px 0;font:600 .8rem Inter,sans-serif;color:#fff;background:var(--grad);transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.pcard:hover>a::after,.pcard>a:focus-visible::after{transform:none}
 .pcard .av{transition:transform .4s cubic-bezier(.3,1.4,.5,1),box-shadow .3s;box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--line)}
-.pcard a:hover .av{transform:scale(1.07);box-shadow:0 0 0 3px var(--card),0 0 0 6px var(--pink),0 12px 26px rgba(232,62,140,.35)}
-.pcard h3{transition:color .2s}.pcard a:hover h3{color:var(--blue-ink)}
-.dot{transition:transform .3s}.pcard a:hover .dot{transform:scale(1.4)}
+.pcard:hover>a .av{transform:scale(1.07);box-shadow:0 0 0 3px var(--card),0 0 0 6px var(--pink),0 12px 26px rgba(232,62,140,.35)}
+.pcard h3{transition:color .2s}.pcard:hover>a h3{color:var(--blue-ink)}
+.dot{transition:transform .3s}.pcard:hover>a .dot{transform:scale(1.4)}
 .faces .av--sm{transition:transform .3s cubic-bezier(.3,1.5,.5,1),box-shadow .3s;position:relative}.faces li:hover{z-index:5;position:relative}
 .faces .av--sm:hover{transform:translateY(-8px) scale(1.18);box-shadow:0 0 0 3px var(--pink),0 12px 24px rgba(232,62,140,.4)}
 .profile .av--lg{animation:floaty 6s ease-in-out infinite;box-shadow:0 0 0 4px rgba(255,255,255,.18),0 0 0 9px rgba(232,62,140,.28),0 18px 40px rgba(0,0,0,.35);border:0}
@@ -1141,7 +1160,7 @@ input[type=search],select{transition:border-color .2s,box-shadow .2s}input[type=
 .ftr{position:relative;overflow:hidden}.ftr::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--grad)}
 #top{position:fixed;right:20px;bottom:20px;width:46px;height:46px;border:0;border-radius:50%;background:var(--grad);color:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 22px rgba(232,62,140,.4);opacity:0;transform:translateY(16px) scale(.8);pointer-events:none;transition:all .3s;z-index:60}
 #top.show{opacity:1;transform:none;pointer-events:auto}#top:hover{transform:translateY(-4px)}#top svg{width:22px;height:22px}
-@media(hover:none){.pcard a::after{display:none}.spot::before{display:none}}
+@media(hover:none){.pcard>a::after{display:none}.spot::before{display:none}}
 /* butterflies */
 #bfly{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}
 .bf{position:absolute;left:0;top:0;width:46px;height:40px;will-change:transform;filter:drop-shadow(0 3px 5px rgba(15,26,71,.28))}
@@ -1181,7 +1200,7 @@ var tp=d.createElement('button');tp.id='top';tp.type='button';tp.setAttribute('a
 tp.addEventListener('click',function(){scrollTo({top:0,behavior:reduce?'auto':'smooth'})});
 var tick=false;function onS(){var h=d.documentElement,m=h.scrollHeight-h.clientHeight,y=h.scrollTop;bar.style.transform='scaleX('+(m>0?y/m:0)+')';hd&&hd.classList.toggle('is-scrolled',y>10);tp.classList.toggle('show',y>600);tick=false}
 addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(onS)}},{passive:true});onS();
-d.querySelectorAll('.area,.pcard a,.pub,.panel,.values li').forEach(function(x){x.classList.add('spot');x.addEventListener('pointermove',function(e){var r=x.getBoundingClientRect();x.style.setProperty('--mx',(e.clientX-r.left)+'px');x.style.setProperty('--my',(e.clientY-r.top)+'px')})});
+d.querySelectorAll('.area,.pcard>a,.pub,.panel,.values li').forEach(function(x){x.classList.add('spot');x.addEventListener('pointermove',function(e){var r=x.getBoundingClientRect();x.style.setProperty('--mx',(e.clientX-r.left)+'px');x.style.setProperty('--my',(e.clientY-r.top)+'px')})});
 
 
 (function(){var b=d.querySelector('.hdr .brand');if(!b||reduce)return;var e=d.createElement('span');e.className='bf-logo';e.setAttribute('aria-hidden','true');
