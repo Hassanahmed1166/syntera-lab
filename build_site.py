@@ -639,6 +639,14 @@ def sectioned_profile(m, insts, achips, ints, pubsec):
 def disp_name(m):
     return ' '.join(x for x in [m['prefix'], m['name']] if x)
 
+BADGE_ICONS = {
+ 'ORCID': '<circle cx="12" cy="12" r="11" fill="#A6CE39"/><text x="12" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">iD</text>',
+ 'Scholar': '<path fill="#4285F4" d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3z"/><path fill="#4285F4" opacity=".7" d="M5 13.2v4c0 1.7 3.1 3.3 7 3.3s7-1.6 7-3.3v-4L12 17z"/>',
+ 'Scopus': '<circle cx="12" cy="12" r="11" fill="#E9711C"/><text x="12" y="16.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">S</text>',
+ 'LinkedIn': '<rect x="1" y="1" width="22" height="22" rx="4" fill="#0A66C2"/><text x="12" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="11.5" font-weight="700" fill="#fff">in</text>',
+ 'ResearchGate': '<rect x="1" y="1" width="22" height="22" rx="4" fill="#00B8A9"/><text x="12" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff">RG</text>',
+ 'Website': '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c3.5 3.2 3.5 16.8 0 20M12 2c-3.5 3.2-3.5 16.8 0 20"/></g>',
+}
 CARD_LINK_GROUPS = {'leadership', 'advisors'}   # these cards show profile badges (ORCID, Scholar, LinkedIn, website)
 def card_links(m):
     out = []
@@ -655,8 +663,8 @@ def person_card(m, p=''):
     links = card_links(m) if m['group'] in CARD_LINK_GROUPS else []
     badges = ''
     if links:
-        badges = '<div class="pcard__links">' + ''.join(f'<a href="{E(u)}" rel="noopener" target="_blank" aria-label="{E(m["name"])} on {t}">{t}</a>' for t, u in links) + '</div>'
-    cls = 'pcard' + (f' pcard--links pcard--l{1 if len(links) <= 3 else 2 if len(links) <= 5 else 3}' if links else '')
+        badges = '<div class="pcard__links">' + ''.join(f'<a href="{E(u)}" rel="noopener" target="_blank" title="{t}" aria-label="{E(m["name"])} on {t}"><svg viewBox="0 0 24 24" aria-hidden="true">{BADGE_ICONS.get(t, BADGE_ICONS["Website"])}</svg></a>' for t, u in links) + '</div>'
+    cls = 'pcard' + (f' pcard--links' if links else '')
     return (f'<li class="{cls}" data-areas="{" ".join(m["areas"] + (["methods"] if m.get("core") else [])) or "methods"}" data-name="{E((m["name"]+" "+m["alias"]+" "+" ".join(m["interests"])).lower())}">'
             f'<a href="{p}people/{m["id"]}.html">{avatar(m, p)}'
             f'<h3>{E(disp_name(m))}</h3>{role}'
@@ -722,7 +730,7 @@ def build_pages(members):
     <p><b>SYNTERA</b> brings together <b>Syn</b>ergy, In<b>te</b>lligence and E<b>ra</b>: a new era where AI works in synergy with health, agriculture, education, homes and mobility.</p>
     <p class="muted">Members and collaborators across {len(countries)} countries.</p>
     <a class="btn btn--blue" href="about.html">About the group</a></div></div></section>
-<section class="sec"><div class="wrap"><p class="eyebrow">People</p><h2>The team</h2>
+<section class="sec"><div class="wrap"><p class="eyebrow">People</p><h2>The Team</h2>
   <ul class="faces">{faces}</ul><p><a class="more" href="people.html">Meet everyone →</a></p></div></section>
 <section class="sec sec--ice"><div class="wrap"><p class="eyebrow">Partner with us</p><h2>Academic collaboration, funded projects and industry partnerships</h2>
   <p class="sub">Whether you want a research partner for a grant, a university team to take on a paid project, or an AI pilot in a real setting, we would like to hear from you.</p>
@@ -785,7 +793,7 @@ def build_pages(members):
     for gid, gt in GROUPS:
         g = [m for m in members if m['group'] == gid]
         if g: secs += f'<section class="pgroup" id="g-{gid}"><h2>{gt} <small>{len(g)}</small></h2><ul class="grid grid--people">{"".join(person_card(m) for m in g)}</ul></section>'
-    body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">People</p><h1>The SYNTERA team</h1>
+    body = f'''<section class="phead"><div class="wrap"><p class="eyebrow">People</p><h1>The SYNTERA Team</h1>
 <p class="lead">{len(members)} researchers, academics and students across {len(countries)} countries.</p></div></section>
 <section class="sec"><div class="wrap"><div class="filters"><input id="q" type="search" placeholder="Search people or interests" aria-label="Search people"><div class="fchips" id="fchips">{chips}</div></div>
 <div id="people">{secs}</div><p id="none" class="notice" hidden>No one matches that filter.</p></div></section>'''
@@ -1032,11 +1040,12 @@ a{color:var(--blue-ink)}img{max-width:100%}
 .pcard .av{width:104px;height:104px;margin:0 auto 12px}.pcard h3{font-size:1rem;margin-bottom:2px}.pcard__role{margin:0;font-size:.84rem;font-weight:600;color:var(--pink-ink)}
 .pcard__inst{margin:.4rem 0 0;font-size:.76rem;color:var(--muted);display:flex;gap:6px;justify-content:center;align-items:flex-start;text-align:left;line-height:1.35}.flag{width:20px;height:14px;object-fit:cover;border-radius:2px;margin-top:2px;flex:none}
 .pcard__inst span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.pcard{position:relative}.pcard--l1>a{padding-bottom:50px}.pcard--l2>a{padding-bottom:78px}.pcard--l3>a{padding-bottom:104px}.pcard--links>a::after{display:none}
+.pcard{position:relative}.pcard--links>a{padding-bottom:56px}.pcard--links>a::after{display:none}
 .pcard__links{position:absolute;left:8px;right:8px;bottom:12px;z-index:2;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 .pcard:hover .pcard__links{transform:translateY(-8px)}
-.pcard__links a{font:600 .7rem Inter,sans-serif;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--alt);color:var(--text);text-decoration:none;transition:background .2s,color .2s,border-color .2s}
-.pcard__links a:hover,.pcard__links a:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff}
+.pcard__links a{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);transition:transform .2s,box-shadow .2s,border-color .2s}
+.pcard__links a svg{width:18px;height:18px}
+.pcard__links a:hover,.pcard__links a:focus-visible{transform:translateY(-2px) scale(1.1);box-shadow:0 6px 14px rgba(58,123,255,.28);border-color:var(--blue)}
 .dots{display:flex;gap:5px;justify-content:center;margin-top:8px;min-height:10px}.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
 .pgroup h2 small{font-size:.9rem;color:var(--muted);font-weight:500}.pgroup{margin-bottom:2.2rem}
 .filters{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
