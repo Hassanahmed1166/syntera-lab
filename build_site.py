@@ -121,7 +121,7 @@ for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','
 GROUP_OF['hassan-ahmed'] = 'lead'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
           'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'researchers'; STUDENT_IDS.add(i)
-GROUPS = [('leadership','Leadership & Founders'),('advisors','Academics & Advisors'),('lead','Team Lead'),
+GROUPS = [('leadership','Leadership & Founders'),('advisors','Scientific Advisory Board'),('lead','Team Lead'),
           ('researchers','Students & Researchers')]
 SHORT_INTEREST = {'Passive sensor monitoring and interpretation of daily activity patterns':'Passive sensor monitoring',
  'Data visualisation for health professionals':'Health data visualisation','Telehealth and wearables':'Telehealth & wearables',
