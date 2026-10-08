@@ -1040,11 +1040,11 @@ a{color:var(--blue-ink)}img{max-width:100%}
 .pcard .av{width:104px;height:104px;margin:0 auto 12px}.pcard h3{font-size:1rem;margin-bottom:2px}.pcard__role{margin:0;font-size:.84rem;font-weight:600;color:var(--pink-ink)}
 .pcard__inst{margin:.4rem 0 0;font-size:.76rem;color:var(--muted);display:flex;gap:6px;justify-content:center;align-items:flex-start;text-align:left;line-height:1.35}.flag{width:20px;height:14px;object-fit:cover;border-radius:2px;margin-top:2px;flex:none}
 .pcard__inst span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.pcard{position:relative}.pcard--links>a{padding-bottom:56px}.pcard--links>a::after{display:none}
-.pcard__links{position:absolute;left:8px;right:8px;bottom:12px;z-index:2;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.pcard{position:relative}.pcard--links>a{padding-bottom:58px}.pcard--links>a::after{display:none}
+.pcard__links{position:absolute;left:6px;right:6px;bottom:12px;z-index:2;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 .pcard:hover .pcard__links{transform:translateY(-8px)}
-.pcard__links a{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);transition:transform .2s,box-shadow .2s,border-color .2s}
-.pcard__links a svg{width:18px;height:18px}
+.pcard__links a{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);transition:transform .2s,box-shadow .2s,border-color .2s}
+.pcard__links a svg{width:15px;height:15px}
 .pcard__links a:hover,.pcard__links a:focus-visible{transform:translateY(-2px) scale(1.1);box-shadow:0 6px 14px rgba(58,123,255,.28);border-color:var(--blue)}
 .dots{display:flex;gap:5px;justify-content:center;margin-top:8px;min-height:10px}.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
 .pgroup h2 small{font-size:.9rem;color:var(--muted);font-weight:500}.pgroup{margin-bottom:2.2rem}
