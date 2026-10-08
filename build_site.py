@@ -204,8 +204,8 @@ def build_members():
             scholar=scholar, linkedin=linkedin, email=''))
         out[-1].update(EXTRA_META.get(mid, {}))
     for m in out:
-        if m['id'] == 'rania-shibl': m['prefix'] = 'Professor Dr.'
-        if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof. Dr.'
+        if m['id'] == 'rania-shibl': m['prefix'] = 'Professor'
+        if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'mostafa-kamalpour', 'shiva-ilkhani-zadeh', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed']
     order = [g for g, _ in GROUPS]
@@ -834,7 +834,7 @@ def build_pages(members):
 <p class="lead">{BRAND['full']}.</p></div></section>
 <section class="sec" id="story"><div class="wrap prose"><h2>Our story</h2>
 <p><b>SYNTERA</b> stands for <b>Syn</b>ergy + In<b>te</b>lligence + E<b>ra</b>: a new era in which artificial intelligence works in synergy with health, agriculture, education, homes and mobility.</p>
-<p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>, <a href="people/rania-shibl.html">Professor Dr. Rania Shibl</a> and <a href="people/dana-dermody.html">Assoc. Prof. Dr. Dana Dermody</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
+<p>The group was founded by <a href="people/shahrzad-saremi.html">Dr. Shahrzad Saremi</a>, <a href="people/rania-shibl.html">Professor Rania Shibl</a> and <a href="people/dana-dermody.html">Assoc. Prof. Dana Dermody</a>, and brings together researchers, academics and students from {len(countries)} countries to build AI and connected systems (IoT and IoV) for real-world problems.</p>
 <p>We collaborate with universities, research institutes, health and care providers, industry and government. See <a href="collaborate.html">how to partner with us</a> on joint research, funded projects and commissioned work.</p>
 <p class="muted">SYNTERA Research Group is not affiliated with any commercial company of a similar name.</p></div></section>
 <section class="sec sec--ice" id="mission"><div class="wrap"><div class="grid grid--2"><div class="panel"><h2>Mission</h2>
@@ -897,7 +897,7 @@ def build_pages(members):
      ('Which fields does SYNTERA work in?', 'Applied AI and connected systems: AI for health, smart health homes, AI for agriculture, AI for education, the Internet of Things and the Internet of Vehicles, supported by machine learning, deep learning, computer vision, language models, explainable AI and cybersecurity.'),
      ('Who can collaborate with SYNTERA?', 'Universities and research institutes, hospitals and aged-care providers, farms and agri-businesses, schools and education providers, companies, government agencies and community organisations, in Australia and overseas.'),
      ('Do you work with partners outside Australia?', 'Yes. SYNTERA has members in %d countries and works with partner institutions on several continents. We collaborate remotely and in person.' % len(countries)),
-     ('Where is SYNTERA based?', 'SYNTERA is led by Dr. Shahrzad Saremi, a lecturer at the University of the Sunshine Coast in Queensland, Australia, with co-director Professor Dr. Rania Shibl.'),
+     ('Where is SYNTERA based?', 'SYNTERA is led by Dr. Shahrzad Saremi, a lecturer at the University of the Sunshine Coast in Queensland, Australia, with co-director Professor Rania Shibl.'),
      ('Do you offer student projects, internships or PhD supervision?', 'Yes. We welcome PhD and Master\'s applicants, research assistants and interns, and can run industry-linked student projects. See the Join Us page for how to apply.'),
      ('How do we get started?', 'Send a short email to %s describing the problem, your organisation, timeline and whether funding is available. We will reply to arrange a scoping conversation.' % BRAND['email_collab']),
     ]
