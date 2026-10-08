@@ -32,11 +32,19 @@
   "source": "OpenAlex"
  },
  "latent-squeeze": {
-  "doi": "",
-  "keywords": [],
-  "abstract": "",
+  "doi": "10.1108/IJICC-06-2026-0590",
+  "keywords": [
+   "Intrusion detection",
+   "Adversarial robustness",
+   "Feature squeezing",
+   "Adversarial training",
+   "Internet of Things",
+   "Edge devices",
+   "Denoising autoencoder"
+  ],
+  "abstract": "Machine learning-based intrusion detection systems (IDS) for Internet of Things (IoT) environments are vulnerable to adversarial perturbations that can cause malicious traffic to be misclassified as benign. Existing defences, such as adversarial training and feature squeezing, are typically applied independently and are not specifically designed for the heterogeneous combination of continuous and discrete features in IoT network traffic. This study proposes a robust and efficient defence framework for securing IoT IDSs against adversarial attacks. This study proposes CoLD-IDS (Coordinated Latent Defence for Intrusion Detection Systems), a two-phase defence framework that is evaluated on the Edge-IIoTset dataset, which contains more than 2.2 million samples spanning 14 attack categories from a physical IoT testbed. Phase 1 combines an IoT-adapted feature squeezing mechanism that quantizes only continuous features with multi-attack adversarial training using clean, Fast Gradient Sign Method (FGSM) and Projected Gradient Descent (PGD) samples. Phase 2 introduces a latent-space defence pipeline in which a denoising autoencoder compresses the original 52-dimensional feature space into a 32-dimensional representation, where feature squeezing and adversarial training are jointly applied. Robustness is further validated through ablation studies and Backward Pass Differentiable Approximation (BPDA) attacks. The adversarially trained multi-layer perceptron in Phase 1 achieved an accuracy of 99.58% on clean data and 99.49% under a PGD attack. The latent-space framework in Phase 2 achieved 98.90% accuracy on clean data and 98.88% under a PGD attack, corresponding to a degradation of only 0.02 percentage points. Ablation studies revealed that applying feature squeezing without training-time adaptation significantly degrades robustness, reducing PGD accuracy to 78.23% for the undefended baseline and 31.47% for latent squeezing without adversarial adaptation. BPDA evaluation confirmed that the observed robustness is not a consequence of gradient masking. Both proposed systems satisfy the latency and storage constraints of edge-based IoT deployments, achieving inference times below 4 µs per sample on CPU.This study presents CoLD-IDS, a novel two-phase adversarial defence framework that integrates IoT-specific feature squeezing with multi-attack adversarial training and extends this concept to a latent representation learned through a denoising autoencoder. Unlike existing approaches that employ these defences independently, the proposed framework jointly optimises feature transformation and adversarial adaptation, resulting in highly robust and computationally efficient intrusion detection suitable for resource-constrained IoT edge devices.",
   "checked": true,
-  "source": ""
+  "source": "Publisher (Emerald)"
  },
  "iot-certless": {
   "doi": "10.3390/iot7020040",
