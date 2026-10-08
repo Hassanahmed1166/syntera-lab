@@ -647,7 +647,7 @@ BADGE_ICONS = {
  'ResearchGate': '<rect x="1" y="1" width="22" height="22" rx="4" fill="#00B8A9"/><text x="12" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" font-weight="700" fill="#fff">RG</text>',
  'Website': '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c3.5 3.2 3.5 16.8 0 20M12 2c-3.5 3.2-3.5 16.8 0 20"/></g>',
 }
-CARD_LINK_GROUPS = {'leadership', 'advisors'}   # these cards show profile badges (ORCID, Scholar, LinkedIn, website)
+CARD_LINK_GROUPS = {'leadership', 'advisors', 'lead'}   # these cards show profile badges (ORCID, Scholar, LinkedIn, website)
 def card_links(m):
     out = []
     if m['orcid']: out.append(('ORCID', f'https://orcid.org/{m["orcid"]}'))
