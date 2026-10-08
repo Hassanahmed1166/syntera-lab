@@ -103,7 +103,7 @@ PHOTOS = {
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
- 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
+ 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
@@ -117,11 +117,12 @@ AREAS_OF = {
 }
 GROUP_OF = {}; STUDENT_IDS = set()   # students are listed under Researchers & Academics, after the other researchers
 for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leadership'
-for i in ['mostafa-kamalpour','hassan-ahmed','shiva-ilkhani-zadeh']: GROUP_OF[i] = 'leads'
+for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','fawad-zaidi']: GROUP_OF[i] = 'advisors'
+GROUP_OF['hassan-ahmed'] = 'lead'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
           'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'researchers'; STUDENT_IDS.add(i)
-GROUPS = [('leadership','Leadership & Founders'),('leads','Senior Researchers'),
-          ('researchers','Researchers & Academics')]
+GROUPS = [('leadership','Leadership & Founders'),('advisors','Academics & Advisors'),('lead','Team Lead'),
+          ('researchers','Students & Researchers')]
 SHORT_INTEREST = {'Passive sensor monitoring and interpretation of daily activity patterns':'Passive sensor monitoring',
  'Data visualisation for health professionals':'Health data visualisation','Telehealth and wearables':'Telehealth & wearables',
  'Human�computer interaction, usability and technology adoption':'HCI & technology adoption',
@@ -153,8 +154,16 @@ EXTRA_MEMBERS = [
   ['Quantum cryptography','IoT','AI','Secure 5G/6G networks'],'0009-0001-1485-8169','https://scholar.google.com/citations?user=K8km0VoAAAAJ','https://www.linkedin.com/in/malak-emziane-a407681a9'),
  ('ramsha-khan','Ramsha Khan','Researcher · MPhil Virology & Molecular Pathology',['University of Lahore'],'Pakistan',
   ['AI for health','Biomedical research','Molecular medicine','Virology & infectious diseases','AI in healthcare','Bioinformatics'],'0009-0004-6469-300X','https://scholar.google.com/citations?user=GFuPTmYAAAAJ','https://www.linkedin.com/in/ramshakhan13'),
+ ('alan-liew','Alan Wee-Chung Liew','Head of School, School of Information and Communication Technology',['Griffith University, Gold Coast'],'Australia',
+  ['Artificial intelligence','AI for health','Medical imaging','Multimodal AI','Trustworthy & explainable AI','Graph learning & foundation models','Machine learning','Computer vision','Bioinformatics'],'0000-0001-6718-7584','https://scholar.google.com.au/citations?user=CNgJ3LYAAAAJ','https://www.linkedin.com/in/alan-liew-0214a138/'),
+ ('fawad-zaidi','Syed Fawad M. Zaidi','Senior Academic',['Torrens University Australia'],'Australia',
+  ['Artificial intelligence & intelligent systems','Human-centred design & design thinking','Serious games & immersive learning technologies','Digital health & health informatics','Learning analytics & educational innovation'],'0000-0002-3027-4139','https://scholar.google.com/citations?user=eZ22LtIAAAAJ','https://www.linkedin.com/in/syedfawadmustafazaidi/'),
+ ('mana-mirzaei','Mana Mirzaei','Lecturer, School of Business and Creative Industries',['University of the Sunshine Coast, Sunshine Coast, Queensland'],'Australia',
+  ['AI','Business data analysis','Machine learning','Optimisation'],'0000-0002-7380-3985','https://scholar.google.com/citations?user=Jec46jcAAAAJ',''),
 ]
-EXTRA_META = {'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher')}
+EXTRA_META = {'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher'),
+              'alan-liew': dict(prefix='Professor', role='Academic Advisor', links=[('Griffith Experts','https://experts.griffith.edu.au/7401-alan-weechung-liew'),('Scopus','https://www.scopus.com/authid/detail.uri?authorId=7005648281'),('ResearchGate','https://www.researchgate.net/profile/Alan_Wee_Chung_Liew')]),
+              'fawad-zaidi': dict(prefix='Dr.', role='Academic Advisor'), 'mana-mirzaei': dict(prefix='Dr.', role='Academic')}
 
 def build_members():
     out = []
@@ -198,7 +207,7 @@ def build_members():
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor Dr.'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof. Dr.'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
-    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'hassan-ahmed', 'mostafa-kamalpour']
+    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'mostafa-kamalpour', 'shiva-ilkhani-zadeh', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed']
     order = [g for g, _ in GROUPS]
     out.sort(key=lambda m: (order.index(m['group']), m['id'] in STUDENT_IDS, first.index(m['id']) if m['id'] in first else len(first)))
     return out
@@ -529,6 +538,24 @@ DETAILS = {
   metrics='15,573 citations (12,216 since 2021) · h-index 21 (18 since 2021) · i10-index 22 (21 since 2021) · Google Scholar, 6 Oct 2026'),
 }
 
+DETAILS['alan-liew'] = dict(
+  title='Head of School, School of Information and Communication Technology, Griffith University',
+  roles=['Founder and Lead, AI4Health Lab · Co-founder and Co-lead, TrustAGI Lab'],
+  bio=['Professor Alan Liew is Head of the School of Information and Communication Technology at Griffith University and an internationally recognised researcher in artificial intelligence (AI), machine learning, medical imaging, computer vision and bioinformatics. His research focuses on advanced, trustworthy and translational AI methods for complex real-world problems, particularly in health and biomedical applications.',
+       'At Griffith he founded the AI4Health Lab, which he leads, and co-founded the TrustAGI Lab, which he co-leads. His current research spans AI for health and medical imaging, multimodal learning, trustworthy and explainable AI, graph learning and foundation models, computer vision, machine learning and bioinformatics. A major emphasis is translating advances in AI into real-world applications through collaboration with clinicians, health researchers, scientists, government and industry, including Gold Coast University Hospital and Queensland Health.',
+       'Professor Liew joined Griffith University in 2007. Before that he was an Assistant Professor in the Department of Computer Science and Engineering at The Chinese University of Hong Kong and a Senior Research Fellow in the Department of Electrical Engineering at City University of Hong Kong.',
+       'He has published more than 300 journal and conference papers and two books, and holds three international patents.'],
+  metrics='h-index 53 on Google Scholar and 42 on Scopus · More than 300 papers · 34 PhD completions at Griffith (20 as Principal Supervisor)',
+  grants=["More than $13.46 million in research, industry and project funding as chief investigator or collaborating investigator, from the Australian Research Council (ARC), National Health and Medical Research Council (NHMRC), Medical Research Future Fund (MRFF), Australia's Economic Accelerator (AEA), Office of National Intelligence, CSIRO, Department of Foreign Affairs and Trade, Queensland Health and industry partners."],
+  supervision='Since joining Griffith he has achieved 34 PhD completions, 20 as Principal Supervisor. He currently supervises doctoral researchers working on multimodal medical AI, trustworthy and explainable AI, graph foundation models, large language models, privacy-preserving learning, medical image analysis, image and video understanding, and AI applications in health and engineering.',
+  experience=[('1 Jun 2022 – present','Head of School, School of ICT, Griffith University'),
+              ('1 Mar 2019 – 31 Dec 2024','Deputy Director, Institute for Integrated and Intelligent Systems, Griffith University'),
+              ('1 Oct 2018 – 31 May 2022','Deputy Head of School (Research), School of ICT, Griffith University'),
+              ('2007 – 2024','Member, Institute for Integrated and Intelligent Systems, Griffith University'),
+              ('Before 2007','Assistant Professor, The Chinese University of Hong Kong; Senior Research Fellow, City University of Hong Kong')],
+  service='Associate Editor of IEEE Transactions on Fuzzy Systems, Springer Nature Computer Science, International Journal of Computational Intelligence Systems and Machine Intelligence Research. Member of organising and programme committees of international conferences, assessor for nationally competitive research grants, and reviewer for international journals and conferences.',
+  awards=['Fellow, Queensland Academy of Arts and Sciences','Fellow, Australian Computer Society','Senior Member, IEEE',"Stanford University World's Top 2% Scientists (Artificial Intelligence and Image Processing), since 2021"])
+
 def details_html(m):
     d = DETAILS.get(m['id'])
     if not d: return ''
@@ -733,6 +760,7 @@ def build_pages(members):
         if m['orcid']: lk.append(('ORCID', f'https://orcid.org/{m["orcid"]}'))
         if m['scholar']: lk.append(('Google Scholar', m['scholar']))
         if m['linkedin']: lk.append(('LinkedIn', m['linkedin']))
+        lk += m.get('links', [])
         links = ''.join(f'<a class="btn btn--ghost-d btn--sm" href="{E(u)}" rel="noopener" target="_blank">{t}</a>' for t, u in lk)
         achips = ''.join(f'<a class="chip" style="--c:{AREA[a]["color"]}" href="../research/{a}.html">{AREA[a]["short"]}</a>' for a in m['areas']) or '<span class="chip chip--plain">Core AI &amp; Methods</span>'
         ints = ''.join(f'<li>{E(x)}</li>' for x in m['interests'])

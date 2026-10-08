@@ -343,7 +343,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Mirzaei, M.",
-    null
+    "mana-mirzaei"
    ]
   ],
   "title": "Crisis-induced hybrid learning, cognitive offloading, and generative AI reliance among Pakistani CS undergraduates",
@@ -421,7 +421,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Mirzaei, M.",
-    null
+    "mana-mirzaei"
    ],
    [
     "Rasti, A.",
@@ -599,7 +599,7 @@ window.SYNTERA_PUBS = [
   "authors": [
    [
     "Mirzaei, M.",
-    null
+    "mana-mirzaei"
    ],
    [
     "Saremi, S.",
@@ -696,7 +696,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Mirzaei, M.",
-    null
+    "mana-mirzaei"
    ],
    [
     "Bedford, A.",
@@ -907,7 +907,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Mirzaei, M.",
-    null
+    "mana-mirzaei"
    ],
    [
     "Rastegari, P.",
@@ -1029,7 +1029,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Mirzaei, M.",
-    null
+    "mana-mirzaei"
    ]
   ],
   "title": "Three decades of AI in sports-related concussion research: A bibliometric analysis (1996–2026)",
@@ -1313,7 +1313,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Zaidi, S. F. M.",
-    null
+    "fawad-zaidi"
    ]
   ],
   "title": "AI-driven process innovation: Transforming service start-ups in the digital age",
@@ -4063,7 +4063,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Liew, A. W. C.",
-    null
+    "alan-liew"
    ],
    [
     "Dong, J. S.",
@@ -4323,7 +4323,7 @@ window.SYNTERA_PUBS = [
    ],
    [
     "Liew, A. W. C.",
-    null
+    "alan-liew"
    ]
   ],
   "title": "Let’s Consider Two Objectives When Estimating Hand Postures",
