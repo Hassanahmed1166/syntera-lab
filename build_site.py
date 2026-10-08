@@ -627,9 +627,10 @@ def disp_name(m):
 def person_card(m, p=''):
     areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["short"]}"></span>' for a in m['areas'])
     inst = E(m['inst'][0]) if m['inst'] else ''
+    role = f'<p class="pcard__role">{E(m["role"])}</p>' if m['group'] == 'leadership' else ''   # role tags only for founders; groups are headed on the People page
     return (f'<li class="pcard" data-areas="{" ".join(m["areas"]) or "methods"}" data-name="{E((m["name"]+" "+m["alias"]+" "+" ".join(m["interests"])).lower())}">'
             f'<a href="{p}people/{m["id"]}.html">{avatar(m, p)}'
-            f'<h3>{E(disp_name(m))}</h3><p class="pcard__role">{E(m["role"])}</p>'
+            f'<h3>{E(disp_name(m))}</h3>{role}'
             f'<p class="pcard__inst">{flag(m, p)}<span>{inst}</span></p><div class="dots">{areas}</div></a></li>')
 
 # ───────────────────────── pages ─────────────────────────
