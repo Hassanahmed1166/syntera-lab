@@ -88,7 +88,7 @@ def slug(s):
     s = re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
     return s
 
-FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no','Iraq':'iq','China':'cn','United Kingdom':'gb','Algeria':'dz'}
+FLAGS = {'Australia':'au','Pakistan':'pk','Bangladesh':'bd','Iran':'ir','Argentina':'ar','Norway':'no','Iraq':'iq','China':'cn','United Kingdom':'gb','Algeria':'dz','Slovenia':'si'}
 # Photo file per member id
 PHOTOS = {
  'shahrzad-saremi':'shahrzad saremi.jpeg','rania-shibl':'rania shibl.jpeg','mostafa-kamalpour':'Mostafa Kamalpour.jpeg',
@@ -103,7 +103,7 @@ PHOTOS = {
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
- 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
+ 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','tanja-pavleska':'Tanja Pavleska.jpg','malak-emziane':'Malak EMZIANE.jpeg',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
@@ -117,7 +117,7 @@ AREAS_OF = {
 }
 GROUP_OF = {}; STUDENT_IDS = set()   # students are listed under Researchers & Academics, after the other researchers
 for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leadership'
-for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','fawad-zaidi']: GROUP_OF[i] = 'advisors'
+for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','fawad-zaidi','tanja-pavleska']: GROUP_OF[i] = 'advisors'
 GROUP_OF['hassan-ahmed'] = GROUP_OF['sadegh-rajaei'] = 'lead'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
           'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'researchers'; STUDENT_IDS.add(i)
@@ -160,10 +160,13 @@ EXTRA_MEMBERS = [
   ['Artificial intelligence & intelligent systems','Human-centred design & design thinking','Serious games & immersive learning technologies','Digital health & health informatics','Learning analytics & educational innovation'],'0000-0002-3027-4139','https://scholar.google.com/citations?user=eZ22LtIAAAAJ','https://www.linkedin.com/in/syedfawadmustafazaidi/'),
  ('mana-mirzaei','Mana Mirzaei','Lecturer, School of Business and Creative Industries',['University of the Sunshine Coast, Sunshine Coast, Queensland'],'Australia',
   ['AI','Business data analysis','Machine learning','Optimisation'],'0000-0002-7380-3985','https://scholar.google.com/citations?user=Jec46jcAAAAJ',''),
+ ('tanja-pavleska','Tanja Pavleska','Researcher, Laboratory for Open Systems and Networks',['Laboratory for Open Systems and Networks, Jožef Stefan Institute, Ljubljana'],'Slovenia',
+  ['Cybersecurity for AI','AI for cybersecurity','Trustworthy & explainable AI','Critical infrastructure security','Industrial automation & digital twins','Threat intelligence & digital forensics','Digital policies & regulatory frameworks','Computational trust & reputation systems'],
+  '0009-0007-3967-2911','https://scholar.google.com/citations?user=jHnvTCcAAAAJ','https://www.linkedin.com/in/tanjaazderska/'),
 ]
 EXTRA_META = {'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher'),
               'alan-liew': dict(prefix='Professor', role='Academic Advisor', links=[('Griffith Experts','https://experts.griffith.edu.au/7401-alan-weechung-liew'),('Scopus','https://www.scopus.com/authid/detail.uri?authorId=7005648281'),('ResearchGate','https://www.researchgate.net/profile/Alan_Wee_Chung_Liew')]),
-              'fawad-zaidi': dict(prefix='Dr.', role='Academic Advisor'), 'mana-mirzaei': dict(prefix='Dr.', role='Academic')}
+              'fawad-zaidi': dict(prefix='Dr.', role='Academic Advisor'), 'tanja-pavleska': dict(prefix='Dr.', role='Academic Advisor', links=[('Website','https://mr.ijs.si/en/dr-tanja-pavleska-2/')]), 'mana-mirzaei': dict(prefix='Dr.', role='Academic')}
 
 def build_members():
     out = []
@@ -207,7 +210,7 @@ def build_members():
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
-    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'mostafa-kamalpour', 'shiva-ilkhani-zadeh', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei']
+    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'mostafa-kamalpour', 'shiva-ilkhani-zadeh', 'mana-mirzaei', 'fawad-zaidi', 'tanja-pavleska', 'hassan-ahmed', 'sadegh-rajaei']
     order = [g for g, _ in GROUPS]
     out.sort(key=lambda m: (order.index(m['group']), m['id'] in STUDENT_IDS, first.index(m['id']) if m['id'] in first else len(first)))
     return out
@@ -577,6 +580,13 @@ DETAILS['alan-liew'] = dict(
               ('1997 – 2002','Research Fellow, Department of Electronic Engineering, City University of Hong Kong')],
   service='Associate Editor of IEEE Transactions on Fuzzy Systems, Springer Nature Computer Science, International Journal of Computational Intelligence Systems and Machine Intelligence Research. Member of organising and programme committees of international conferences, assessor for nationally competitive research grants, and reviewer for international journals and conferences.',
   awards=['Fellow, Queensland Academy of Arts and Sciences','Fellow, Australian Computer Society','Senior Member, IEEE (since 2005)',"Stanford University World's Top 2% Scientists (Computer Science: AI and Image Processing), recognised since 2021 for career-long impact"])
+
+DETAILS['tanja-pavleska'] = dict(
+  title='Researcher, Laboratory for Open Systems and Networks, Jožef Stefan Institute',
+  bio=['Dr. Tanja Pavleska is a researcher at the Laboratory for Open Systems and Networks, Jožef Stefan Institute. She obtained her PhD from the JSI Postgraduate School in the area of computational trust and reputation systems, with emphasis on user behaviour.',
+       'Her interests include cybersecurity for AI and AI for cybersecurity, trustworthy and explainable AI, critical infrastructure security, industrial automation and digital twins, threat intelligence and digital forensics, architecture design, and digital policies and regulatory frameworks. She has participated in many international projects, coordinating and researching the latest technological advancements.'],
+  education=['<b>PhD</b>, Jožef Stefan Institute Postgraduate School. Area: computational trust and reputation systems, with emphasis on user behaviour'],
+  supervision='Research programme: Future internet technologies: concepts, architectures, services and socio-economic issues. Training topic: Artificial Intelligence for Cybersecurity and Cybersecurity for Artificial Intelligence, covering trustworthy and explainable AI for security, human–AI collaboration in security operations, AI-driven threat detection and incident response, security and robustness of AI systems, cybersecurity for critical infrastructures, and regulatory and ethical compliance (GDPR, NIS2, Cyber Resilience Act, EU AI Act).')
 
 def details_html(m):
     d = DETAILS.get(m['id'])
