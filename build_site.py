@@ -686,7 +686,7 @@ def card_links(m):
     return out
 
 def person_card(m, p=''):
-    areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["name"]}"></span>' for a in m['areas'])
+    areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["name"]}"></span>' for a in m['areas']) + ('<span class="dot" style="--c:#64748B" title="Core AI &amp; Methods"></span>' if m.get('core') else '')
     inst = E(uni_name(m['inst']))
     role = f'<p class="pcard__role">{E(m["role"])}</p>' if m['group'] == 'leadership' else ''   # role tags only for founders; groups are headed on the People page
     links = card_links(m) if m['group'] in CARD_LINK_GROUPS else []
