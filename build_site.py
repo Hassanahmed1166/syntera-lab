@@ -489,7 +489,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
     <div><h4>The group</h4><ul><li><a href="{p}about.html">About</a></li><li><a href="{p}people.html">People</a></li><li><a href="{p}publications.html">Publications</a></li><li><a href="{p}collaborate.html">Collaborate with us</a></li><li><a href="{p}join.html">Join us</a></li><li><a href="{p}privacy.html">Privacy</a></li></ul></div>
     <div><h4>Get in touch</h4><ul><li><a href="mailto:{BRAND['email_student']}">{BRAND['email_student']}</a></li><li><a href="mailto:{BRAND['email_join']}">{BRAND['email_join']}</a></li><li><a href="mailto:{BRAND['email_collab']}">{BRAND['email_collab']}</a></li><li><a href="{BRAND['scholar']}" rel="noopener" target="_blank">Director on Google Scholar</a></li></ul><a class="btn btn--pink btn--sm" href="{p}join.html">Join Us</a></div>
   </div>
-  <div class="ftr__bar"><span>© 2026 {BRAND['name']}</span><span><a href="{p}privacy.html">Privacy</a></span></div>
+  <div class="ftr__bar"><span>© 2026 {BRAND['name']}</span><span class="ftr__sig">Crafted with <svg class="ftr__heart" viewBox="0 0 24 24" width="14" height="14" aria-label="love" role="img"><path d="M12 21s-7.5-4.6-9.6-9.2C1 8.6 2.8 5 6.3 5c2 0 3.5 1.1 4.2 2.4h3C14.2 6.1 15.7 5 17.7 5c3.5 0 5.3 3.6 3.9 6.8C19.5 16.4 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg> by <a href="{p}people/hassan-ahmed.html">Hassan Ahmed</a></span><span><a href="{p}privacy.html">Privacy</a></span></div>
 </div></footer>
 <script src="{p}js/site.js?v={VER}"></script>
 {data_js}
@@ -1118,6 +1118,7 @@ input[type=search],select{padding:11px 16px;border-radius:12px;border:1.5px soli
 .ftr{background:var(--hero);color:#C9D4F2;padding:56px 0 24px}.ftr a{color:#E3EBFF}.ftr h4{color:#fff;font-size:.95rem}.ftr ul{list-style:none;padding:0;margin:0}.ftr li{margin:6px 0;font-size:.92rem}
 .ftr__grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.3fr;gap:32px}@media(max-width:860px){.ftr__grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.ftr__grid{grid-template-columns:1fr}}
 .ftr__bar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.14);margin-top:32px;padding-top:18px;font-size:.85rem}
+.ftr__sig{color:#9FB0D8}.ftr__heart{color:#E8678A;vertical-align:-2px;margin:0 2px}.ftr .ftr__sig a{color:#fff;font-weight:600;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}.ftr .ftr__sig a:hover{border-bottom-color:#E8678A}
 .ftr .btn{margin-top:10px;color:#fff}:root[data-theme=dark] .ftr .btn--pink{color:#0A0F1F}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}.reveal.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
