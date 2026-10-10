@@ -188,10 +188,10 @@ def build_members():
         interests = [SHORT_INTEREST.get(x.strip(), x.strip()) for x in r.get('L', '').replace('�', '–').split(';') if x.strip()]
         orcid = r.get('I', '').replace('https://orcid.org/', '').strip()
         level = r.get('D', '').strip(); gpos = r.get('C', '').strip()
-        role = {'Founder - Director':'Founder · Director','Cofounder':'Cofounder'}.get(level, '')
+        role = {'Founder - Director':'Founder · Director','Cofounder':'Co-founder'}.get(level, '')
         if mid == 'shahrzad-saremi': role = 'Founder · Director'
-        elif mid == 'rania-shibl': role = 'Co-Director · Cofounder'
-        elif mid == 'dana-dermody': role = 'Cofounder · Senior Researcher'
+        elif mid == 'rania-shibl': role = 'Co-Director · Co-founder'
+        elif mid == 'dana-dermody': role = 'Co-founder'
         elif mid == 'mostafa-kamalpour': role = 'Senior Researcher · Sessional Academic'
         elif mid == 'hassan-ahmed': role = 'Team Lead · Senior Researcher'
         elif mid == 'abdullah-khan': role = 'Senior Researcher'
@@ -212,6 +212,7 @@ def build_members():
     for m in out:
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
+        if m['id'] == 'sadegh-rajaei': m['inst'] = ['Department of Electrical and Computer Engineering, Babol Noshirvani University of Technology, Babol, Iran']; m['country'] = 'Iran'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei']
     order = [g for g, _ in GROUPS]
@@ -494,6 +495,17 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
     path = os.path.join(OUT, fname); os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w', encoding='utf-8').write(clean_links(doc, fname))
 
+def uni_name(insts):
+    """Card label: just the university / institute (no school, department or city)."""
+    if not insts: return ''
+    parts = [x.strip() for x in insts[0].split(',')]
+    for rx in (r'universit', r'institute|college|academy|business school|NUST'):
+        for x in parts:
+            if re.search(rx, x, re.I) and not re.match(r'(School|Faculty|Department|Laboratory|Institute) of', x, re.I): return {'NUST Islamabad': 'National University of Sciences and Technology (NUST)'}.get(x, x)
+    for x in parts:
+        if not re.match(r'(School|Faculty|Department|Laboratory|Institute|Business School)', x, re.I): return x
+    return parts[-1]
+
 def flag(m, p=''):
     f = FLAGS.get(m['country'])
     return f'<img class="flag" src="{p}images/flags/{f}.png" alt="" width="20" height="14">' if f else ''
@@ -675,7 +687,7 @@ def card_links(m):
 
 def person_card(m, p=''):
     areas = ''.join(f'<span class="dot" style="--c:{AREA[a]["color"]}" title="{AREA[a]["name"]}"></span>' for a in m['areas'])
-    inst = E(m['inst'][0]) if m['inst'] else ''
+    inst = E(uni_name(m['inst']))
     role = f'<p class="pcard__role">{E(m["role"])}</p>' if m['group'] == 'leadership' else ''   # role tags only for founders; groups are headed on the People page
     links = card_links(m) if m['group'] in CARD_LINK_GROUPS else []
     badges = ''
