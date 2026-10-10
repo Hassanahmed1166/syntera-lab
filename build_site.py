@@ -223,7 +223,7 @@ def build_members():
     return out
 
 # face-centred crops (left, top, size) in source pixels
-CROPS = {'shahrzad-saremi': (390, 0, 680), 'rania-shibl': (306, 50, 640), 'dana-dermody': (95, 20, 680),
+CROPS = {'shahrzad-saremi': (390, 0, 680), 'rania-shibl': (306, 50, 640), 'dana-dermody': (0, 0, 673),
          'hassan-ahmed': (250, 60, 820), 'mostafa-kamalpour': (10, 0, 490), 'hanem-ellethy': (150, 0, 1100)}
 
 def process_photos(members):
