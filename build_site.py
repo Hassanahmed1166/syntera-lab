@@ -103,7 +103,7 @@ PHOTOS = {
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
- 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','tanja-pavleska':'Tanja Pavleska.jpg','hanem-ellethy':'Hanem Ellethy.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
+ 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','tanja-pavleska':'Tanja Pavleska.jpg','hanem-ellethy':'Hanem Ellethy.jpeg','furqan-ahmad':'furqan-ahmad.jpg','malak-emziane':'Malak EMZIANE.jpeg',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
