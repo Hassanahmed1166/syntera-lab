@@ -212,7 +212,7 @@ def build_members():
     for m in out:
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
-        if m['id'] == 'sadegh-rajaei': m['inst'] = ['Department of Electrical and Computer Engineering, Babol Noshirvani University of Technology, Babol, Iran']; m['country'] = 'Iran'
+        if m['id'] == 'sadegh-rajaei': m['inst'] = ['Department of Electrical and Computer Engineering, Babol Noshirvani University of Technology, Babol, Iran']; m['country'] = 'Iran'; m['role'] = 'Researcher · Team Lead'; m['title'] = ''
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei'] + [
         'hilda-jemutai-bitok', 'abdul-mateen', 'abdullah-khan', 'svetlana-kolos', 'samia-mujahid', 'jie-zhu', 'bisma-ali', 'manar-makki-shaalan', 'javeria-iqbal', 'damilare-ogunjobi', 'nazmul-hossain', 'arooj-fatima', 'tobias-romano', 'shiva-jahanaray', 'muhammad-irfan-aslam', 'sepehr-amooeinejad', 'ghalib-nadeem', 'nida-ali', 'hina-mehboob', 'hasanga-uyanhewage', 'malak-emziane', 'mohamadali-rezaeimanesh', 'amir-h-malekijoo', 'thiwanka-kaushalya-nagasanga', 'meerab-fatima', 'malahat-mardani', 'mounes-mardani', 'ramsha-khan', 'ali-hasnain', 'bilal-aslam', 'aittezaz-ahmad']   # Students & Researchers, in the agreed order
