@@ -522,7 +522,7 @@ DETAILS = {
  'shahrzad-saremi': dict(
   quals='',
   title='Lecturer, ICT and Computer Science',
-  roles=['Program Coordinator: Bachelor of Information and Communications Technology'],
+  roles=['Program Coordinator: Bachelor of Information and Communications Technology','Stanford–Elsevier Top 2% Scientist (2020, 2021 & 2023) | FHEA | IEEE Member'],
   bio=['Dr Shahrzad Saremi is a researcher and academic with over a decade of experience in computing and information technology. She has published more than 20 high-impact journal articles, attracting over 15,000 citations, reflecting the significant international reach of her research contributions.',
        'Her research spans multiple interdisciplinary domains, including bio-inspired optimisation algorithms, human–computer interaction (HCI), machine learning, Internet of Things (IoT), Internet of Vehicles (IoV), and Smart Health Home systems. She is widely recognised for her co-development of nature-inspired metaheuristic algorithms, including the Grasshopper Optimisation Algorithm and Salp Swarm Algorithm, which are extensively applied to complex engineering and computational challenges. Her work in HCI investigates user experience, gesture recognition, augmented reality, and creative technologies, with a particular focus on design education and knowledge management in organisational settings.',
        'She also explores knowledge-sharing behaviours in organisational and educational settings, examining the interplay between motivation and culture to enhance learning and risk management outcomes. Her research combines technical innovation with human-centred inquiry.',
