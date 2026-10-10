@@ -214,9 +214,10 @@ def build_members():
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
         if m['id'] == 'sadegh-rajaei': m['inst'] = ['Department of Electrical and Computer Engineering, Babol Noshirvani University of Technology, Babol, Iran']; m['country'] = 'Iran'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
-    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei']
+    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei'] + [
+        'hilda-jemutai-bitok', 'abdul-mateen', 'abdullah-khan', 'svetlana-kolos', 'samia-mujahid', 'jie-zhu', 'bisma-ali', 'manar-makki-shaalan', 'javeria-iqbal', 'damilare-ogunjobi', 'nazmul-hossain', 'arooj-fatima', 'tobias-romano', 'shiva-jahanaray', 'muhammad-irfan-aslam', 'sepehr-amooeinejad', 'ghalib-nadeem', 'nida-ali', 'hina-mehboob', 'hasanga-uyanhewage', 'malak-emziane', 'mohamadali-rezaeimanesh', 'amir-h-malekijoo', 'thiwanka-kaushalya-nagasanga', 'meerab-fatima', 'malahat-mardani', 'mounes-mardani', 'ramsha-khan', 'ali-hasnain', 'bilal-aslam', 'aittezaz-ahmad']   # Students & Researchers, in the agreed order
     order = [g for g, _ in GROUPS]
-    out.sort(key=lambda m: (order.index(m['group']), m['id'] in STUDENT_IDS, first.index(m['id']) if m['id'] in first else len(first)))
+    out.sort(key=lambda m: (order.index(m['group']), first.index(m['id']) if m['id'] in first else len(first)))
     return out
 
 # face-centred crops (left, top, size) in source pixels
