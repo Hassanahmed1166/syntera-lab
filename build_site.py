@@ -850,7 +850,7 @@ def build_pages(members):
         body = f'''<section class="phead phead--profile"><div class="wrap profile"><div class="profile__ph">{avatar(m, "../", "av av--lg")}</div>
 <div><p class="eyebrow"><a href="../people.html">People</a></p><h1>{E(disp_name(m))}{f"<small>{E(m['suffix'])}</small>" if m["suffix"] else ""}</h1>
 <p class="lead">{E(m["role"])}{" · " + E(DETAILS.get(m["id"], {}).get("title", m["title"])) if m["title"] else ""}</p>
-{"".join(f'<p class="lead lead--sub">{E(r)}</p>' for r in DETAILS.get(m["id"], {}).get("roles", []))}<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
+{"".join(f'<p class="lead lead--sub">{E(x)}</p>' for x in m["inst"])}{"".join(f'<p class="lead lead--sub">{E(r)}</p>' for r in DETAILS.get(m["id"], {}).get("roles", []))}<p class="where">{flag(m, "../")} {E(m["country"])}</p><div class="cta">{links}</div></div></div></section>
 {sp if sp else main_html}{pager}'''
         person = {"@context": "https://schema.org", "@type": "Person", "@id": f'{SITE_URL}/people/{m["id"]}#person', "name": m['name'], "url": f'{SITE_URL}/people/{m["id"]}',
                   "jobTitle": m['role'], "worksFor": {"@id": SITE_URL + "/#org"}, "memberOf": {"@id": SITE_URL + "/#org"},
