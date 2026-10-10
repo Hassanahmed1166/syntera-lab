@@ -319,7 +319,11 @@ def derive_areas(members):
             if mid in ev:
                 npub[mid] += 1
                 for a in areas: ev[mid][a] = ev[mid].get(a, 0) + 1
+    ov_path = os.path.join(ROOT, 'member_areas.json')   # hand-reviewed areas per member (exported from SYNTERA-member-areas.xlsx); overrides the derived ones
+    ov = json.load(open(ov_path, encoding='utf-8')) if os.path.exists(ov_path) else {}
     for m in members:
+        if m['id'] in ov:
+            m['areas'] = [a for a in order if a in ov[m['id']]]; m['core'] = 'methods' in ov[m['id']]; continue
         if m['id'] in ALL_AREAS: m['areas'] = list(order); m['core'] = m['id'] in CORE_TOO; continue
         t = ' '.join(m['interests']).lower()
         got = {a for a, rx in INTEREST_RULES if re.search(rx, t)}
