@@ -166,6 +166,8 @@ EXTRA_MEMBERS = [
  ('hanem-ellethy','Hanem Ellethy','Associate Lecturer, School of Electrical Engineering and Computer Science',['School of Electrical Engineering and Computer Science (EECS), The University of Queensland'],'Australia',
   ['Applied AI & intelligent systems','Trustworthy, explainable & human-centred AI','AI in healthcare & medical imaging','Generative AI in education','AI-enhanced learning','AI reliability, robustness & real-world deployment'],
   '0000-0003-2791-9087','https://scholar.google.com/citations?user=qs9heBQAAAAJ&hl=en','https://www.linkedin.com/in/hanem-ellethy-phd-afhea-867573a9'),
+ ('furqan-ahmad','Furqan Ahmad','Researcher',["Northwestern Polytechnical University, Xi'an"],'China',
+  ['AIoT','Edge computing','TinyML','SDN & network automation','Smart healthcare'],'','','https://www.linkedin.com/in/furqanahmad272/'),
 ]
 EXTRA_META = {'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher'),
               'alan-liew': dict(prefix='Professor', role='Academic Advisor', links=[('Griffith Experts','https://experts.griffith.edu.au/7401-alan-weechung-liew'),('Scopus','https://www.scopus.com/authid/detail.uri?authorId=7005648281'),('ResearchGate','https://www.researchgate.net/profile/Alan_Wee_Chung_Liew')]),
@@ -215,7 +217,7 @@ def build_members():
         if m['id'] == 'sadegh-rajaei': m['inst'] = ['Department of Electrical and Computer Engineering, Babol Noshirvani University of Technology, Babol, Iran']; m['country'] = 'Iran'; m['role'] = 'Researcher · Team Lead'; m['title'] = ''
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei'] + [
-        'hilda-jemutai-bitok', 'abdul-mateen', 'abdullah-khan', 'svetlana-kolos', 'samia-mujahid', 'jie-zhu', 'bisma-ali', 'manar-makki-shaalan', 'javeria-iqbal', 'damilare-ogunjobi', 'nazmul-hossain', 'arooj-fatima', 'tobias-romano', 'shiva-jahanaray', 'muhammad-irfan-aslam', 'sepehr-amooeinejad', 'ghalib-nadeem', 'nida-ali', 'hina-mehboob', 'hasanga-uyanhewage', 'malak-emziane', 'mohamadali-rezaeimanesh', 'amir-h-malekijoo', 'thiwanka-kaushalya-nagasanga', 'meerab-fatima', 'malahat-mardani', 'mounes-mardani', 'ramsha-khan', 'ali-hasnain', 'bilal-aslam', 'aittezaz-ahmad']   # Students & Researchers, in the agreed order
+        'hilda-jemutai-bitok', 'abdul-mateen', 'abdullah-khan', 'svetlana-kolos', 'samia-mujahid', 'jie-zhu', 'bisma-ali', 'manar-makki-shaalan', 'javeria-iqbal', 'damilare-ogunjobi', 'nazmul-hossain', 'arooj-fatima', 'tobias-romano', 'shiva-jahanaray', 'furqan-ahmad', 'muhammad-irfan-aslam', 'sepehr-amooeinejad', 'ghalib-nadeem', 'nida-ali', 'hina-mehboob', 'hasanga-uyanhewage', 'malak-emziane', 'mohamadali-rezaeimanesh', 'amir-h-malekijoo', 'thiwanka-kaushalya-nagasanga', 'meerab-fatima', 'malahat-mardani', 'mounes-mardani', 'ramsha-khan', 'ali-hasnain', 'bilal-aslam', 'aittezaz-ahmad']   # Students & Researchers, in the agreed order
     order = [g for g, _ in GROUPS]
     out.sort(key=lambda m: (order.index(m['group']), first.index(m['id']) if m['id'] in first else len(first)))
     return out
@@ -929,7 +931,7 @@ def build_pages(members):
     mail = lambda subj: f'mailto:{BRAND["email_collab"]}?subject=' + subj.replace(' ', '%20')
     ways = [
      ('Academic collaboration', 'Joint research and co-authored papers, shared methods and datasets, visiting researchers, co-supervision of PhD and Master\'s students, and joint workshops with universities and research institutes.'),
-     ('Funding and joint grant applications', 'We partner on grant proposals as a research partner or lead investigator, from early scoping to submission, including industry-linked and government-funded schemes. Our director leads a 2026 LAUNCH Partnership Grant on AI-based knee MRI segmentation.'),
+     ('Funding and joint grant applications', 'We partner on grant proposals as a research partner or lead investigator, from early scoping to submission, including industry-linked and government-funded schemes.'),
      ('Commissioned and paid research', 'Organisations can engage the group for a defined project: a proof of concept, data analysis, model development and evaluation, a technical review or an AI feasibility study. Scope, deliverables, IP and fees are agreed in writing before work starts.'),
      ('Industry and community pilots', 'Pilot AI and IoT solutions in real settings such as clinics, aged care, farms, classrooms and transport, with privacy, ethics and explainability built in.'),
      ('Student and talent partnerships', 'Industry-linked student projects, internships and higher degree research (PhD and Master\'s) that you co-fund or co-supervise with us.'),
@@ -945,11 +947,11 @@ def build_pages(members):
     partner_html = ', '.join(f'<a href="{u}" rel="noopener" target="_blank">{E(n)}</a>' for n, sl, c, u in partners)
     faqs = [
      ('Can we commission a paid research project with SYNTERA?', 'Yes. Organisations can engage the group for a defined, funded project such as a proof of concept, data analysis, model development, evaluation or feasibility study. We agree scope, deliverables, timeline, fees, data handling and intellectual property in writing before work starts. Email %s to start.' % BRAND['email_collab']),
-     ('Can we apply for a research grant together?', 'Yes. We join grant applications as a research partner or lead investigator and can help scope the research, build the partnership and prepare the proposal, including industry-linked and government-funded schemes in Australia and internationally.'),
+     ('Can we apply for a research grant together?', 'Yes. We join grant applications as a research partner or lead investigator and can help scope the research, build the partnership and prepare the proposal, including industry-linked and government-funded schemes, nationally and internationally.'),
      ('Which fields does SYNTERA work in?', 'Applied AI and connected systems: AI for health, smart health homes, AI for agriculture, AI for education, the Internet of Things and the Internet of Vehicles, supported by machine learning, deep learning, computer vision, language models, explainable AI and cybersecurity.'),
-     ('Who can collaborate with SYNTERA?', 'Universities and research institutes, hospitals and aged-care providers, farms and agri-businesses, schools and education providers, companies, government agencies and community organisations, in Australia and overseas.'),
-     ('Do you work with partners outside Australia?', 'Yes. SYNTERA has members in %d countries and works with partner institutions on several continents. We collaborate remotely and in person.' % len(countries)),
-     ('Where is SYNTERA based?', 'SYNTERA is led by Dr. Shahrzad Saremi, a lecturer at the University of the Sunshine Coast in Queensland, Australia, with co-director Professor Rania Shibl.'),
+     ('Who can collaborate with SYNTERA?', 'Universities and research institutes, hospitals and aged-care providers, farms and agri-businesses, schools and education providers, companies, government agencies and community organisations, anywhere in the world.'),
+     ('Do you work with international partners?', 'Yes. SYNTERA has members in %d countries and works with partners on several continents. We collaborate remotely and in person.' % len(countries)),
+     ('Who leads SYNTERA?', 'SYNTERA is an international research group led by Director Dr. Shahrzad Saremi and Co-Director Professor Rania Shibl.'),
      ('Do you offer student projects, internships or PhD supervision?', 'Yes. We welcome PhD and Master\'s applicants, research assistants and interns, and can run industry-linked student projects. See the Join Us page for how to apply.'),
      ('How do we get started?', 'Send a short email to %s describing the problem, your organisation, timeline and whether funding is available. We will reply to arrange a scoping conversation.' % BRAND['email_collab']),
     ]
@@ -964,7 +966,7 @@ def build_pages(members):
 <p class="lead">Partner with SYNTERA on academic collaborations, grant applications, industry-funded research and commissioned (paid) projects in applied AI and connected systems.</p>
 <div class="cta"><a class="btn btn--pink" href="{mail('Collaboration with SYNTERA Research Group')}">Start a collaboration</a><a class="btn btn--ghost" href="#process">How it works</a></div></div></section>
 <section class="sec"><div class="wrap"><p class="eyebrow">Ways to work with us</p><h2>Six ways to partner</h2>
-<p class="sub">SYNTERA is a research group of {len(members)} researchers, academics and students across {len(countries)} countries, led from the University of the Sunshine Coast, Queensland, Australia. We work with universities, health and care providers, industry and government.</p>
+<p class="sub">SYNTERA is a research group of {len(members)} researchers, academics and students across {len(countries)} countries. We work with universities, health and care providers, industry and government.</p>
 <div class="grid grid--3">{ways_html}</div></div></section>
 <section class="sec sec--ice" id="areas"><div class="wrap prose"><p class="eyebrow">Where we can help</p><h2>Research areas open to partnership</h2>
 <ul>{area_html}</ul>
@@ -972,7 +974,7 @@ def build_pages(members):
 <section class="sec" id="process"><div class="wrap prose"><p class="eyebrow">How it works</p><h2>From first email to results</h2><ol>{steps_html}</ol>
 <p><a class="btn btn--blue" href="{mail('Collaboration with SYNTERA Research Group')}">Email {BRAND['email_collab']}</a></p></div></section>
 <section class="sec sec--ice" id="who"><div class="wrap prose"><p class="eyebrow">Who we work with</p><h2>Universities, institutes, industry and government</h2>
-<p>Our members come from and collaborate with {partner_html}, among others. Meet the <a href="people.html">team</a> or read about the <a href="about.html">group</a>.</p></div></section>
+<p>Our members and collaborators come from universities, research institutes, hospitals, industry and government around the world. Meet the <a href="people.html">team</a> or read about the <a href="about.html">group</a>.</p></div></section>
 <section class="sec" id="faq"><div class="wrap prose"><p class="eyebrow">FAQ</p><h2>Frequently asked questions</h2>{faq_html}</div></section>
 <section class="sec"><div class="wrap"><div class="banner"><div><h2>Have a project, a grant or a problem to solve?</h2><p>Tell us what you need. We will reply to arrange a conversation.</p></div>
 <div class="cta"><a class="btn btn--pink" href="{mail('Collaboration with SYNTERA Research Group')}">Email collaborations</a><a class="btn btn--ghost" href="join.html">Join the group</a></div></div></div></section>'''
