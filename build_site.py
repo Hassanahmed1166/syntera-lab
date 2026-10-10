@@ -103,7 +103,7 @@ PHOTOS = {
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
- 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','tanja-pavleska':'Tanja Pavleska.jpg','malak-emziane':'Malak EMZIANE.jpeg',
+ 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','tanja-pavleska':'Tanja Pavleska.jpg','hanem-ellethy':'Hanem Ellethy.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
@@ -117,7 +117,7 @@ AREAS_OF = {
 }
 GROUP_OF = {}; STUDENT_IDS = set()   # students are listed under Researchers & Academics, after the other researchers
 for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leadership'
-for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','fawad-zaidi','tanja-pavleska']: GROUP_OF[i] = 'advisors'
+for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','fawad-zaidi','tanja-pavleska','hanem-ellethy']: GROUP_OF[i] = 'advisors'
 GROUP_OF['hassan-ahmed'] = GROUP_OF['sadegh-rajaei'] = 'lead'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
           'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'researchers'; STUDENT_IDS.add(i)
@@ -163,10 +163,13 @@ EXTRA_MEMBERS = [
  ('tanja-pavleska','Tanja Pavleska','Researcher, Laboratory for Open Systems and Networks',['Laboratory for Open Systems and Networks, Jožef Stefan Institute, Ljubljana'],'Slovenia',
   ['Cybersecurity for AI','AI for cybersecurity','Trustworthy & explainable AI','Critical infrastructure security','Industrial automation & digital twins','Threat intelligence & digital forensics','Digital policies & regulatory frameworks','Computational trust & reputation systems'],
   '0009-0007-3967-2911','https://scholar.google.com/citations?user=jHnvTCcAAAAJ','https://www.linkedin.com/in/tanjaazderska/'),
+ ('hanem-ellethy','Hanem Ellethy','Associate Lecturer, School of Electrical Engineering and Computer Science',['School of Electrical Engineering and Computer Science (EECS), The University of Queensland'],'Australia',
+  ['Applied AI & intelligent systems','Trustworthy, explainable & human-centred AI','AI in healthcare & medical imaging','Generative AI in education','AI-enhanced learning','AI reliability, robustness & real-world deployment'],
+  '0000-0003-2791-9087','https://scholar.google.com/citations?user=qs9heBQAAAAJ&hl=en','https://www.linkedin.com/in/hanem-ellethy-phd-afhea-867573a9'),
 ]
 EXTRA_META = {'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher'),
               'alan-liew': dict(prefix='Professor', role='Academic Advisor', links=[('Griffith Experts','https://experts.griffith.edu.au/7401-alan-weechung-liew'),('Scopus','https://www.scopus.com/authid/detail.uri?authorId=7005648281'),('ResearchGate','https://www.researchgate.net/profile/Alan_Wee_Chung_Liew')]),
-              'fawad-zaidi': dict(prefix='Dr.', role='Academic Advisor'), 'tanja-pavleska': dict(prefix='Dr.', role='Academic Advisor', links=[('Website','https://mr.ijs.si/en/dr-tanja-pavleska-2/')]), 'mana-mirzaei': dict(prefix='Dr.', role='Academic')}
+              'fawad-zaidi': dict(prefix='Dr.', role='Academic Advisor'), 'hanem-ellethy': dict(prefix='Dr.', role='Academic Advisor'), 'tanja-pavleska': dict(prefix='Dr.', role='Academic Advisor', links=[('Website','https://mr.ijs.si/en/dr-tanja-pavleska-2/')]), 'mana-mirzaei': dict(prefix='Dr.', role='Academic')}
 
 def build_members():
     out = []
@@ -210,14 +213,14 @@ def build_members():
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
-    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'mostafa-kamalpour', 'shiva-ilkhani-zadeh', 'mana-mirzaei', 'fawad-zaidi', 'tanja-pavleska', 'hassan-ahmed', 'sadegh-rajaei']
+    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei']
     order = [g for g, _ in GROUPS]
     out.sort(key=lambda m: (order.index(m['group']), m['id'] in STUDENT_IDS, first.index(m['id']) if m['id'] in first else len(first)))
     return out
 
 # face-centred crops (left, top, size) in source pixels
 CROPS = {'shahrzad-saremi': (390, 0, 680), 'rania-shibl': (306, 50, 640), 'dana-dermody': (95, 20, 680),
-         'hassan-ahmed': (250, 60, 820), 'mostafa-kamalpour': (10, 0, 490)}
+         'hassan-ahmed': (250, 60, 820), 'mostafa-kamalpour': (10, 0, 490), 'hanem-ellethy': (150, 0, 1100)}
 
 def process_photos(members):
     d = os.path.join(OUT, 'images', 'team'); os.makedirs(d, exist_ok=True)

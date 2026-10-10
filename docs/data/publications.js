@@ -1025,7 +1025,7 @@ window.SYNTERA_PUBS = [
   "authors": [
    [
     "Ellethy, H.",
-    null
+    "hanem-ellethy"
    ],
    [
     "Kamalpour, M.",
