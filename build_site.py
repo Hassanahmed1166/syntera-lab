@@ -477,7 +477,7 @@ def page(fname, title, desc, body, active='', depth=0, extra_js='', home=False, 
   <a class="brand" href="{p}index.html" title="{BRAND['name']}">{LOGO}<span><b>SYNTERA</b><small>Research Group</small></span></a>
   <nav aria-label="Main"><ul id="nav" class="nav">{nav}<li class="nav__cta"><a class="btn btn--pink" href="{p}join.html">Join Us</a></li></ul></nav>
   <div class="hdr__act">
-    <button class="icon-btn" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button>
+    <button class="icon-btn" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode"><svg class="ti ti--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg><svg class="ti ti--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
     <button class="icon-btn burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
 </div></header>
@@ -1122,6 +1122,7 @@ input[type=search],select{padding:11px 16px;border-radius:12px;border:1.5px soli
 .ftr__grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.3fr;gap:32px}@media(max-width:860px){.ftr__grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.ftr__grid{grid-template-columns:1fr}}
 .ftr__bar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.14);margin-top:32px;padding-top:18px;font-size:.85rem}
 .ftr__sig{color:#9FB0D8}.ftr__heart{color:#E8678A;vertical-align:-2px;margin:0 2px}.ftr .ftr__sig a{color:#fff;font-weight:600;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}.ftr .ftr__sig a:hover{border-bottom-color:#E8678A}
+.ti--sun{display:block}.ti--moon{display:none}:root[data-theme=dark] .ti--sun{display:none}:root[data-theme=dark] .ti--moon{display:block}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ti--sun{display:none}:root:not([data-theme=light]) .ti--moon{display:block}}
 .ftr .btn{margin-top:10px;color:#fff}:root[data-theme=dark] .ftr .btn--pink{color:#0A0F1F}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}.reveal.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
