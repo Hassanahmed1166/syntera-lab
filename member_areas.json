@@ -243,5 +243,11 @@
   "connect",
   "mobility",
   "methods"
+ ],
+ "saviz-zarei": [
+  "health",
+  "home",
+  "connect",
+  "methods"
  ]
 }
