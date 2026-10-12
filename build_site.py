@@ -103,7 +103,7 @@ PHOTOS = {
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
  'sadegh-rajaei':'Sadegh Rajaei.png',
- 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','tanja-pavleska':'Tanja Pavleska.jpg','hanem-ellethy':'Hanem Ellethy.jpeg','furqan-ahmad':'furqan-ahmad.jpg','saviz-zarei':'Saviz Zarei.jpeg','malak-emziane':'Malak EMZIANE.jpeg',
+ 'shiva-ilkhani-zadeh':'Shiva Ilkhani zadeh.jpeg','ali-hasnain':'Ali Hasnain.jpeg','ramsha-khan':'ramsha.jpeg','alan-liew':'Professor Alan Wee-Chung Liew.jpg','fawad-zaidi':'Syed Fawad.png','mana-mirzaei':'mana mirzai.jpeg','tanja-pavleska':'Tanja Pavleska.jpg','hanem-ellethy':'Hanem Ellethy.jpeg','furqan-ahmad':'furqan-ahmad.jpg','saviz-zarei':'Saviz Zarei.jpeg','wathiq-mansoor':'wathiq mansoor.jpg','malak-emziane':'Malak EMZIANE.jpeg',
 }
 # Research-area tags (first pass from stated interests; director to confirm)
 AREAS_OF = {
@@ -117,7 +117,7 @@ AREAS_OF = {
 }
 GROUP_OF = {}; STUDENT_IDS = set()   # students are listed under Researchers & Academics, after the other researchers
 for i in ['shahrzad-saremi','rania-shibl','dana-dermody']: GROUP_OF[i] = 'leadership'
-for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','fawad-zaidi','tanja-pavleska','hanem-ellethy']: GROUP_OF[i] = 'advisors'
+for i in ['alan-liew','mostafa-kamalpour','shiva-ilkhani-zadeh','mana-mirzaei','fawad-zaidi','tanja-pavleska','hanem-ellethy','wathiq-mansoor']: GROUP_OF[i] = 'advisors'
 GROUP_OF['hassan-ahmed'] = GROUP_OF['sadegh-rajaei'] = 'lead'
 for i in ['svetlana-kolos','mohamadali-rezaeimanesh','amir-h-malekijoo','jie-zhu','thiwanka-kaushalya-nagasanga',
           'meerab-fatima','malahat-mardani','mounes-mardani']: GROUP_OF[i] = 'researchers'; STUDENT_IDS.add(i)
@@ -170,8 +170,11 @@ EXTRA_MEMBERS = [
   ['AIoT','Edge computing','TinyML','SDN & network automation','Smart healthcare'],'','','https://www.linkedin.com/in/furqanahmad272/'),
  ('saviz-zarei','Saviz Zarei','Principal Analyst, Queensland Health',['University of the Sunshine Coast, Sunshine Coast, Queensland','Queensland Health'],'Australia',
   ['Health informatics','Decision support systems','Predictive modelling','Simulation modelling','Digital twins for healthcare'],'','','https://www.linkedin.com/in/saviz-zarei-2400437a'),
+ ('wathiq-mansoor','Wathiq Mansoor','Honorary Professor',['Macquarie University'],'Australia',
+  ['Biomedical signal processing','Image processing','Parallel processing','Smart technologies','Computer engineering'],'0000-0003-2542-8604','https://scholar.google.com/citations?user=LboZwd0AAAAJ&hl=en',''),
 ]
-EXTRA_META = {'saviz-zarei': dict(role='PhD Student'),
+EXTRA_META = {'wathiq-mansoor': dict(prefix='Professor', role='Academic Advisor'),
+              'saviz-zarei': dict(role='PhD Student'),
               'shiva-ilkhani-zadeh': dict(prefix='Dr.', role='Senior Researcher'),
               'alan-liew': dict(prefix='Professor', role='Academic Advisor', links=[('Griffith Experts','https://experts.griffith.edu.au/7401-alan-weechung-liew'),('Scopus','https://www.scopus.com/authid/detail.uri?authorId=7005648281'),('ResearchGate','https://www.researchgate.net/profile/Alan_Wee_Chung_Liew')]),
               'fawad-zaidi': dict(prefix='Dr.', role='Academic Advisor'), 'hanem-ellethy': dict(prefix='Dr.', role='Academic Advisor'), 'tanja-pavleska': dict(prefix='Dr.', role='Academic Advisor', links=[('Website','https://mr.ijs.si/en/dr-tanja-pavleska-2/')]), 'mana-mirzaei': dict(prefix='Dr.', role='Academic')}
@@ -219,7 +222,7 @@ def build_members():
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
         if m['id'] == 'sadegh-rajaei': m['inst'] = ['Department of Electrical and Computer Engineering, Babol Noshirvani University of Technology, Babol, Iran']; m['country'] = 'Iran'; m['role'] = 'Researcher · Team Lead'; m['title'] = ''
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
-    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei'] + [
+    first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'wathiq-mansoor', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei'] + [
         'hilda-jemutai-bitok', 'abdul-mateen', 'abdullah-khan', 'svetlana-kolos', 'samia-mujahid', 'saviz-zarei', 'jie-zhu', 'bisma-ali', 'manar-makki-shaalan', 'javeria-iqbal', 'damilare-ogunjobi', 'nazmul-hossain', 'arooj-fatima', 'tobias-romano', 'shiva-jahanaray', 'furqan-ahmad', 'muhammad-irfan-aslam', 'sepehr-amooeinejad', 'ghalib-nadeem', 'nida-ali', 'hina-mehboob', 'hasanga-uyanhewage', 'malak-emziane', 'mohamadali-rezaeimanesh', 'amir-h-malekijoo', 'thiwanka-kaushalya-nagasanga', 'meerab-fatima', 'malahat-mardani', 'mounes-mardani', 'ramsha-khan', 'ali-hasnain', 'bilal-aslam', 'aittezaz-ahmad']   # Students & Researchers, in the agreed order
     order = [g for g, _ in GROUPS]
     out.sort(key=lambda m: (order.index(m['group']), first.index(m['id']) if m['id'] in first else len(first)))
