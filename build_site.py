@@ -170,7 +170,7 @@ EXTRA_MEMBERS = [
   ['AIoT','Edge computing','TinyML','SDN & network automation','Smart healthcare'],'','','https://www.linkedin.com/in/furqanahmad272/'),
  ('saviz-zarei','Saviz Zarei','Principal Analyst, Queensland Health',['University of the Sunshine Coast, Sunshine Coast, Queensland','Queensland Health'],'Australia',
   ['Health informatics','Decision support systems','Predictive modelling','Simulation modelling','Digital twins for healthcare'],'','','https://www.linkedin.com/in/saviz-zarei-2400437a'),
- ('wathiq-mansoor','Wathiq Mansoor','Honorary Professor',['Macquarie University'],'Australia',
+ ('wathiq-mansoor','Wathiq Mansoor','Dean, College of Engineering',['College of Engineering, American University in Baghdad (AUIB)','Honorary Professor, Macquarie University'],'Iraq',
   ['Biomedical signal processing','Image processing','Parallel processing','Smart technologies','Computer engineering'],'0000-0003-2542-8604','https://scholar.google.com/citations?user=LboZwd0AAAAJ&hl=en',''),
 ]
 EXTRA_META = {'wathiq-mansoor': dict(prefix='Professor', role='Academic Advisor'),
