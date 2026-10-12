@@ -170,7 +170,7 @@ EXTRA_MEMBERS = [
   ['AIoT','Edge computing','TinyML','SDN & network automation','Smart healthcare'],'','','https://www.linkedin.com/in/furqanahmad272/'),
  ('saviz-zarei','Saviz Zarei','Principal Analyst, Queensland Health',['University of the Sunshine Coast, Sunshine Coast, Queensland','Queensland Health'],'Australia',
   ['Health informatics','Decision support systems','Predictive modelling','Simulation modelling','Digital twins for healthcare'],'','','https://www.linkedin.com/in/saviz-zarei-2400437a'),
- ('wathiq-mansoor','Wathiq Mansoor','Dean, College of Engineering',['College of Engineering, American University in Baghdad (AUIB)','Honorary Professor, Macquarie University'],'Iraq',
+ ('wathiq-mansoor','Wathiq Mansoor','Honorary Professor',['Macquarie University'],'',
   ['Biomedical signal processing','Image processing','Parallel processing','Smart technologies','Computer engineering'],'0000-0003-2542-8604','https://scholar.google.com/citations?user=LboZwd0AAAAJ&hl=en','https://www.linkedin.com/in/wathiq-mansoor-a3947614/'),
 ]
 EXTRA_META = {'wathiq-mansoor': dict(prefix='Professor', role='Academic Advisor'),
@@ -221,6 +221,7 @@ def build_members():
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
         if m['id'] == 'sadegh-rajaei': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['role'] = 'Researcher · Team Lead'; m['title'] = ''
+        if m['country'] == 'Iraq': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['title'] = ''
         if m['country'] == 'Iran': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['title'] = ''
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'wathiq-mansoor', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei'] + [
