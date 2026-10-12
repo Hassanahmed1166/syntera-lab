@@ -221,6 +221,7 @@ def build_members():
         if m['id'] == 'rania-shibl': m['prefix'] = 'Professor'
         if m['id'] == 'dana-dermody': m['prefix'] = 'Assoc. Prof.'
         if m['id'] == 'sadegh-rajaei': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['role'] = 'Researcher · Team Lead'; m['title'] = ''
+        if m['country'] == 'China': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['title'] = ''
         if m['country'] == 'Iraq': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['title'] = ''
         if m['country'] == 'Iran': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['title'] = ''
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
