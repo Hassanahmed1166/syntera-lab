@@ -244,16 +244,16 @@
   "mobility",
   "methods"
  ],
- "bisma-nawaz": ["health","home","connect","methods"],
- "saviz-zarei": [
+ "bisma-nawaz": [
   "health",
   "home",
   "connect",
   "methods"
  ],
- "wathiq-mansoor": [
+ "saviz-zarei": [
   "health",
   "home",
+  "connect",
   "methods"
  ]
 }
