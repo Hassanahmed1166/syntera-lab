@@ -98,7 +98,7 @@ PHOTOS = {
  'tobias-romano':'Tobias.jpeg','shiva-jahanaray':'shiva.jpg','aittezaz-ahmad':'Aittezaz Ahmad.jpeg',
  'mohamadali-rezaeimanesh':'Mohamadali Rezaeimanesh.jpeg','amir-h-malekijoo':'Amir Malekijo.jpeg','jie-zhu':'Jie Zhu.jpeg',
  'thiwanka-kaushalya-nagasanga':'Thiwanka Kaushalya Nagasanga.PNG','muhammad-irfan-aslam':'Muhammad Irfan Aslam.jpeg',
- 'sepehr-amooeinejad':'Sepehr Amooeinejad.jpeg','damilare-ogunjobi':'Damilare Ogunjobi.jpeg','bisma-ali':'Bisma Ali.png','bisma-nawaz':'bisma nawaz.jpeg',
+ 'sepehr-amooeinejad':'Sepehr Amooeinejad.jpeg','damilare-ogunjobi':'Damilare Ogunjobi.jpeg','bisma-ali':'Bisma Ali.png','bisma-nawaz':'bisma nawaz.jpeg','roya-haghighatjou':'Roya Haghighatjou.jpeg',
  'hilda-jemutai-bitok':'Hilda Jemutai Bitok.jpeg','meerab-fatima':'Meerab Fatima.jpeg','malahat-mardani':'Malahat.png',
  'mounes-mardani':'Mounes.png','manar-makki-shaalan':'manar-makki.jpg','abdul-mateen':'abdul-mateen.jpg',
  'ghalib-nadeem':'ghalib-nadeem.jpg','hina-mehboob':'hina-mehboob.jpg','javeria-iqbal':'javeria-iqbal.jpg','bilal-aslam':'Bilal Aslam.jpeg','hasanga-uyanhewage':'Hasanga Uyanhewage.jpeg',
@@ -170,6 +170,8 @@ EXTRA_MEMBERS = [
   ['AIoT','Edge computing','TinyML','SDN & network automation','Smart healthcare'],'','','https://www.linkedin.com/in/furqanahmad272/'),
  ('bisma-nawaz','Bisma Nawaz','Researcher',['Department of Computer Science, National University of Computer and Emerging Sciences, Pakistan'],'Pakistan',
   ['Natural language processing','Deep learning','Medical imaging','Computer vision'],'0009-0006-6349-189X','','https://www.linkedin.com/in/bisma-nawaz-a61b43312'),
+ ('roya-haghighatjou','Roya Haghighatjou','Researcher',['Research Center for Development of Nursing and Midwifery Sciences, Najafabad Branch, Islamic Azad University'],'Iran',
+  ['Digital and psychological health interventions','Mental health','Aging, geriatric nursing and neurocognitive health','Cardiovascular nursing','Emergency and critical care nursing'],'0000-0003-2792-0328','','https://www.linkedin.com/in/royahaghighatjou'),
  ('saviz-zarei','Saviz Zarei','Principal Analyst, Queensland Health',['University of the Sunshine Coast, Sunshine Coast, Queensland','Queensland Health'],'Australia',
   ['Health informatics','Decision support systems','Predictive modelling','Simulation modelling','Digital twins for healthcare'],'','','https://www.linkedin.com/in/saviz-zarei-2400437a'),
 ]
@@ -226,14 +228,14 @@ def build_members():
         if m['country'] == 'Iran': m['inst'] = ['Independent Researcher']; m['country'] = ''; m['title'] = ''
         if m['id'] == 'mostafa-kamalpour': m['prefix'] = 'Dr.'; m['name'] = 'Mostafa Kamalpour, PhD'; m['suffix'] = ''
     first = ['shahrzad-saremi', 'rania-shibl', 'dana-dermody', 'alan-liew', 'tanja-pavleska', 'shiva-ilkhani-zadeh', 'mostafa-kamalpour', 'hanem-ellethy', 'mana-mirzaei', 'fawad-zaidi', 'hassan-ahmed', 'sadegh-rajaei'] + [
-        'hilda-jemutai-bitok', 'abdul-mateen', 'abdullah-khan', 'svetlana-kolos', 'samia-mujahid', 'saviz-zarei', 'jie-zhu', 'bisma-ali', 'bisma-nawaz', 'manar-makki-shaalan', 'javeria-iqbal', 'damilare-ogunjobi', 'nazmul-hossain', 'arooj-fatima', 'tobias-romano', 'shiva-jahanaray', 'furqan-ahmad', 'muhammad-irfan-aslam', 'sepehr-amooeinejad', 'ghalib-nadeem', 'nida-ali', 'hina-mehboob', 'hasanga-uyanhewage', 'malak-emziane', 'mohamadali-rezaeimanesh', 'amir-h-malekijoo', 'thiwanka-kaushalya-nagasanga', 'meerab-fatima', 'malahat-mardani', 'mounes-mardani', 'ramsha-khan', 'ali-hasnain', 'bilal-aslam', 'aittezaz-ahmad']   # Students & Researchers, in the agreed order
+        'hilda-jemutai-bitok', 'abdul-mateen', 'abdullah-khan', 'svetlana-kolos', 'samia-mujahid', 'saviz-zarei', 'jie-zhu', 'bisma-ali', 'bisma-nawaz', 'manar-makki-shaalan', 'roya-haghighatjou', 'javeria-iqbal', 'damilare-ogunjobi', 'nazmul-hossain', 'arooj-fatima', 'tobias-romano', 'shiva-jahanaray', 'furqan-ahmad', 'muhammad-irfan-aslam', 'sepehr-amooeinejad', 'ghalib-nadeem', 'nida-ali', 'hina-mehboob', 'hasanga-uyanhewage', 'malak-emziane', 'mohamadali-rezaeimanesh', 'amir-h-malekijoo', 'thiwanka-kaushalya-nagasanga', 'meerab-fatima', 'malahat-mardani', 'mounes-mardani', 'ramsha-khan', 'ali-hasnain', 'bilal-aslam', 'aittezaz-ahmad']   # Students & Researchers, in the agreed order
     order = [g for g, _ in GROUPS]
     out.sort(key=lambda m: (order.index(m['group']), first.index(m['id']) if m['id'] in first else len(first)))
     return out
 
 # face-centred crops (left, top, size) in source pixels
 CROPS = {'shahrzad-saremi': (390, 0, 680), 'rania-shibl': (306, 50, 640), 'dana-dermody': (0, 0, 673),
-         'hassan-ahmed': (250, 60, 820), 'bisma-nawaz': (210, 60, 1100), 'mostafa-kamalpour': (10, 0, 490), 'hanem-ellethy': (150, 0, 1100)}
+         'hassan-ahmed': (250, 60, 820), 'bisma-nawaz': (210, 60, 1100), 'roya-haghighatjou': (0, 60, 708), 'mostafa-kamalpour': (10, 0, 490), 'hanem-ellethy': (150, 0, 1100)}
 
 def process_photos(members):
     d = os.path.join(OUT, 'images', 'team'); os.makedirs(d, exist_ok=True)
